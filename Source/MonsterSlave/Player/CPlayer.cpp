@@ -89,11 +89,11 @@ void ACPlayer::BeginPlay() {
 	// Widget Create
 	InventoryWidget = CreateWidget<UCInventory, APlayerController>(GetController<APlayerController>(), InventoryWidgetClass);
 	InventoryWidget->AddToViewport();
-	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+	InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	PlayerHpWidget = CreateWidget<UCPlayerHp>(GetController<APlayerController>(), PlayerHpWidgetClass);
 	PlayerHpWidget->AddToViewport();
-	PlayerHpWidget->SetVisibility(ESlateVisibility::Visible);
+	PlayerHpWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	// Status Setting
 	CheckNull(StatusComponent);

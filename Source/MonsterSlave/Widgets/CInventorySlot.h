@@ -20,21 +20,13 @@ private:
 	UFUNCTION()
 		void Clicked();
 
-	UFUNCTION()
-		void Hovered();
-
-	UFUNCTION()
-		void UnHovered();
-
 // ===========================================
 
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* SlotButton;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UUserWidget* Description;
-
-private:
-	
+protected:
+	UPROPERTY(BlueprintReadWrite)
+		FCItemStruct InvenItem;
 };
