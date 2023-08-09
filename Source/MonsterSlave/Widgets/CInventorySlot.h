@@ -32,7 +32,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* SlotButton;
 
-private:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UUserWidget* Description;
+
+private:
+	
 };

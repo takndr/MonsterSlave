@@ -18,6 +18,13 @@ bool UCInventorySlot::Initialize() {
 	// unhovered event ¹ÙÀÎµù
 	SlotButton->OnUnhovered.AddDynamic(this, &UCInventorySlot::UnHovered);
 
+	Description->SetVisibility(ESlateVisibility::Collapsed);
+
+
+
+
+
+
 	return true;
 }
 

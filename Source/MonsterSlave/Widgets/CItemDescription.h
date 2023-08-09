@@ -14,17 +14,14 @@ public:
 
 // =========================================================
 
-private:
-	UPROPERTY(meta = (BindWidget))
+public:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UImage* ItemImage;
 	
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* ItemName;
 
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* ItemType;
-
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* ItemDescription;
 
 };

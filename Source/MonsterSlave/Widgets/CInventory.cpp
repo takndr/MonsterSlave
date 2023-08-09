@@ -70,6 +70,7 @@ void UCInventory::AddItem(FCItemStruct item) {
 
 	invenslot->SettingSlot(item);
 	invenslot->SetVisibility(ESlateVisibility::Visible);
+
 	BagPannel->AddChildToUniformGrid(invenslot, CurrentRow, CurrentColumn);
 	SetRowColumn();
 }
