@@ -16,6 +16,13 @@ enum class EItemType : uint8
 	Other,
 };
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	Sword,
+	Bow,
+};
+
 UCLASS()
 class MONSTERSLAVE_API AItemStruct : public AActor
 {
@@ -53,6 +60,10 @@ public:
 	// 아이템 타입
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		EItemType ItemType;
+
+	// 무기일 시, 무기 타입
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		EWeaponType WeaponType;
 
 	// UI에서 보여줄 사진
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

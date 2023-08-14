@@ -9,16 +9,21 @@ UCLASS()
 class MONSTERSLAVE_API UCInventorySlot : public UUserWidget
 {
 	GENERATED_BODY()
+
 public:
-	UFUNCTION(BlueprintImplementableEvent)
-		void SettingSlot(FCItemStruct item);
+	void SettingSlot(FCItemStruct InItem);
+	__forceinline bool IsFilled() { return bFilled; }
 
 protected:
 	virtual bool Initialize() override;
 
+	UFUNCTION(BlueprintCallable)
+		void EquipItem();
+
 private:
-	UFUNCTION()
-		void Clicked();
+	void EquipBow();
+	void EquipSword();
+
 
 // ===========================================
 
@@ -26,7 +31,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* SlotButton;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UImage* SlotImage;
+
 protected:
 	UPROPERTY(BlueprintReadWrite)
 		FCItemStruct InvenItem;
+
+	UPROPERTY(BlueprintReadOnly)
+		bool bFilled = false;
+
+private:
+	
 };

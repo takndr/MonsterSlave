@@ -17,6 +17,8 @@
 #include "Component/CStatusComponent.h"
 
 #include "Player/CPlayerHair.h"
+#include "Items/Weapons/CEquipBow.h"
+#include "Items/Weapons/CEquipSword.h"
 
 #include "Global.h"
 
@@ -78,6 +80,8 @@ ACPlayer::ACPlayer() {
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
 	CHelpers::GetClass(&PlayerHpWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerHp");
 	
+	// Weapon Test
+	CHelpers::GetClass(&TestWeaponClass, "/Game/Items/Weapons/Bow/BP_EquipBow3");
 }
 
 void ACPlayer::BeginPlay() {
@@ -85,6 +89,10 @@ void ACPlayer::BeginPlay() {
 
 	// Hair Set
 	PlayerHair = ACPlayerHair::Spawn(GetWorld(), this);
+
+	// Weapon Test
+	TestWeapon = Cast<ACEquipItem>(GetWorld()->SpawnActor(TestWeaponClass));
+	TestWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
 
 	// Widget Create
 	InventoryWidget = CreateWidget<UCInventory, APlayerController>(GetController<APlayerController>(), InventoryWidgetClass);
@@ -170,29 +178,28 @@ void ACPlayer::PickUp() {
 		return;
 	}
 
-	CheckFalse(bCanPickUp);
-	CLog::Log("PickUP");
-
-	CheckNull(PickableActor);
-	CLog::Log("Add Item");
-
 	FCItemStruct item;
 	item = PickableActor->ItemDescription;
 
-	MyItems.Add(item);
-	InventoryWidget->AddItem(item);
+	CheckFalse(bCanPickUp);
+	CheckNull(PickableActor);
+	CLog::Log("PickUP : " + item.Name);
+
+	//MyItems.Add(item);
+	uint32 index = InventoryWidget->AddItem(item);
+	if (index != -1) {
+		MyItems.Insert(item, index);
+	}
 
 	PickableActor->Destroy();
 }
 
 void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	CLog::Log("Mesh Overlapped Begin");
 	PickableActor = Cast<ACFieldItem>(OtherActor);
 	CheckNull(PickableActor);
 }
 
 void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
-	CLog::Log("Mesh Overlapped End");
 	PickableActor = nullptr;
 }
 
@@ -200,4 +207,16 @@ void ACPlayer::DamageTest(float Damage) {
 	CheckNull(PlayerHpWidget);
 	StatusComponent->CurrentHp -= Damage;
 	PlayerHpWidget->UpdateHealth(StatusComponent->MaxHp, StatusComponent->CurrentHp);
+}
+
+void ACPlayer::AddItem(FCItemStruct InItem) {
+	uint32 index = InventoryWidget->AddItem(InItem);
+	if (index != -1) {
+		MyItems.Insert(InItem, index);
+	}
+}
+
+void ACPlayer::RemoveItem(FCItemStruct InItem) {
+	//MyItems.
+	//MyItems.Remove(InItem);
 }

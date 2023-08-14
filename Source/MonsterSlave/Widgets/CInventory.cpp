@@ -7,14 +7,13 @@
 #include "Global.h"
 
 UCInventory::UCInventory(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
-	CHelpers::GetClass(&Slot, "/Game/Widgets/Widget/Inventory/WB_Inventory_Slot");
 }
 
 bool UCInventory::Initialize() {
 	bool bSuccess = Super::Initialize();
 	CheckFalseResult(bSuccess, false);
 
-	return false;
+	return true;
 }
 
 void UCInventory::Attach() {
@@ -65,25 +64,14 @@ void UCInventory::Update() {
 }
 
 // 아이템 먹었을 때 실행
-void UCInventory::AddItem(FCItemStruct item) {
-	UCInventorySlot* invenslot = CreateWidget<UCInventorySlot>(GetWorld(), Slot);
-
-	invenslot->SettingSlot(item);
-	invenslot->SetVisibility(ESlateVisibility::Visible);
-
-	BagPannel->AddChildToUniformGrid(invenslot, CurrentRow, CurrentColumn);
-	SetRowColumn();
-}
-
-void UCInventory::SetRowColumn() {
-	CLog::Log("Column : " + FString::FromInt(CurrentColumn) + ", Row : " + FString::FromInt(CurrentRow));
-
-	if (CurrentColumn + 1 >= MaxInColumn) {
-		CurrentColumn = 0;
-		CurrentRow++;
+uint32 UCInventory::AddItem(FCItemStruct item) {
+	for (uint32 i = 0; i < MaxInventory; i++) {
+		UCInventorySlot* slot = Cast<UCInventorySlot>(BagPannel->GetChildAt(i));
+		if (slot->IsFilled() == false) {
+			slot->SettingSlot(item);
+			return i;
+		}
 	}
-	else {
-		CurrentColumn++;
-	}
-	
+
+	return -1;
 }

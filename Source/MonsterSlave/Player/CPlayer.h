@@ -14,7 +14,8 @@ public:
 	ACPlayer();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	void AddItem(FCItemStruct InItem);
+	void RemoveItem(FCItemStruct InItem);
 
 protected:
 	virtual void BeginPlay() override;
@@ -78,7 +79,8 @@ private:
 	class USkeletalMesh* PlayerBody;
 	class ACPlayerHair* PlayerHair;
 
-	
+	TSubclassOf<class ACEquipItem> TestWeaponClass;
+	class ACEquipItem* TestWeapon;
 
 	TSubclassOf<class UCPlayerHp> PlayerHpWidgetClass;
 	class UCPlayerHp* PlayerHpWidget;
