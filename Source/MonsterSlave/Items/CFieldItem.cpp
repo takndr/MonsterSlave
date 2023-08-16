@@ -44,6 +44,8 @@ void ACFieldItem::BeginPlay() {
 	InteractWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	InteractWidget->SetInteractText(ItemDescription.Interact);
+
+	CLog::Log("Item : " + ItemDescription.Name + ", Index : " + FString::FromInt(ItemDescription.GetIndex()));
 }
 
 void ACFieldItem::Tick(float DeltaTime) {

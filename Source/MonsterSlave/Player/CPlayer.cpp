@@ -181,7 +181,7 @@ void ACPlayer::PickUp() {
 	FCItemStruct item;
 	item = PickableActor->ItemDescription;
 	
-	CLog::Log("PickUP : " + item.Name);
+	CLog::Log("PickUP : " + item.Name + ", Index : " + FString::FromInt(item.GetIndex()));
 
 	AddItem(item);
 
@@ -211,10 +211,8 @@ void ACPlayer::AddItem(const FCItemStruct& InItem) {
 }
 
 void ACPlayer::RemoveItem(const FCItemStruct& InItem) {
-	//MyItems.
-	//int index = 0;
-	//index = MyItems.Find(InItem);
-	//MyItems.RemoveAt(index);
+
+	MyItems.Remove(InItem);
 }
 
 void ACPlayer::EquipSword(const FCItemStruct& InItem) {

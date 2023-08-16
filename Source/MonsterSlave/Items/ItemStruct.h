@@ -8,6 +8,8 @@
 
 #include "ItemStruct.generated.h"
 
+static TArray<int32> ItemIndexes;
+
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
@@ -40,9 +42,18 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FCItemStruct : public FTableRowBase
-{
+struct FCItemStruct : public FTableRowBase {
 	GENERATED_BODY()
+
+public:
+	FCItemStruct();
+
+	FORCEINLINE uint32 GetIndex() const { return Index; }
+
+public:
+	bool operator==(const FCItemStruct& Other);
+
+// ==============================================
 
 public:
 	// 아이템 이름
@@ -76,4 +87,7 @@ public:
 	// 무기인지 아닌지? 굳이 필요한가 싶기도 하고
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool isWeapon;
+
+private:
+	int32 Index;
 };
