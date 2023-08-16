@@ -65,6 +65,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		EWeaponType WeaponType;
 
+	// 클래스 래퍼런스
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSubclassOf<class ACEquipItem> EquipWeaponClass;
+
 	// UI에서 보여줄 사진
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* Picture;

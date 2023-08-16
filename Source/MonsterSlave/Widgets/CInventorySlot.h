@@ -36,7 +36,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
-		FCItemStruct InvenItem;
+		FCItemStruct InvenSlotItem;
 
 	UPROPERTY(BlueprintReadOnly)
 		bool bFilled = false;

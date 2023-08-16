@@ -12,6 +12,7 @@ class MONSTERSLAVE_API UCEquipSlot : public UUserWidget
 public:
 	void SettingSlot(FCItemStruct InItem);
 	FORCEINLINE bool IsEquipped() const { return bEquipped; }
+	FORCEINLINE FCItemStruct GetItem() const { return EquipSlotItem; }
 
 protected:
 	virtual bool Initialize() override;
@@ -20,6 +21,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		void UnEquipItem();
 
+private:
+	void UnEquipSword();
+	void UnEquipBow();
+
 // ===================================================
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
@@ -27,7 +32,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-		FCItemStruct Item;
+		FCItemStruct EquipSlotItem;
 
 private:
 	UPROPERTY(meta = (BindWidget))

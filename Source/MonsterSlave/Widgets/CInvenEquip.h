@@ -19,9 +19,9 @@ protected:
 // =====================================================
 public:
 	UPROPERTY(meta = (BindWidget))
-		class UCEquipSlot* Sword;
+		class UCEquipSlot* EquipSlotSword;
 
 	UPROPERTY(meta = (BindWidget))
-		class UCEquipSlot* Bow;
+		class UCEquipSlot* EquipSlotBow;
 
 };

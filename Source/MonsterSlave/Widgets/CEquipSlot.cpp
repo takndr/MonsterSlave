@@ -10,7 +10,7 @@
 void UCEquipSlot::SettingSlot(FCItemStruct InItem) {
 	SlotImage->SetBrushFromTexture(InItem.Picture);
 
-	Item = InItem;
+	EquipSlotItem = InItem;
 	bEquipped = true;
 }
 
@@ -28,8 +28,28 @@ void UCEquipSlot::UnEquipItem() {
 	bEquipped = false;
 
 	ACPlayer* playertest = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	playertest->AddItem(Item);
+	playertest->AddItem(EquipSlotItem);
 
-	
+	SlotImage->SetBrushFromTexture(DefaultImage);
+
+	switch (EquipSlotItem.WeaponType) {
+		case EWeaponType::Sword: {
+			playertest->UnEquipSword();
+			break;
+		}
+		case EWeaponType::Bow: {
+			playertest->UnEquipBow();
+			break;
+		}
+	}
+}
+
+void UCEquipSlot::UnEquipSword() {
+	// 플레이어에게 장착된 부분 해제
+
+}
+
+void UCEquipSlot::UnEquipBow() {
+	// 플레이어에게 장착된 부분 해제
 
 }

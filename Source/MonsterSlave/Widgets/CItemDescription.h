@@ -14,6 +14,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void SettingDescription(FCItemStruct item);
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void SettingDescriptionTest(FCItemStruct item);
+
 // =========================================================
 
 public:

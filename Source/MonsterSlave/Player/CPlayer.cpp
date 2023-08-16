@@ -80,8 +80,6 @@ ACPlayer::ACPlayer() {
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
 	CHelpers::GetClass(&PlayerHpWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerHp");
 	
-	// Weapon Test
-	CHelpers::GetClass(&TestWeaponClass, "/Game/Items/Weapons/Bow/BP_EquipBow3");
 }
 
 void ACPlayer::BeginPlay() {
@@ -89,10 +87,6 @@ void ACPlayer::BeginPlay() {
 
 	// Hair Set
 	PlayerHair = ACPlayerHair::Spawn(GetWorld(), this);
-
-	// Weapon Test
-	TestWeapon = Cast<ACEquipItem>(GetWorld()->SpawnActor(TestWeaponClass));
-	TestWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
 
 	// Widget Create
 	InventoryWidget = CreateWidget<UCInventory, APlayerController>(GetController<APlayerController>(), InventoryWidgetClass);
@@ -158,6 +152,8 @@ void ACPlayer::OnVerticalLook(float Axis) {
 }
 
 void ACPlayer::Inventory() {
+	CheckNull(InventoryWidget);
+
 	if (InventoryWidget->IsOpened() == false) {
 		InventoryWidget->Attach();
 	}
@@ -167,12 +163,16 @@ void ACPlayer::Inventory() {
 }
 
 void ACPlayer::Attack() {
+	CheckNull(InventoryWidget);
 	CheckTrue(InventoryWidget->IsOpened());
 
 	CLog::Log("Attack");
 }
 
 void ACPlayer::PickUp() {
+	CheckFalse(bCanPickUp);
+	CheckNull(PickableActor);
+
 	if (MyItems.Num() == MaxItem) {
 		CLog::Log("Not Enough Inventory...");
 		return;
@@ -180,16 +180,10 @@ void ACPlayer::PickUp() {
 
 	FCItemStruct item;
 	item = PickableActor->ItemDescription;
-
-	CheckFalse(bCanPickUp);
-	CheckNull(PickableActor);
+	
 	CLog::Log("PickUP : " + item.Name);
 
-	//MyItems.Add(item);
-	uint32 index = InventoryWidget->AddItem(item);
-	if (index != -1) {
-		MyItems.Insert(item, index);
-	}
+	AddItem(item);
 
 	PickableActor->Destroy();
 }
@@ -209,14 +203,46 @@ void ACPlayer::DamageTest(float Damage) {
 	PlayerHpWidget->UpdateHealth(StatusComponent->MaxHp, StatusComponent->CurrentHp);
 }
 
-void ACPlayer::AddItem(FCItemStruct InItem) {
+void ACPlayer::AddItem(const FCItemStruct& InItem) {
 	uint32 index = InventoryWidget->AddItem(InItem);
 	if (index != -1) {
 		MyItems.Insert(InItem, index);
 	}
 }
 
-void ACPlayer::RemoveItem(FCItemStruct InItem) {
+void ACPlayer::RemoveItem(const FCItemStruct& InItem) {
 	//MyItems.
-	//MyItems.Remove(InItem);
+	//int index = 0;
+	//index = MyItems.Find(InItem);
+	//MyItems.RemoveAt(index);
+}
+
+void ACPlayer::EquipSword(const FCItemStruct& InItem) {
+	// 현재 착용중은 검이 있을 경우
+	if (!!TestSword) {
+		UnEquipSword();
+	}
+
+	TestSword = Cast<ACEquipItem>(GetWorld()->SpawnActor(InItem.EquipWeaponClass));
+	TestSword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
+}
+
+void ACPlayer::EquipBow(const FCItemStruct& InItem) {
+	// 현재 착용중인 활이 있을 경우
+	if (!!TestBow) {
+		UnEquipBow();
+	}
+
+	TestBow = Cast<ACEquipItem>(GetWorld()->SpawnActor(InItem.EquipWeaponClass));
+	TestBow->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
+}
+
+void ACPlayer::UnEquipSword() {
+	TestSword->Destroy();
+	TestSword = nullptr;
+}
+
+void ACPlayer::UnEquipBow() {
+	TestBow->Destroy();
+	TestBow = nullptr;
 }
