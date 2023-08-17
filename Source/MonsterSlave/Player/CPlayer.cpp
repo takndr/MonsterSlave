@@ -183,6 +183,8 @@ void ACPlayer::PickUp() {
 	
 	CLog::Log("PickUP : " + item.Name + ", Index : " + FString::FromInt(item.GetIndex()));
 
+	
+
 	AddItem(item);
 
 	PickableActor->Destroy();
@@ -197,22 +199,23 @@ void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent,
 	PickableActor = nullptr;
 }
 
-void ACPlayer::DamageTest(float Damage) {
-	CheckNull(PlayerHpWidget);
-	StatusComponent->CurrentHp -= Damage;
-	PlayerHpWidget->UpdateHealth(StatusComponent->MaxHp, StatusComponent->CurrentHp);
-}
-
 void ACPlayer::AddItem(const FCItemStruct& InItem) {
-	uint32 index = InventoryWidget->AddItem(InItem);
-	if (index != -1) {
-		MyItems.Insert(InItem, index);
-	}
+	CLog::Log("Add Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
+	int32 index = InventoryWidget->AddItem(InItem);
+	MyItems.Insert(InItem, index);
 }
 
-void ACPlayer::RemoveItem(const FCItemStruct& InItem) {
-
+void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem) {
+	CLog::Log("Remove Inventory Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
 	MyItems.Remove(InItem);
+}
+
+void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem) {
+	CLog::Log("Replace Inventory Item");
+	int32 index;
+	index = MyItems.Find(OldItem);
+	MyItems.Remove(OldItem);
+	MyItems.Insert(NewItem, index);
 }
 
 void ACPlayer::EquipSword(const FCItemStruct& InItem) {

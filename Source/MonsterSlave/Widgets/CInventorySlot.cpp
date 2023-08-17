@@ -51,6 +51,7 @@ void UCInventorySlot::EquipSword() {
 	// 현재는 EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
 	if (playertest->InventoryWidget->Equipment->EquipSlotSword->IsEquipped() == true) {
 		FCItemStruct temp = playertest->InventoryWidget->Equipment->EquipSlotSword->GetItem();
+		playertest->ReplaceInventoryItem(InvenSlotItem, temp);
 		playertest->InventoryWidget->Equipment->EquipSlotSword->SettingSlot(InvenSlotItem);
 		playertest->EquipSword(InvenSlotItem);
 		SettingSlot(temp);
@@ -59,16 +60,13 @@ void UCInventorySlot::EquipSword() {
 		// EquipSlot에 등록 혹은 EquipSlot에 아이템이 등록되어 있을 경우 교체
 		playertest->InventoryWidget->Equipment->EquipSlotSword->SettingSlot(InvenSlotItem);
 		// Player의 Item배열에서 해당 아이템 삭제 혹은 교체된 아이템이 있을 경우 아이템에 추가
-		playertest->RemoveItem(InvenSlotItem);
+		playertest->RemoveInventoryItem(InvenSlotItem);
 		// 인벤토리 창에서 해당 아이템 제거 및 교체된 아이템이 있을경우 인벤토리에 추가
 		SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 0.0f));
 		// 플레이어에게 실제로 아이템 장착
 		playertest->EquipSword(InvenSlotItem);
 		bFilled = false;
-	}
-
-	
-	
+	}	
 }
 
 void UCInventorySlot::EquipBow() {
@@ -78,6 +76,7 @@ void UCInventorySlot::EquipBow() {
 	// 현재는  EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
 	if (playertest->InventoryWidget->Equipment->EquipSlotBow->IsEquipped() == true) {
 		FCItemStruct temp = playertest->InventoryWidget->Equipment->EquipSlotBow->GetItem();
+		playertest->ReplaceInventoryItem(InvenSlotItem, temp);
 		playertest->InventoryWidget->Equipment->EquipSlotBow->SettingSlot(InvenSlotItem);
 		playertest->EquipBow(InvenSlotItem);
 		SettingSlot(temp);
@@ -86,7 +85,7 @@ void UCInventorySlot::EquipBow() {
 		// EquipSlot에 등록 혹은 EquipSlot에 아이템이 등록되어 있을 경우 교체
 		playertest->InventoryWidget->Equipment->EquipSlotBow->SettingSlot(InvenSlotItem);
 		// Player의 Item배열에서 해당 아이템 삭제 혹은 교체된 아이템이 있을 경우 아이템에 추가
-		playertest->RemoveItem(InvenSlotItem);
+		playertest->RemoveInventoryItem(InvenSlotItem);
 		// 인벤토리 창에서 해당 아이템 제거 및 교체된 아이템이 있을경우 인벤토리에 추가
 		SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 0.0f));
 		// 플레이어에게 실제로 아이템 장착

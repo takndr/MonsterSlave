@@ -15,7 +15,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void AddItem(const FCItemStruct& InItem);
-	void RemoveItem(const FCItemStruct& InItem);
+	void RemoveInventoryItem(const FCItemStruct& InItem);
+	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
 
 	void EquipSword(const FCItemStruct& InItem);
 	void EquipBow(const FCItemStruct& InItem);
@@ -33,8 +34,6 @@ private:
 	UFUNCTION()
 		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION(Exec)
-		void DamageTest(float Damage);
 
 private:
 	// Axis Event

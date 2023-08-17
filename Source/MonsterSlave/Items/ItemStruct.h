@@ -46,13 +46,10 @@ struct FCItemStruct : public FTableRowBase {
 	GENERATED_BODY()
 
 public:
-	FCItemStruct();
-
-	FORCEINLINE uint32 GetIndex() const { return Index; }
+	FORCEINLINE int32 GetIndex() const { return Index; }
 	void Init();
 
 public:
-	bool operator==(const FCItemStruct& Other);
 
 // ==============================================
 
@@ -92,3 +89,11 @@ public:
 private:
 	int32 Index;
 };
+
+FORCEINLINE bool operator==(const FCItemStruct& Lhs, const FCItemStruct& Rhs) {
+	return Lhs.GetIndex() == Rhs.GetIndex();
+}
+
+FORCEINLINE bool operator==(const FCItemStruct* Lhs, const FCItemStruct& Rhs) {
+	return Lhs->GetIndex() == Rhs.GetIndex();
+}
