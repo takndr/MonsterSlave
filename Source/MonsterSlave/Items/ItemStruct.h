@@ -49,6 +49,7 @@ public:
 	FCItemStruct();
 
 	FORCEINLINE uint32 GetIndex() const { return Index; }
+	void Init();
 
 public:
 	bool operator==(const FCItemStruct& Other);

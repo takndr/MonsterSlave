@@ -21,6 +21,23 @@ void AItemStruct::Tick(float DeltaTime)
 }
 
 FCItemStruct::FCItemStruct() {
+	/*int32 i;
+	while (1) {
+		i = UKismetMathLibrary::RandomIntegerInRange(0, 65532);
+		if (ItemIndexes.Find(i) == INDEX_NONE) {
+			CLog::Log(i);
+			ItemIndexes.Add(i);
+			Index = i;
+			break;
+		}
+	}*/
+
+}
+
+void FCItemStruct::Init()
+{
+	PrintLine();
+
 	int32 i;
 	while (1) {
 		i = UKismetMathLibrary::RandomIntegerInRange(0, 65532);
@@ -31,7 +48,6 @@ FCItemStruct::FCItemStruct() {
 			break;
 		}
 	}
-
 }
 
 bool FCItemStruct::operator==(const FCItemStruct& Other) {

@@ -13,7 +13,7 @@
 
 ACFieldItem::ACFieldItem() {
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	// Component Setting
 	CHelpers::CreateSceneComponent(this, &Scene, "Scene");
 	CHelpers::CreateSceneComponent(this, &SkeletalMesh, "SkeletalMesh", Scene);
@@ -42,6 +42,8 @@ void ACFieldItem::BeginPlay() {
 
 	InteractWidget->AddToViewport();
 	InteractWidget->SetVisibility(ESlateVisibility::Hidden);
+
+	ItemDescription.Init();
 
 	InteractWidget->SetInteractText(ItemDescription.Interact);
 
