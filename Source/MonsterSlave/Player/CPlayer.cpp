@@ -121,6 +121,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ACPlayer::Attack);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
+	PlayerInputComponent->BindAction("SwordWeapon", IE_Pressed, this, &ACPlayer::OnSwordWeapon);
+	PlayerInputComponent->BindAction("BowWeapon", IE_Pressed, this, &ACPlayer::OnBowWeapon);
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -149,6 +151,45 @@ void ACPlayer::OnHorizontalLook(float Axis) {
 
 void ACPlayer::OnVerticalLook(float Axis) {
 	AddControllerPitchInput(Axis * GetWorld()->GetDeltaSeconds() * 45);
+}
+
+void ACPlayer::OnSwordWeapon() {
+	if (SwordWeapon == nullptr) {
+		CLog::Log("Do Not Equip Sword, Check the Sword Equip Slot");
+		return;
+	}
+	// 현재 장착 무기 여부 확인(Current Weapon)
+	// Current Weapon이 none이면 장착
+	// Current Weapon이 sword이면 해제
+	// Current Weapon이 bow이면 bow 해제 이후 장착
+	// 장착 몽타주 실행
+	// Current Weapon에 SwordWeapon 지정
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Sword Equipping");
+		SwordWeapon->Equip();
+	}
+	else {
+		// 일단은 장비 해제만
+		CLog::Log("Sword UnEquipping");
+		CurrentWeapon->UnEquip();
+	}
+}
+
+void ACPlayer::OnBowWeapon() {
+	if (BowWeapon == nullptr) {
+		CLog::Log("Do Not Equip Bow, Check the Bow Equip Slot");
+		return;
+	}
+
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Bow Equipping");
+		BowWeapon->Equip();
+	}
+	else {
+		// 일단은 장비 해제만
+		CLog::Log("Bow UnEquipping");
+		CurrentWeapon->UnEquip();
+	}
 }
 
 void ACPlayer::Inventory() {
@@ -182,8 +223,6 @@ void ACPlayer::PickUp() {
 	item = PickableActor->ItemDescription;
 	
 	CLog::Log("PickUP : " + item.Name + ", Index : " + FString::FromInt(item.GetIndex()));
-
-	
 
 	AddItem(item);
 
@@ -220,30 +259,32 @@ void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStr
 
 void ACPlayer::EquipSword(const FCItemStruct& InItem) {
 	// 현재 착용중은 검이 있을 경우
-	if (!!TestSword) {
+	if (!!SwordWeapon) {
 		UnEquipSword();
 	}
-
-	TestSword = Cast<ACEquipItem>(GetWorld()->SpawnActor(InItem.EquipWeaponClass));
-	TestSword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
+	FActorSpawnParameters param;
+	param.Owner = this;
+	SwordWeapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
+	SwordWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
 }
 
 void ACPlayer::EquipBow(const FCItemStruct& InItem) {
 	// 현재 착용중인 활이 있을 경우
-	if (!!TestBow) {
+	if (!!BowWeapon) {
 		UnEquipBow();
 	}
-
-	TestBow = Cast<ACEquipItem>(GetWorld()->SpawnActor(InItem.EquipWeaponClass));
-	TestBow->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
+	FActorSpawnParameters param;
+	param.Owner = this;
+	BowWeapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
+	BowWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
 }
 
 void ACPlayer::UnEquipSword() {
-	TestSword->Destroy();
-	TestSword = nullptr;
+	SwordWeapon->Destroy();
+	SwordWeapon = nullptr;
 }
 
 void ACPlayer::UnEquipBow() {
-	TestBow->Destroy();
-	TestBow = nullptr;
+	BowWeapon->Destroy();
+	BowWeapon = nullptr;
 }

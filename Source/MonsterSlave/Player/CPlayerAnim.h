@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Items/ItemStruct.h"
 #include "CPlayerAnim.generated.h"
 
 UCLASS()
@@ -22,6 +23,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")
 		float Pitch = 0.0f;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")
+		EWeaponType WeaponType;
 
 private:
 	class ACharacter* OwnerCharacter;

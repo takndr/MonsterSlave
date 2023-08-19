@@ -2,17 +2,20 @@
 
 #include "GameFramework/Character.h"
 
+#include "Player/CPlayer.h"
+
 #include "Global.h"
 
 void UCPlayerAnim::NativeUpdateAnimation(float DeltaSeconds) {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-
 	CheckNull(OwnerCharacter);
 
-	Speed = OwnerCharacter->GetVelocity().Size2D();
-	Direction = CalculateDirection(OwnerCharacter->GetVelocity(), OwnerCharacter->GetControlRotation());
-	Pitch = OwnerCharacter->GetBaseAimRotation().Pitch;
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 
+	Speed = player->GetVelocity().Size2D();
+	Direction = CalculateDirection(player->GetVelocity(), player->GetControlRotation());
+	Pitch = player->GetBaseAimRotation().Pitch;
+	WeaponType = player->GetWeaponType();
 }
 
 void UCPlayerAnim::NativeBeginPlay() {

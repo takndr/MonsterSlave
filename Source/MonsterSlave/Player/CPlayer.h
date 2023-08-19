@@ -12,6 +12,7 @@ class MONSTERSLAVE_API ACPlayer : public ACharacter
 
 public:
 	ACPlayer();
+
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void AddItem(const FCItemStruct& InItem);
@@ -22,6 +23,11 @@ public:
 	void EquipBow(const FCItemStruct& InItem);
 	void UnEquipSword();
 	void UnEquipBow();
+
+	FORCEINLINE void SetCurrentWeapon(class ACEquipItem* InWeapon) { CurrentWeapon = InWeapon; }
+	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return CurrentWeapon; }
+	FORCEINLINE void SetWeaponType(const EWeaponType InType) { WeaponType = InType; }
+	FORCEINLINE const EWeaponType GetWeaponType() { return WeaponType; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -41,6 +47,8 @@ private:
 	void OnMoveRight(float Axis);
 	void OnHorizontalLook(float Axis);
 	void OnVerticalLook(float Axis);
+	void OnSwordWeapon();
+	void OnBowWeapon();
 
 	// Action Event
 	void Inventory();
@@ -83,8 +91,7 @@ private:
 	class USkeletalMesh* PlayerBody;
 	class ACPlayerHair* PlayerHair;
 
-	class ACEquipItem* TestSword;
-	class ACEquipItem* TestBow;
+	
 
 	TSubclassOf<class UCPlayerHp> PlayerHpWidgetClass;
 	class UCPlayerHp* PlayerHpWidget;
@@ -94,4 +101,8 @@ private:
 	int32 MaxItem = 15;
 
 	// Weapons
+	EWeaponType WeaponType = EWeaponType::None;
+	class ACEquipItem* SwordWeapon;
+	class ACEquipItem* BowWeapon;
+	class ACEquipItem* CurrentWeapon;
 };

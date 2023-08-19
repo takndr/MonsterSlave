@@ -5,7 +5,7 @@
 #include "Global.h"
 
 ACEquipSword::ACEquipSword() {
-
+	WeaponType = EWeaponType::Sword;
 	CHelpers::CreateSceneComponent(this, &Capsule, "Collision", SkeletalMesh);
 }
 
