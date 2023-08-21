@@ -25,6 +25,9 @@ protected:
 		float Pitch = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")
+		bool bAim = false;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")
 		EWeaponType WeaponType;
 
 private:

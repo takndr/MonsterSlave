@@ -13,4 +13,5 @@ public:
 	ACEquipBow();
 
 protected:
+	virtual void Attack() override;
 };

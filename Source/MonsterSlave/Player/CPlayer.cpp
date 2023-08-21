@@ -123,6 +123,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
 	PlayerInputComponent->BindAction("SwordWeapon", IE_Pressed, this, &ACPlayer::OnSwordWeapon);
 	PlayerInputComponent->BindAction("BowWeapon", IE_Pressed, this, &ACPlayer::OnBowWeapon);
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ACPlayer::OnAim);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ACPlayer::OffAim);
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -158,12 +160,7 @@ void ACPlayer::OnSwordWeapon() {
 		CLog::Log("Do Not Equip Sword, Check the Sword Equip Slot");
 		return;
 	}
-	// 현재 장착 무기 여부 확인(Current Weapon)
-	// Current Weapon이 none이면 장착
-	// Current Weapon이 sword이면 해제
-	// Current Weapon이 bow이면 bow 해제 이후 장착
-	// 장착 몽타주 실행
-	// Current Weapon에 SwordWeapon 지정
+
 	if (CurrentWeapon == nullptr) {
 		CLog::Log("Sword Equipping");
 		SwordWeapon->Equip();
@@ -206,8 +203,9 @@ void ACPlayer::Inventory() {
 void ACPlayer::Attack() {
 	CheckNull(InventoryWidget);
 	CheckTrue(InventoryWidget->IsOpened());
+	CheckNull(CurrentWeapon);
 
-	CLog::Log("Attack");
+	CurrentWeapon->Attack();
 }
 
 void ACPlayer::PickUp() {
@@ -227,6 +225,24 @@ void ACPlayer::PickUp() {
 	AddItem(item);
 
 	PickableActor->Destroy();
+}
+
+void ACPlayer::OnAim() {
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Do Not Equipped Item");
+		return;
+	}
+	bAim = true;
+	CurrentWeapon->OnAim();
+}
+
+void ACPlayer::OffAim() {
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Do Not Equipped Item");
+		return;
+	}
+	bAim = false;
+	CurrentWeapon->OffAim();
 }
 
 void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {

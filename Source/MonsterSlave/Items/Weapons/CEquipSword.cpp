@@ -1,6 +1,9 @@
 #include "Items/Weapons/CEquipSword.h"
 
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
+
+#include "Player/CPlayer.h"
 
 #include "Global.h"
 
@@ -20,4 +23,22 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	//CheckTrue(GetOwner() == OtherActor);
 	//CLog::Print(GetOwner()->GetName());
 	//CLog::Print("Sword Attack!!");
+}
+
+void ACEquipSword::Attack() {
+	CheckNull(AttackMontage);
+	CheckNull(AimAttackMontage);
+	CheckNull(Owner);
+	CLog::Log("Sword Attack");
+
+	ACPlayer* player = Cast<ACPlayer>(Owner);
+	CheckNull(player);
+
+	if (player->IsAim()) {
+		player->PlayAnimMontage(AimAttackMontage);
+	}
+	else {
+		player->PlayAnimMontage(AttackMontage);
+	}
+	
 }

@@ -3,16 +3,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ItemStruct.h"
+#include "Interface/CInterfaceWeapon.h"
 #include "CEquipItem.generated.h"
 
 UCLASS()
-class MONSTERSLAVE_API ACEquipItem : public AActor
+class MONSTERSLAVE_API ACEquipItem : public AActor, public ICInterfaceWeapon
 {
 	GENERATED_BODY()
 	
 public:	
 	ACEquipItem();
 	virtual void Tick(float DeltaTime) override;
+	virtual void Attack() override;
 
 	// CPlayer에서 1번이나 2번 눌렀을 때 호출하는 함수
 	void Equip();
@@ -22,6 +24,9 @@ public:
 	void Detach();
 	void Equipped();
 	void UnEquipped();
+	void OnAim();
+	void OffAim();
+	
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,13 +41,19 @@ protected:
 	EWeaponType WeaponType;		// 자식에서 초기화
 
 private:
-	bool bEquip;
+	bool bEquipping;
 
 // ===================================================
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UAnimMontage* AimAttackMontage;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -59,5 +70,13 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		class UAnimMontage* UnEquipMontage;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UAnimMontage* OnAimMontage;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UAnimMontage* OffAimMontage;
+
+	
 
 };

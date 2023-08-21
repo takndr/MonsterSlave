@@ -1,6 +1,7 @@
 #include "CEquipItem.h"
 
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Player/CPlayer.h"
 
@@ -24,20 +25,26 @@ void ACEquipItem::Tick(float DeltaTime) {
 
 }
 
+void ACEquipItem::Attack() {
+
+}
+
+
 void ACEquipItem::Equip() {
 	if (EquipMontage == nullptr) {
 		CLog::Log("Set Equip Montage");
 		return;
 	}
 
-	CheckTrue(bEquip);
-	bEquip = true;
+	CheckTrue(bEquipping);
+	bEquipping = true;
 
-	//Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
-	//Owner->bUseControllerRotationYaw = false;
 	ACPlayer* player = Cast<ACPlayer>(Owner);
+	player->SetWeaponType(WeaponType);
 	player->SetCurrentWeapon(this);
 
+	Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
+	Owner->bUseControllerRotationYaw = true;
 	Owner->PlayAnimMontage(EquipMontage);
 }
 
@@ -47,12 +54,8 @@ void ACEquipItem::UnEquip() {
 		return;
 	}
 
-	CheckTrue(bEquip);
-	bEquip = true;
-
-	//Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
-	//Owner->bUseControllerRotationYaw = true;
-	
+	CheckTrue(bEquipping);
+	bEquipping = true;
 
 	Owner->PlayAnimMontage(UnEquipMontage);
 }
@@ -69,15 +72,37 @@ void ACEquipItem::Detach() {
 
 void ACEquipItem::Equipped() {
 	CLog::Log("EquipItem Equipped Called");
-	bEquip = false;
-	ACPlayer* player = Cast<ACPlayer>(Owner);
-	player->SetWeaponType(WeaponType);
+	bEquipping = false;
 }
 
 void ACEquipItem::UnEquipped() {
 	CLog::Log("EquipItem UnEquipped Called");
-	bEquip = false;
+	bEquipping = false;
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	player->SetWeaponType(EWeaponType::None);
 	player->SetCurrentWeapon(nullptr);
+
+	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
+	Owner->bUseControllerRotationYaw = false;
+}
+
+void ACEquipItem::OnAim() {
+	CLog::Log("EquipItem OnAim Called");
+	if (OnAimMontage == nullptr) {
+		CLog::Log("Set OnAim Montage");
+		return;
+	}
+	CheckNull(Owner);
+	Owner->PlayAnimMontage(OnAimMontage);
+}
+
+
+void ACEquipItem::OffAim() {
+	CLog::Log("EquipItem OffAim Called");
+	if (OffAimMontage == nullptr) {
+		CLog::Log("Set OffAim Montage");
+		return;
+	}
+	CheckNull(Owner);
+	Owner->PlayAnimMontage(OffAimMontage);
 }

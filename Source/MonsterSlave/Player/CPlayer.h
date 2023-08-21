@@ -28,6 +28,7 @@ public:
 	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return CurrentWeapon; }
 	FORCEINLINE void SetWeaponType(const EWeaponType InType) { WeaponType = InType; }
 	FORCEINLINE const EWeaponType GetWeaponType() { return WeaponType; }
+	FORCEINLINE const bool IsAim() { return bAim; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,6 +55,8 @@ private:
 	void Inventory();
 	void Attack();
 	void PickUp();
+	void OnAim();
+	void OffAim();
 
 // ===========================================================
 public:
@@ -86,6 +89,7 @@ private:
 
 public:
 	bool bCanPickUp = false;
+	bool bAim = false;
 
 private:
 	class USkeletalMesh* PlayerBody;
