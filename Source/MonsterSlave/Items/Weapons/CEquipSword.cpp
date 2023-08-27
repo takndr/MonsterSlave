@@ -29,6 +29,8 @@ void ACEquipSword::Attack() {
 	CheckNull(AttackMontage);
 	CheckNull(AimAttackMontage);
 	CheckNull(Owner);
+	Super::Attack();
+
 	CLog::Log("Sword Attack");
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);

@@ -58,5 +58,9 @@ public:
 		*classObj = asset.Class;
 	}
 
-
+	template<typename T>
+	static T* GetComponent(AActor* InActor) {
+		T* Comp = Cast<T>(InActor->GetComponentByClass(T::StaticClass()));
+		return Comp;
+	}
 };

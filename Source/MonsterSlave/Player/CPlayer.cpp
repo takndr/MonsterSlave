@@ -15,6 +15,8 @@
 #include "Items/CFieldItem.h"
 
 #include "Component/CStatusComponent.h"
+#include "Component/CStateComponent.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Player/CPlayerHair.h"
 #include "Items/Weapons/CEquipBow.h"
@@ -34,6 +36,8 @@ ACPlayer::ACPlayer() {
 
 	// Create Actor Component
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
+	CHelpers::CreateActorComponent(this, &StateComponent, "State");
+	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
@@ -118,13 +122,15 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// Action Event Binding
-	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
+	// Weapon 관련
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ACPlayer::Attack);
-	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
 	PlayerInputComponent->BindAction("SwordWeapon", IE_Pressed, this, &ACPlayer::OnSwordWeapon);
 	PlayerInputComponent->BindAction("BowWeapon", IE_Pressed, this, &ACPlayer::OnBowWeapon);
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ACPlayer::OnAim);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ACPlayer::OffAim);
+	// Inventory 관련
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
+	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -170,6 +176,10 @@ void ACPlayer::OnSwordWeapon() {
 		CLog::Log("Sword UnEquipping");
 		CurrentWeapon->UnEquip();
 	}
+
+	// 컴포넌트 화 진행시
+	// Component 내부 무기 배열(index는 EWeaponType으로) 에 저장된 것을 Equip실행
+	// UnEquip일때에는 
 }
 
 void ACPlayer::OnBowWeapon() {
@@ -189,6 +199,33 @@ void ACPlayer::OnBowWeapon() {
 	}
 }
 
+void ACPlayer::Attack() {
+	CheckNull(InventoryWidget);
+	CheckTrue(InventoryWidget->IsOpened());
+	CheckNull(CurrentWeapon);
+	CheckFalse(StateComponent->IsIdle());
+
+	CurrentWeapon->Attack();
+}
+
+void ACPlayer::OnAim() {
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Do Not Equipped Item");
+		return;
+	}
+	bAim = true;
+	CurrentWeapon->OnAim();
+}
+
+void ACPlayer::OffAim() {
+	if (CurrentWeapon == nullptr) {
+		CLog::Log("Do Not Equipped Item");
+		return;
+	}
+	bAim = false;
+	CurrentWeapon->OffAim();
+}
+
 void ACPlayer::Inventory() {
 	CheckNull(InventoryWidget);
 
@@ -198,14 +235,6 @@ void ACPlayer::Inventory() {
 	else {
 		InventoryWidget->Detach();
 	}
-}
-
-void ACPlayer::Attack() {
-	CheckNull(InventoryWidget);
-	CheckTrue(InventoryWidget->IsOpened());
-	CheckNull(CurrentWeapon);
-
-	CurrentWeapon->Attack();
 }
 
 void ACPlayer::PickUp() {
@@ -225,24 +254,6 @@ void ACPlayer::PickUp() {
 	AddItem(item);
 
 	PickableActor->Destroy();
-}
-
-void ACPlayer::OnAim() {
-	if (CurrentWeapon == nullptr) {
-		CLog::Log("Do Not Equipped Item");
-		return;
-	}
-	bAim = true;
-	CurrentWeapon->OnAim();
-}
-
-void ACPlayer::OffAim() {
-	if (CurrentWeapon == nullptr) {
-		CLog::Log("Do Not Equipped Item");
-		return;
-	}
-	bAim = false;
-	CurrentWeapon->OffAim();
 }
 
 void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {

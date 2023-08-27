@@ -3,6 +3,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Component/CStateComponent.h"
+
 #include "Player/CPlayer.h"
 
 #include "Global.h"
@@ -26,7 +28,11 @@ void ACEquipItem::Tick(float DeltaTime) {
 }
 
 void ACEquipItem::Attack() {
+	UCStateComponent* state;
+	state = CHelpers::GetComponent<UCStateComponent>(Owner);
+	CheckNull(state);
 
+	state->SetAttack();
 }
 
 
@@ -39,6 +45,9 @@ void ACEquipItem::Equip() {
 	CheckTrue(bEquipping);
 	bEquipping = true;
 
+	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(Owner);
+
+	// 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	player->SetWeaponType(WeaponType);
 	player->SetCurrentWeapon(this);
@@ -76,10 +85,13 @@ void ACEquipItem::Equipped() {
 }
 
 void ACEquipItem::UnEquipped() {
+	// StateComponent
 	CLog::Log("EquipItem UnEquipped Called");
 	bEquipping = false;
+
+	// WeaponComponent
 	ACPlayer* player = Cast<ACPlayer>(Owner);
-	player->SetWeaponType(EWeaponType::None);
+	player->SetWeaponType(EWeaponType::Unarmed);
 	player->SetCurrentWeapon(nullptr);
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;

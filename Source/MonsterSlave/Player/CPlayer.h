@@ -26,9 +26,10 @@ public:
 
 	FORCEINLINE void SetCurrentWeapon(class ACEquipItem* InWeapon) { CurrentWeapon = InWeapon; }
 	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return CurrentWeapon; }
+	FORCEINLINE const bool IsAim() { return bAim; }
+
 	FORCEINLINE void SetWeaponType(const EWeaponType InType) { WeaponType = InType; }
 	FORCEINLINE const EWeaponType GetWeaponType() { return WeaponType; }
-	FORCEINLINE const bool IsAim() { return bAim; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -60,11 +61,17 @@ private:
 
 // ===========================================================
 public:
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly)
 		class UPaperSpriteComponent* MinimapSprite;
 
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly)
 		class UCStatusComponent* StatusComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UCStateComponent* StateComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UCWeaponComponent* WeaponComponent;
 
 	TSubclassOf<class UUserWidget> InventoryWidgetClass;
 	class UCInventory* InventoryWidget;
@@ -73,16 +80,16 @@ protected:
 	
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly)
 		class UCameraComponent* MeshCamera;
 
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MeshSpringArm;
 
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly)
 		class USceneCaptureComponent2D* MinimapCamera;
 
-	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MinimapSpringArm;
 
 	
@@ -105,7 +112,7 @@ private:
 	int32 MaxItem = 15;
 
 	// Weapons
-	EWeaponType WeaponType = EWeaponType::None;
+	EWeaponType WeaponType = EWeaponType::Unarmed;
 	class ACEquipItem* SwordWeapon;
 	class ACEquipItem* BowWeapon;
 	class ACEquipItem* CurrentWeapon;

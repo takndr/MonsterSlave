@@ -24,8 +24,8 @@ public:
 	void Detach();
 	void Equipped();
 	void UnEquipped();
-	void OnAim();
-	void OffAim();
+	virtual void OnAim();
+	virtual void OffAim();
 	
 
 protected:
@@ -49,32 +49,32 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		class UAnimMontage* AttackMontage;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		class UAnimMontage* AimAttackMontage;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Scene;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		FName UnEquippedHolster;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		FName EquippedHolster;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		class UAnimMontage* EquipMontage;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		class UAnimMontage* UnEquipMontage;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		class UAnimMontage* OnAimMontage;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		class UAnimMontage* OffAimMontage;
 
 	

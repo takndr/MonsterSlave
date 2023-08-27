@@ -21,9 +21,10 @@ enum class EItemType : uint8
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {
-	None,
+	Unarmed,
 	Sword,
 	Bow,
+	Max
 };
 
 UCLASS()

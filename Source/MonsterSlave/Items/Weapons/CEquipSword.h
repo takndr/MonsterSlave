@@ -23,5 +23,6 @@ private:
 // =========================================================
 
 private:
-	class UCapsuleComponent* Capsule;
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCapsuleComponent* Capsule;
 };

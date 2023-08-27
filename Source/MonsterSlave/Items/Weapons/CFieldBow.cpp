@@ -8,10 +8,10 @@
 
 ACFieldBow::ACFieldBow() {
 	// Mesh Setting
-	SkeletalMesh->SetRelativeRotation(FRotator(0.0f, 90.0f, 90.0f));
+	SkeletalMesh->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 
 	// Collision Setting
-	Sphere->SetRelativeLocation(FVector(-15.0f, 0.0f, 0.0f));
+	Sphere->SetRelativeLocation(FVector(0.0f, -10.0f, 0.0f));
 
 	// Sprite Setting
 	MinimapSprite->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));

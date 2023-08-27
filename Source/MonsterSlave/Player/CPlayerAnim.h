@@ -32,4 +32,5 @@ protected:
 
 private:
 	class ACharacter* OwnerCharacter;
+	class UCWeaponComponent* WeaponComponent;
 };
