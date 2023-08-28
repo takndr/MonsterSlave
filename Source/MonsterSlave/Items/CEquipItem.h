@@ -41,6 +41,8 @@ protected:
 	EWeaponType WeaponType;		// 자식에서 초기화
 
 private:
+	class UCStateComponent* StateComp;
+	class UCWeaponComponent* WeaponComp;
 	bool bEquipping;
 
 // ===================================================

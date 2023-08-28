@@ -22,12 +22,8 @@ public:
 	void EquipSword(const FCItemStruct& InItem);
 	void EquipBow(const FCItemStruct& InItem);
 
-	FORCEINLINE void SetCurrentWeapon(class ACEquipItem* InWeapon) { CurrentWeapon = InWeapon; }
-	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return CurrentWeapon; }
 	FORCEINLINE const bool IsAim() { return bAim; }
 
-	FORCEINLINE void SetWeaponType(const EWeaponType InType) { WeaponType = InType; }
-	FORCEINLINE const EWeaponType GetWeaponType() { return WeaponType; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -109,9 +105,4 @@ private:
 	TArray<FCItemStruct> MyItems;
 	int32 MaxItem = 15;
 
-	// Weapons
-	EWeaponType WeaponType = EWeaponType::Unarmed;
-	class ACEquipItem* SwordWeapon;
-	class ACEquipItem* BowWeapon;
-	class ACEquipItem* CurrentWeapon;
 };

@@ -2,6 +2,7 @@
 
 #include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
@@ -16,7 +17,10 @@ void UCAnimNotifyUnEquipped::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	ACPlayer* player = Cast<ACPlayer>(MeshComp->GetOwner());
 	CheckNull(player);
 
-	ACEquipItem* equipItem = Cast<ACEquipItem>(player->GetCurrentWeapon());
+	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
+	CheckNull(weapon);
+
+	ACEquipItem* equipItem = weapon->GetCurrentWeapon();
 	CheckNull(equipItem);
 
 	equipItem->UnEquipped();

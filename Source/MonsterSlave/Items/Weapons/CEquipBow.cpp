@@ -29,9 +29,11 @@ void ACEquipBow::Attack() {
 
 	if (player->IsAim()) {
 		player->PlayAnimMontage(AimAttackMontage);
+		SkeletalMesh->GetAnimInstance()->Montage_Play(AimAttackBowMontage);
 	}
 	else {
 		player->PlayAnimMontage(AttackMontage);
+		SkeletalMesh->GetAnimInstance()->Montage_Play(AttackBowMontage);
 	}
 }
 

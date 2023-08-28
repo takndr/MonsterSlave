@@ -21,7 +21,5 @@ void UCAnimNotifyAttach::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
 	CheckNull(weapon);
 
-	EWeaponType type = weapon->GetWeaponType();
-	weapon->Weapons[(int32)type]->Attach();
-
+	weapon->GetCurrentWeapon()->Attach();
 }

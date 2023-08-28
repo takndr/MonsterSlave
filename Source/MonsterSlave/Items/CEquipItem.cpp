@@ -4,7 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Component/CStateComponent.h"
-
+#include "Component/CWeaponComponent.h"
 #include "Player/CPlayer.h"
 
 #include "Global.h"
@@ -20,6 +20,8 @@ void ACEquipItem::BeginPlay() {
 	Super::BeginPlay();
 	CLog::Log("EquipItem BeginPlay Called");
 	Owner = Cast<ACharacter>(GetOwner());
+	StateComp = CHelpers::GetComponent<UCStateComponent>(Owner);
+	WeaponComp = CHelpers::GetComponent<UCWeaponComponent>(Owner);
 }
 
 void ACEquipItem::Tick(float DeltaTime) {
@@ -28,11 +30,9 @@ void ACEquipItem::Tick(float DeltaTime) {
 }
 
 void ACEquipItem::Attack() {
-	UCStateComponent* state;
-	state = CHelpers::GetComponent<UCStateComponent>(Owner);
-	CheckNull(state);
+	CheckNull(StateComp);
 
-	state->SetAttack();
+	StateComp->SetAttack();
 }
 
 
@@ -41,16 +41,8 @@ void ACEquipItem::Equip() {
 		CLog::Log("Set Equip Montage");
 		return;
 	}
-
-	CheckTrue(bEquipping);
-	bEquipping = true;
-
-	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(Owner);
-
-	// 
-	//ACPlayer* player = Cast<ACPlayer>(Owner);
-	//player->SetWeaponType(WeaponType);
-	//player->SetCurrentWeapon(this);
+	CheckNull(StateComp);
+	StateComp->SetEquip();
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
 	Owner->bUseControllerRotationYaw = true;
@@ -62,9 +54,8 @@ void ACEquipItem::UnEquip() {
 		CLog::Log("Set UnEquip Montage");
 		return;
 	}
-
-	CheckTrue(bEquipping);
-	bEquipping = true;
+	CheckNull(StateComp);
+	StateComp->SetEquip();
 
 	Owner->PlayAnimMontage(UnEquipMontage);
 }
@@ -81,18 +72,19 @@ void ACEquipItem::Detach() {
 
 void ACEquipItem::Equipped() {
 	CLog::Log("EquipItem Equipped Called");
-	bEquipping = false;
+	CheckNull(StateComp);
+
+	StateComp->SetIdle();
 }
 
 void ACEquipItem::UnEquipped() {
 	// StateComponent
 	CLog::Log("EquipItem UnEquipped Called");
-	bEquipping = false;
+	CheckNull(StateComp);
+	CheckNull(WeaponComp);
 
-	// WeaponComponent
-	//ACPlayer* player = Cast<ACPlayer>(Owner);
-	//player->SetWeaponType(EWeaponType::Unarmed);
-	//player->SetCurrentWeapon(nullptr);
+	StateComp->SetIdle();
+	WeaponComp->SetUnarmed();
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
 	Owner->bUseControllerRotationYaw = false;

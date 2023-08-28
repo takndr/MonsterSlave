@@ -9,18 +9,20 @@ UCWeaponComponent::UCWeaponComponent() {
 
 }
 
-
 void UCWeaponComponent::BeginPlay() {
 	Super::BeginPlay();
-
-	
 }
 
 void UCWeaponComponent::SetUnarmed() {
-	Weapons[(int32)WeaponType]->UnEquip();
 	WeaponType = EWeaponType::Unarmed;
+}
 
+void UCWeaponComponent::SetSwordType() {
+	WeaponType = EWeaponType::Sword;
+}
 
+void UCWeaponComponent::SetBowType() {
+	WeaponType = EWeaponType::Bow;
 }
 
 void UCWeaponComponent::SetSword(ACEquipItem* InItem) {
@@ -68,11 +70,15 @@ void UCWeaponComponent::RemoveBow() {
 }
 
 void UCWeaponComponent::EquipSword() {
-	WeaponType = EWeaponType::Sword;
+	SetSwordType();
 	Weapons[(int32)EWeaponType::Sword]->Equip();
 }
 
 void UCWeaponComponent::EquipBow() {
-	WeaponType = EWeaponType::Bow;
+	SetBowType();
 	Weapons[(int32)EWeaponType::Bow]->Equip();
+}
+
+void UCWeaponComponent::UnEquip() {
+	Weapons[(int32)WeaponType]->UnEquip();
 }

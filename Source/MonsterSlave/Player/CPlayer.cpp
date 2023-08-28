@@ -167,21 +167,15 @@ void ACPlayer::OnSwordWeapon() {
 		return;
 	}
 
-	if (WeaponComponent->GetWeaponType() == EWeaponType::Unarmed) {
+	if (WeaponComponent->IsUnarmed() == true) {
 		CLog::Log("Sword Equipping");
-		//SwordWeapon->Equip();
 		WeaponComponent->EquipSword();
 	}
 	else {
 		// 일단은 장비 해제만
 		CLog::Log("Sword UnEquipping");
-		//CurrentWeapon->UnEquip();
-		WeaponComponent->SetUnarmed();
+		WeaponComponent->UnEquip();
 	}
-
-	// 컴포넌트 화 진행시
-	// Component 내부 무기 배열(index는 EWeaponType으로) 에 저장된 것을 Equip실행
-	// UnEquip일때에는 
 }
 
 void ACPlayer::OnBowWeapon() {
@@ -190,24 +184,23 @@ void ACPlayer::OnBowWeapon() {
 		return;
 	}
 
-	if (WeaponComponent->GetWeaponType() == EWeaponType::Unarmed) {
+	if (WeaponComponent->IsUnarmed() == true) {
 		CLog::Log("Bow Equipping");
 		WeaponComponent->EquipBow();
 	}
 	else {
 		// 일단은 장비 해제만
 		CLog::Log("Bow UnEquipping");
-		WeaponComponent->SetUnarmed();
+		WeaponComponent->UnEquip();
 	}
 }
 
 void ACPlayer::Attack() {
-	//CheckNull(InventoryWidget);
-	//CheckTrue(InventoryWidget->IsOpened());
-	//CheckNull(CurrentWeapon);
-	//CheckFalse(StateComponent->IsIdle());
+	CheckFalse(StateComponent->IsIdle());
+	if (WeaponComponent->GetCurrentWeapon() != nullptr) {
+		WeaponComponent->GetCurrentWeapon()->Attack();
+	}
 
-	//CurrentWeapon->Attack();
 }
 
 void ACPlayer::OnAim() {
@@ -215,8 +208,8 @@ void ACPlayer::OnAim() {
 		CLog::Log("Do Not Equipped Item");
 		return;
 	}
-	//bAim = true;
-	//CurrentWeapon->OnAim();
+	bAim = true;
+	WeaponComponent->GetCurrentWeapon()->OnAim();
 }
 
 void ACPlayer::OffAim() {
@@ -224,8 +217,8 @@ void ACPlayer::OffAim() {
 		CLog::Log("Do Not Equipped Item");
 		return;
 	}
-	//bAim = false;
-	//CurrentWeapon->OffAim();
+	bAim = false;
+	WeaponComponent->GetCurrentWeapon()->OffAim();
 }
 
 void ACPlayer::Inventory() {
