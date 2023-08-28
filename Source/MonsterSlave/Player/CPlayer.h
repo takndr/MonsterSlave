@@ -21,8 +21,6 @@ public:
 
 	void EquipSword(const FCItemStruct& InItem);
 	void EquipBow(const FCItemStruct& InItem);
-	void UnEquipSword();
-	void UnEquipBow();
 
 	FORCEINLINE void SetCurrentWeapon(class ACEquipItem* InWeapon) { CurrentWeapon = InWeapon; }
 	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return CurrentWeapon; }

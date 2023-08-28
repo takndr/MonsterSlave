@@ -3,6 +3,7 @@
 #include "Components/Image.h"
 
 #include "Player/CPlayer.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
@@ -27,29 +28,20 @@ bool UCEquipSlot::Initialize() {
 void UCEquipSlot::UnEquipItem() {
 	bEquipped = false;
 
-	ACPlayer* playertest = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	playertest->AddItem(EquipSlotItem);
+	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
 
+	player->AddItem(EquipSlotItem);
 	SlotImage->SetBrushFromTexture(DefaultImage);
 
 	switch (EquipSlotItem.WeaponType) {
 		case EWeaponType::Sword: {
-			playertest->UnEquipSword();
+			weapon->RemoveSword();
 			break;
 		}
 		case EWeaponType::Bow: {
-			playertest->UnEquipBow();
+			weapon->RemoveBow();
 			break;
 		}
 	}
-}
-
-void UCEquipSlot::UnEquipSword() {
-	// 플레이어에게 장착된 부분 해제
-
-}
-
-void UCEquipSlot::UnEquipBow() {
-	// 플레이어에게 장착된 부분 해제
-
 }

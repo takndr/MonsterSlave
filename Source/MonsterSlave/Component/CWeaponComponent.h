@@ -16,10 +16,19 @@ protected:
 //===================================================================
 public:
 	void SetUnarmed();
-	void SetSword();
-	void SetBow();
+	void SetSword(class ACEquipItem* InItem);
+	void SetSword(const FCItemStruct& InItem);
+	void SetBow(class ACEquipItem* InItem);
+	void SetBow(const FCItemStruct& InItem);
+	void RemoveSword();
+	void RemoveBow();
+	void EquipSword();
+	void EquipBow();
 
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
+	FORCEINLINE bool IsSetSword() { return Weapons[(int32)EWeaponType::Sword] != nullptr; }
+	FORCEINLINE bool IsSetBow() { return Weapons[(int32)EWeaponType::Bow] != nullptr; }
+
 //===================================================================
 
 //===================================================================
@@ -27,9 +36,9 @@ public:
 //===================================================================
 public:	
 	EWeaponType WeaponType = EWeaponType::Unarmed;
+	class ACEquipItem* Weapons[(int32)EWeaponType::Max];
 	
 
 private:
-	class ACEquipItem* Weapons[(int32)EWeaponType::Max];
 		
 };

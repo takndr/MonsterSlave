@@ -48,9 +48,9 @@ void ACEquipItem::Equip() {
 	UCStateComponent* state = CHelpers::GetComponent<UCStateComponent>(Owner);
 
 	// 
-	ACPlayer* player = Cast<ACPlayer>(Owner);
-	player->SetWeaponType(WeaponType);
-	player->SetCurrentWeapon(this);
+	//ACPlayer* player = Cast<ACPlayer>(Owner);
+	//player->SetWeaponType(WeaponType);
+	//player->SetCurrentWeapon(this);
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
 	Owner->bUseControllerRotationYaw = true;
@@ -90,9 +90,9 @@ void ACEquipItem::UnEquipped() {
 	bEquipping = false;
 
 	// WeaponComponent
-	ACPlayer* player = Cast<ACPlayer>(Owner);
-	player->SetWeaponType(EWeaponType::Unarmed);
-	player->SetCurrentWeapon(nullptr);
+	//ACPlayer* player = Cast<ACPlayer>(Owner);
+	//player->SetWeaponType(EWeaponType::Unarmed);
+	//player->SetCurrentWeapon(nullptr);
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
 	Owner->bUseControllerRotationYaw = false;

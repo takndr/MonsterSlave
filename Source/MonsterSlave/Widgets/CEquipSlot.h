@@ -21,10 +21,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		void UnEquipItem();
 
-private:
-	void UnEquipSword();
-	void UnEquipBow();
-
 // ===================================================
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)

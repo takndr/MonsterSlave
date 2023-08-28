@@ -2,6 +2,7 @@
 
 #include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
@@ -17,9 +18,10 @@ void UCAnimNotifyDetach::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	ACPlayer* player = Cast<ACPlayer>(MeshComp->GetOwner());
 	CheckNull(player);
 
-	ACEquipItem* equipItem = Cast<ACEquipItem>(player->GetCurrentWeapon());
-	CheckNull(equipItem);
+	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
+	CheckNull(weapon);
 
-	equipItem->Detach();
+	EWeaponType type = weapon->GetWeaponType();
+	weapon->Weapons[(int32)type]->Detach();
 
 }
