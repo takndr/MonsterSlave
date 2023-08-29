@@ -17,3 +17,4 @@ void UCAnimNotifyEndAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 
 	state->SetIdle();
 }
+// 활 EndAttack같은 경우에는 화살까지 재스폰 시켜야함

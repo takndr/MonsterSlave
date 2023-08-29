@@ -22,7 +22,7 @@ public:
 
 	void Attach();
 	void Detach();
-	void Equipped();
+	virtual void Equipped();
 	void UnEquipped();
 	virtual void OnAim();
 	virtual void OffAim();

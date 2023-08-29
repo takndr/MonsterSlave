@@ -204,7 +204,7 @@ void ACPlayer::Attack() {
 }
 
 void ACPlayer::OnAim() {
-	if (WeaponComponent->GetWeaponType() == EWeaponType::Unarmed) {
+	if (WeaponComponent->IsUnarmed() == true) {
 		CLog::Log("Do Not Equipped Item");
 		return;
 	}
@@ -213,7 +213,7 @@ void ACPlayer::OnAim() {
 }
 
 void ACPlayer::OffAim() {
-	if (WeaponComponent->GetWeaponType() == EWeaponType::Unarmed) {
+	if (WeaponComponent->IsUnarmed() == true) {
 		CLog::Log("Do Not Equipped Item");
 		return;
 	}
@@ -277,30 +277,4 @@ void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStr
 	index = MyItems.Find(OldItem);
 	MyItems.Remove(OldItem);
 	MyItems.Insert(NewItem, index);
-}
-
-void ACPlayer::EquipSword(const FCItemStruct& InItem) {
-	// 현재 착용중은 검이 있을 경우
-	if (WeaponComponent->IsSetSword()) {
-		WeaponComponent->RemoveSword();
-	}
-	ACEquipItem* weapon;
-	FActorSpawnParameters param;
-	param.Owner = this;
-	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
-	weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
-	WeaponComponent->SetSword(weapon);
-}
-
-void ACPlayer::EquipBow(const FCItemStruct& InItem) {
-	// 현재 착용중인 활이 있을 경우
-	if (WeaponComponent->IsSetBow()) {
-		WeaponComponent->RemoveBow();
-	}
-	ACEquipItem* weapon;
-	FActorSpawnParameters param;
-	param.Owner = this;
-	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
-	weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
-	WeaponComponent->SetBow(weapon);
 }

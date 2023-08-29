@@ -13,9 +13,12 @@ public:
 	ACEquipBow();
 	virtual void OnAim() override;
 	virtual void OffAim() override;
+	virtual void Attack() override;
+	virtual void Equipped() override;
+
+	void SpawnArrow();
 
 protected:
-	virtual void Attack() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Bow")
@@ -30,4 +33,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Bow")
 		class UAnimMontage* AimAttackBowMontage;
 
+private:
+	class ACArrow* Arrow;
 };

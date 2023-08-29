@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/StaticMeshActor.h"
+#include "GameFramework/Actor.h"
 #include "CArrow.generated.h"
 
 UCLASS()
@@ -13,7 +13,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 // ==================================================================
-
+public:
+	static ACArrow* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
 // ==================================================================
 private:
 	UFUNCTION()
@@ -31,4 +32,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCapsuleComponent* Capsule;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UProjectileMovementComponent* Projectile;
 };

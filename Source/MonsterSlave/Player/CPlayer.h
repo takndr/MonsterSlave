@@ -12,30 +12,17 @@ class MONSTERSLAVE_API ACPlayer : public ACharacter
 
 public:
 	ACPlayer();
-
+protected:
+	virtual void BeginPlay() override;
+// ============================================================================
+public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void AddItem(const FCItemStruct& InItem);
 	void RemoveInventoryItem(const FCItemStruct& InItem);
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
 
-	void EquipSword(const FCItemStruct& InItem);
-	void EquipBow(const FCItemStruct& InItem);
-
 	FORCEINLINE const bool IsAim() { return bAim; }
-
-
-protected:
-	virtual void BeginPlay() override;
-
-
-private:
-	UFUNCTION()
-		void MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 
 private:
 	// Axis Event
@@ -52,7 +39,13 @@ private:
 	void PickUp();
 	void OnAim();
 	void OffAim();
-
+// ============================================================================
+private:
+	UFUNCTION()
+		void MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION()
+		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 // ===========================================================
 public:
 	UPROPERTY(EditDefaultsOnly)
@@ -66,9 +59,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		class UCWeaponComponent* WeaponComponent;
-
-	TSubclassOf<class UUserWidget> InventoryWidgetClass;
-	class UCInventory* InventoryWidget;
 
 protected:
 	
@@ -85,19 +75,18 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MinimapSpringArm;
-
-	
-
+// ===========================================================
 public:
+	TSubclassOf<class UUserWidget> InventoryWidgetClass;
+	class UCInventory* InventoryWidget;
+
 	bool bCanPickUp = false;
 	bool bAim = false;
 
 private:
 	class USkeletalMesh* PlayerBody;
 	class ACPlayerHair* PlayerHair;
-
 	
-
 	TSubclassOf<class UCPlayerHp> PlayerHpWidgetClass;
 	class UCPlayerHp* PlayerHpWidget;
 

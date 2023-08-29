@@ -10,9 +10,10 @@ class MONSTERSLAVE_API ACEquipSword : public ACEquipItem {
 	
 public:
 	ACEquipSword();
-
 protected:
 	virtual void BeginPlay() override;
+// =========================================================
+public:
 	virtual void Attack() override;
 // =========================================================
 

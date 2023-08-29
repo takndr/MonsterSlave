@@ -4,6 +4,7 @@
 
 #include "Player/CPlayer.h"
 #include "Items/Weapons/CBowAnimInstance.h"
+#include "Items/Weapons/CArrow.h"
 
 #include "Global.h"
 
@@ -59,4 +60,17 @@ void ACEquipBow::OffAim() {
 		return;
 	}
 	SkeletalMesh->GetAnimInstance()->Montage_Play(OffAimBowMontage);
+}
+
+void ACEquipBow::Equipped() {
+	Super::Equipped();
+
+	// 활에 화살 붙이기
+	SpawnArrow();
+}
+
+void ACEquipBow::SpawnArrow() {
+	Arrow = ACArrow::Spawn( GetWorld(), Owner);
+	CheckNull(Arrow);
+	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), "Bow_Arrow_Slot");
 }
