@@ -35,6 +35,8 @@ private:
 	
 
 // ===================================================
+public:
+	int32 ComboCount = 0;
 
 protected:
 	class ACharacter* Owner;
@@ -51,11 +53,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-		class UAnimMontage* AttackMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Attack") // -> Tarray·Î
+		TArray<class UAnimMontage*> AttackMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-		class UAnimMontage* AimAttackMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Attack") // -> Tarray·Î
+		TArray<class UAnimMontage*> AimAttackMontage;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)

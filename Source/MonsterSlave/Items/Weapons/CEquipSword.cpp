@@ -26,9 +26,7 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 }
 
 void ACEquipSword::Attack() {
-	CheckNull(AttackMontage);
-	CheckNull(AimAttackMontage);
-	CheckNull(Owner);
+	// attack몽타주의 길이가 0보다 클때 진행하도록 조건 설정
 	Super::Attack();
 
 	CLog::Log("Sword Attack");
@@ -37,10 +35,10 @@ void ACEquipSword::Attack() {
 	CheckNull(player);
 
 	if (player->IsAim()) {
-		player->PlayAnimMontage(AimAttackMontage);
+		player->PlayAnimMontage(AimAttackMontage[ComboCount]);
 	}
 	else {
-		player->PlayAnimMontage(AttackMontage);
+		player->PlayAnimMontage(AttackMontage[ComboCount]);
 	}
 	
 }

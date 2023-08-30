@@ -19,6 +19,7 @@ public:
 	void SpawnArrow();
 
 protected:
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Bow")

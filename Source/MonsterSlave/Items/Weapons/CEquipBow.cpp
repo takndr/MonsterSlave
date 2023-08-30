@@ -15,12 +15,21 @@ ACEquipBow::ACEquipBow() {
 	if (animAsset.Succeeded()) {
 		SkeletalMesh->SetAnimInstanceClass(animAsset.Class);
 	}
+	
+}
+
+void ACEquipBow::BeginPlay() {
+	Super::BeginPlay();
+
+	UAnimInstance* anim = SkeletalMesh->GetAnimInstance();
+	CheckNull(anim);
+	UCBowAnimInstance* bowAnim = Cast<UCBowAnimInstance>(anim);
+	CheckNull(bowAnim);
+	bowAnim->SetOwnerCharacter(Owner);
 }
 
 void ACEquipBow::Attack() {
-	CheckNull(AttackMontage);
-	CheckNull(AimAttackMontage);
-	CheckNull(Owner);
+	// attack몽타주의 길이가 0보다 클때 진행하도록 조건 설정
 	Super::Attack();
 
 	CLog::Log("Bow Attack");
@@ -29,11 +38,11 @@ void ACEquipBow::Attack() {
 	CheckNull(player);
 
 	if (player->IsAim()) {
-		player->PlayAnimMontage(AimAttackMontage);
+		player->PlayAnimMontage(AimAttackMontage[ComboCount]);
 		SkeletalMesh->GetAnimInstance()->Montage_Play(AimAttackBowMontage);
 	}
 	else {
-		player->PlayAnimMontage(AttackMontage);
+		player->PlayAnimMontage(AttackMontage[ComboCount]);
 		SkeletalMesh->GetAnimInstance()->Montage_Play(AttackBowMontage);
 	}
 }
@@ -72,5 +81,5 @@ void ACEquipBow::Equipped() {
 void ACEquipBow::SpawnArrow() {
 	Arrow = ACArrow::Spawn( GetWorld(), Owner);
 	CheckNull(Arrow);
-	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), "Bow_Arrow_Slot");
+	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), "arrow_socket");
 }

@@ -11,6 +11,7 @@ class MONSTERSLAVE_API UCBowAnimInstance : public UAnimInstance
 public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	virtual void NativeBeginPlay() override;
+	void SetOwnerCharacter(class ACharacter* InCharacter) { OwnerCharacter = InCharacter; }
 
 protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")

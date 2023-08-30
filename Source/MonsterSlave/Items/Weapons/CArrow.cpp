@@ -17,7 +17,7 @@ ACArrow::ACArrow() {
 	UStaticMesh* staticMesh;
 	CHelpers::GetAsset(&staticMesh, "StaticMesh'/Game/Items/Weapons/_Asset/Arrow/SM_Arrow.SM_Arrow'");
 	StaticMesh->SetStaticMesh(staticMesh);
-
+	StaticMesh->SetCollisionProfileName("NoCollision");
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Projectile->ProjectileGravityScale = 0.0f;
