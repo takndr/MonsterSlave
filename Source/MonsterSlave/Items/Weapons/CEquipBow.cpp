@@ -79,7 +79,7 @@ void ACEquipBow::Equipped() {
 }
 
 void ACEquipBow::SpawnArrow() {
-	Arrow = ACArrow::Spawn( GetWorld(), Owner);
+	Arrow = ACArrow::Spawn(GetWorld(), Owner);
 	CheckNull(Arrow);
 	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), "arrow_socket");
 }

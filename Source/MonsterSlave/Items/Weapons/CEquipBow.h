@@ -18,6 +18,7 @@ public:
 
 	void SpawnArrow();
 
+	FORCEINLINE class ACArrow* GetArrow() { return Arrow; }
 protected:
 	virtual void BeginPlay() override;
 

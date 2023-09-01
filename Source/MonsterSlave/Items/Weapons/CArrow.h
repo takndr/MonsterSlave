@@ -15,11 +15,17 @@ protected:
 // ==================================================================
 public:
 	static ACArrow* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
+	void ShootArrow();
 // ==================================================================
 private:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 // ==================================================================
+public:
+	class ACharacter* OwnerCharacter;
+
+private:
+	class ACEquipBow* EquippedBow;
 
 // ==================================================================
 protected:
