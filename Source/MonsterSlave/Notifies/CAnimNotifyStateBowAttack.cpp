@@ -21,7 +21,7 @@ void UCAnimNotifyStateBowAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	// 화살 프로젝타일 켜기
 	// 화살 콜리젼 켜기
 	CLog::Log("Bow Shoot Arrow");
-	arrow->ShootArrow();
+	bow->ShotArrow();
 
 
 

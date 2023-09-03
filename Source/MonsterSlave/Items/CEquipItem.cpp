@@ -30,9 +30,6 @@ void ACEquipItem::Tick(float DeltaTime) {
 }
 
 void ACEquipItem::Attack() {
-	CheckNull(StateComp);
-
-	StateComp->SetAttack();
 }
 
 
@@ -78,7 +75,6 @@ void ACEquipItem::Equipped() {
 }
 
 void ACEquipItem::UnEquipped() {
-	// StateComponent
 	CLog::Log("EquipItem UnEquipped Called");
 	CheckNull(StateComp);
 	CheckNull(WeaponComp);
@@ -109,4 +105,8 @@ void ACEquipItem::OffAim() {
 	}
 	CheckNull(Owner);
 	Owner->PlayAnimMontage(OffAimMontage);
+	
+	if (StateComp->IsIdle() == false) {
+		StateComp->SetIdle();
+	}
 }

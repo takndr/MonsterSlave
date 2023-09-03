@@ -2,6 +2,7 @@
 
 #include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
@@ -14,8 +15,7 @@ void UCAnimNotifyNextCombo::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 	Super::Notify(MeshComp, Animation);
 	CheckNull(MeshComp);
 
-	ACPlayer* player = Cast<ACPlayer>(MeshComp->GetOwner());
-	CheckNull(player);
-
-
+	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
+	CheckNull(weaponComp);
+	weaponComp->GetCurrentWeapon()->ComboCount++;
 }

@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 
 #include "Player/CPlayer.h"
+#include "Component/CStateComponent.h"
 
 #include "Global.h"
 
@@ -20,16 +21,36 @@ void ACEquipSword::BeginPlay() {
 
 void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
-	//CheckTrue(GetOwner() == OtherActor);
-	//CLog::Print(GetOwner()->GetName());
-	//CLog::Print("Sword Attack!!");
+	CheckTrue(OtherActor == Owner);
+	
+	// TODO : 다단히트 생성 안되게 HittedActors의 TArray를 생성하여 방지하자
+	// 현재 Collision이 접촉한 다른 Actor가 HittedActors배열에 있을 경우 return하여 코드 더 진행 못하게
+	if (HittedActors.Find(OtherActor) != -1) {
+		return;
+	}
+	HittedActors.AddUnique(OtherActor);
+
+	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
+	// 적에게 데미지 주기
+	//FDamageEvent damageEvent;
+	//InOtherCharacter->TakeDamage(Datas[ComboCount].Power, damageEvent, InAttacker->GetController(), InCauser);
 }
 
 void ACEquipSword::Attack() {
-	// attack몽타주의 길이가 0보다 클때 진행하도록 조건 설정
 	Super::Attack();
 
-	CLog::Log("Sword Attack");
+	CheckTrue(AimAttackMontage.Num() == 0);
+	CheckTrue(AttackMontage.Num() == 0);
+
+	// TODO : 첫 번쨰 공격만 다시 안나가고 이후는 계속 끊겨서 나감
+	if (StateComp->IsIdle() == false) {
+		if (ComboCount == 0) {
+			return;
+		}
+	}
+
+	StateComp->SetAttack();
+	CLog::Print("Current Combo : " + FString::FromInt(ComboCount));
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	CheckNull(player);
@@ -40,5 +61,18 @@ void ACEquipSword::Attack() {
 	else {
 		player->PlayAnimMontage(AttackMontage[ComboCount]);
 	}
-	
+}
+
+void ACEquipSword::OnCollision() {
+	CheckNull(Capsule);
+
+	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void ACEquipSword::OffCollision() {
+	CheckNull(Capsule);
+
+	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HittedActors.Empty();
+	HittedActors.Shrink();
 }

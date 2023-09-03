@@ -42,7 +42,7 @@ protected:
 	class ACharacter* Owner;
 	EWeaponType WeaponType;		// 자식에서 초기화
 
-private:
+protected:
 	class UCStateComponent* StateComp;
 	class UCWeaponComponent* WeaponComp;
 	bool bEquipping;
@@ -53,10 +53,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Attack") // -> Tarray로
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		TArray<class UAnimMontage*> AttackMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Attack") // -> Tarray로
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		TArray<class UAnimMontage*> AimAttackMontage;
 
 private:

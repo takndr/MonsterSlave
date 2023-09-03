@@ -16,6 +16,7 @@ public:
 	virtual void Attack() override;
 	virtual void Equipped() override;
 
+	void ShotArrow();
 	void SpawnArrow();
 
 	FORCEINLINE class ACArrow* GetArrow() { return Arrow; }

@@ -3,6 +3,8 @@
 #include "GameFramework/Character.h"
 
 #include "Player/CPlayer.h"
+#include "Component/CStateComponent.h"
+
 #include "Items/Weapons/CBowAnimInstance.h"
 #include "Items/Weapons/CArrow.h"
 
@@ -15,7 +17,6 @@ ACEquipBow::ACEquipBow() {
 	if (animAsset.Succeeded()) {
 		SkeletalMesh->SetAnimInstanceClass(animAsset.Class);
 	}
-	
 }
 
 void ACEquipBow::BeginPlay() {
@@ -32,7 +33,11 @@ void ACEquipBow::Attack() {
 	// attack몽타주의 길이가 0보다 클때 진행하도록 조건 설정
 	Super::Attack();
 
-	CLog::Log("Bow Attack");
+	CheckFalse(StateComp->IsIdle());
+	CheckTrue(AimAttackMontage.Num() == 0);
+	CheckTrue(AttackMontage.Num() == 0);
+
+	StateComp->SetAttack();
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	CheckNull(player);
@@ -78,8 +83,15 @@ void ACEquipBow::Equipped() {
 	SpawnArrow();
 }
 
+void ACEquipBow::ShotArrow() {
+	CheckNull(Arrow);
+
+	Arrow->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	Arrow->ShootArrow();
+}
+
 void ACEquipBow::SpawnArrow() {
 	Arrow = ACArrow::Spawn(GetWorld(), Owner);
 	CheckNull(Arrow);
-	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), "arrow_socket");
+	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform, "arrow_socket");
 }

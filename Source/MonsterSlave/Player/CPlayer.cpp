@@ -196,7 +196,6 @@ void ACPlayer::OnBowWeapon() {
 }
 
 void ACPlayer::Attack() {
-	CheckFalse(StateComponent->IsIdle());
 	if (WeaponComponent->GetCurrentWeapon() != nullptr) {
 		WeaponComponent->GetCurrentWeapon()->Attack();
 	}
