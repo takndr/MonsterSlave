@@ -86,7 +86,7 @@ void ACEquipBow::Equipped() {
 void ACEquipBow::ShotArrow() {
 	CheckNull(Arrow);
 
-	Arrow->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	Arrow->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	Arrow->ShootArrow();
 }
 

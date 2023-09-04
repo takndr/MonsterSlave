@@ -24,12 +24,11 @@ ACArrow::ACArrow() {
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// Projectile Setting
-	Projectile->bInitialVelocityInLocalSpace = false;
 	Projectile->ProjectileGravityScale = 0.0f;
-	Projectile->InitialSpeed = 100.0f;
-	Projectile->MaxSpeed = 100.0f;
-	Projectile->Velocity = FVector(0.0f, 0.0f, 0.0f);
-	
+	//Projectile->InitialSpeed = 100.0f;
+	//Projectile->MaxSpeed = 100.0f;
+	Projectile->SetVelocityInLocalSpace(FVector(0.0f, 0.0f, 0.0f));
+	SetActorScale3D(FVector(3.0f));
 }
 
 void ACArrow::BeginPlay() {
@@ -50,11 +49,11 @@ ACArrow* ACArrow::Spawn(UWorld* InWorld, ACharacter* InOwner) {
 	return InWorld->SpawnActor<ACArrow>(param);
 }
 
-// TODO :: 발사되지 않음
+// TODO :: 발사는 되지만 아직 방향이 정확하지 않음, 방향은 캐릭터가 보고 있는 쪽으로 진행을 할 예정
 void ACArrow::ShootArrow() {
 	//Capsule->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	
-	
-	Projectile->Velocity = FVector(1.0f, 0.0f, 0.0f);
-	SetLifeSpan(2.0f);
+	Projectile->SetVelocityInLocalSpace(FVector(100.0f, 0.0f, 0.0f));
+	//Projectile->Velocity = FVector(100.0f, 0.0f, 0.0f);
+	SetLifeSpan(20.0f);
 }
