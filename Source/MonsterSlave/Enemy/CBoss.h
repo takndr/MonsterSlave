@@ -18,6 +18,10 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCStatusComponent* Status;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCStateComponent* State;
 };
