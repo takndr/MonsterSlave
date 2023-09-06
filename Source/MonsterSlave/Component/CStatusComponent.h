@@ -12,26 +12,23 @@ class MONSTERSLAVE_API UCStatusComponent : public UActorComponent
 
 public:	
 	UCStatusComponent();
-
 protected:
 	virtual void BeginPlay() override;
 
+// =================================================================
+public:
+	FORCEINLINE bool IsDead() { return CurrentHp <= 0; }
+// =================================================================
 public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	UFUNCTION(BlueprintCallable)
 		void IncreaseHealth(float Dx);
 
 	UFUNCTION(BlueprintCallable)
 		void DecreaseHealth(float Dx);
-
-
-
 // =================================================================
-
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status : Hp")
-		float MaxHp;
+		float MaxHp = 100.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status : Hp")
 		float CurrentHp;

@@ -3,8 +3,6 @@
 #include "Global.h"
 
 UCStatusComponent::UCStatusComponent() {
-	PrimaryComponentTick.bCanEverTick = true;
-	bEditableWhenInherited = true;
 
 }
 
@@ -12,20 +10,18 @@ UCStatusComponent::UCStatusComponent() {
 void UCStatusComponent::BeginPlay() {
 	Super::BeginPlay();
 
-	
+	CurrentHp = MaxHp;
 }
 
-
-void UCStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-}
 
 void UCStatusComponent::IncreaseHealth(float Dx) {
 	//UKismetMathLibrary::ClampAngle();
+	CurrentHp += Dx;
+	CurrentHp = FMath::Clamp(CurrentHp, 0.0f, MaxHp);
 }
 
 void UCStatusComponent::DecreaseHealth(float Dx) {
-
+	CurrentHp -= Dx;
+	CurrentHp = FMath::Clamp(CurrentHp, 0.0f, MaxHp);
 }
 

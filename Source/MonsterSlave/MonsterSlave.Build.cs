@@ -19,7 +19,8 @@ public class MonsterSlave : ModuleRules
 			"InputCore",
 			"HeadMountedDisplay",
 			"UMG",
-			"OnlineSubSystem"
+			"OnlineSubSystem",
+			"AIModule",
 		});
 
 

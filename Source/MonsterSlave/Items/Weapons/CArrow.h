@@ -26,7 +26,7 @@ public:
 
 private:
 	class ACEquipBow* EquippedBow;
-
+	TArray<AActor*> HittedActors;
 // ==================================================================
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
