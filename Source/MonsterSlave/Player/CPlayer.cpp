@@ -277,3 +277,4 @@ void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStr
 	MyItems.Remove(OldItem);
 	MyItems.Insert(NewItem, index);
 }
+

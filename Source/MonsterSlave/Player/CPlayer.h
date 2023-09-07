@@ -24,6 +24,12 @@ public:
 
 	FORCEINLINE const bool IsAim() { return bAim; }
 
+	UFUNCTION(BlueprintImplementableEvent, Exec)
+		void TestMontageFly();
+
+	UFUNCTION(BlueprintImplementableEvent, Exec)
+		void TestMontageLand();
+
 private:
 	// Axis Event
 	void OnMoveForward(float Axis);

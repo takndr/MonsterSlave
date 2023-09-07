@@ -45,6 +45,20 @@ void ACBoss::Tick(float DeltaTime)
 
 }
 
+void ACBoss::BossFly()
+{
+	CLog::Print("Fly");
+	//GetMesh()->GetAnimInstance()->Montage_Play(FlyMontage);
+	PlayAnimMontage(FlyMontage);
+}
+
+void ACBoss::BossLand()
+{
+	CLog::Print("Land");
+	//GetMesh()->GetAnimInstance()->Montage_Play(LandMontage);
+	PlayAnimMontage(LandMontage);
+}
+
 float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	Attacker = Cast<ACharacter>(EventInstigator->GetPawn());

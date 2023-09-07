@@ -17,12 +17,24 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 // =================================================================
+public:
+	FORCEINLINE void SetFly(bool InFly) { bFly = InFly; }
+	FORCEINLINE bool IsFly() { return bFly; }
+
+// =================================================================
 private:
 	class ACharacter* Attacker;
 	class AActor* Causer;
 	float DamageValue;
 	int32 BossPhase = 1;
+	bool bFly = false;
 // =================================================================
+public:
+	UFUNCTION(BlueprintCallable)
+		void BossFly();
+
+	UFUNCTION(BlueprintCallable)
+		void BossLand();
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStatusComponent* Status;
