@@ -12,11 +12,10 @@ public:
 	void UpdateHealth(float currentHealth, float maxHealth);
 
 protected:
-	virtual bool Initialize() override;
 
 private:
 
-	// ==============================
+// ============================================================
 
 public:
 

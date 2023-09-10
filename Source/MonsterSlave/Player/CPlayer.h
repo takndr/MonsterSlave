@@ -66,6 +66,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		class UCWeaponComponent* WeaponComponent;
 
+	UPROPERTY(EditDefaultsOnly)
+		class UCActionComponent* ActionComponent;
+
 protected:
 	
 

@@ -10,7 +10,6 @@ void UCBossAnim::NativeUpdateAnimation(float DeltaSeconds) {
 	CheckNull(OwnerCharacter);
 
 	Speed = OwnerCharacter->GetVelocity().Size2D();
-	// TODO : bFly가져오는 코드
 	ACBoss* boss = Cast<ACBoss>(OwnerCharacter);
 	bFly = boss->IsFly();
 }

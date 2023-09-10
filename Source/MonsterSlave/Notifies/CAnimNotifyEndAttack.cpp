@@ -1,6 +1,5 @@
 #include "Notifies/CAnimNotifyEndAttack.h"
 
-#include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
 #include "Items/CEquipItem.h"
 
@@ -14,12 +13,12 @@ FString UCAnimNotifyEndAttack::GetNotifyName_Implementation() const {
 void UCAnimNotifyEndAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {
 	Super::Notify(MeshComp, Animation);
 
-	UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(MeshComp->GetOwner());
-	CheckNull(stateComp);
-	stateComp->SetIdle();
-
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 	CheckNull(weaponComp);
-	weaponComp->GetCurrentWeapon()->ComboCount = 0;
+
+	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+	CheckNull(equipItem);
+
+	equipItem->EndAttack();
 }
 // 활 EndAttack같은 경우에는 화살까지 재스폰 시켜야함

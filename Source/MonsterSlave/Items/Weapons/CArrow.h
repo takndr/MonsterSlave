@@ -14,7 +14,6 @@ protected:
 	virtual void BeginPlay() override;
 // ==================================================================
 public:
-	static ACArrow* Spawn(class UWorld* InWorld, class ACharacter* InOwner);
 	void ShootArrow();
 // ==================================================================
 private:
@@ -22,19 +21,18 @@ private:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 // ==================================================================
 public:
-	class ACharacter* OwnerCharacter;
+	class ACharacter* Owner;
 
 private:
 	class ACEquipBow* EquippedBow;
 	TArray<AActor*> HittedActors;
 // ==================================================================
-protected:
-	UPROPERTY(VisibleDefaultsOnly)
-		class UStaticMeshComponent* StaticMesh;
-
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Scene;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCapsuleComponent* Capsule;

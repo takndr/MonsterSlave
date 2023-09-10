@@ -8,21 +8,24 @@ UCLASS()
 class MONSTERSLAVE_API ACEquipBow : public ACEquipItem
 {
 	GENERATED_BODY()
-	
 public:
 	ACEquipBow();
+protected:
+	virtual void BeginPlay() override;
+// =========================================================
+public:
 	virtual void OnAim() override;
 	virtual void OffAim() override;
 	virtual void Attack() override;
+	virtual void EndAttack() override;
 	virtual void Equipped() override;
+	virtual void UnEquipped() override;
 
 	void ShotArrow();
 	void SpawnArrow();
 
 	FORCEINLINE class ACArrow* GetArrow() { return Arrow; }
-protected:
-	virtual void BeginPlay() override;
-
+// =========================================================
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Bow")
 		class UAnimMontage* OnAimBowMontage;
@@ -35,7 +38,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Bow")
 		class UAnimMontage* AimAttackBowMontage;
-
+// =========================================================
 private:
+	TSubclassOf<ACArrow> ArrowClass;
 	class ACArrow* Arrow;
 };

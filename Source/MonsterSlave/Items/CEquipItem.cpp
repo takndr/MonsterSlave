@@ -88,10 +88,7 @@ void ACEquipItem::UnEquipped() {
 
 void ACEquipItem::OnAim() {
 	CLog::Log("EquipItem OnAim Called");
-	if (OnAimMontage == nullptr) {
-		CLog::Log("Set OnAim Montage");
-		return;
-	}
+	CheckNull(OnAimMontage);
 	CheckNull(Owner);
 	Owner->PlayAnimMontage(OnAimMontage);
 }
@@ -99,14 +96,12 @@ void ACEquipItem::OnAim() {
 
 void ACEquipItem::OffAim() {
 	CLog::Log("EquipItem OffAim Called");
-	if (OffAimMontage == nullptr) {
-		CLog::Log("Set OffAim Montage");
-		return;
-	}
+	CheckNull(OffAimMontage);
 	CheckNull(Owner);
 	Owner->PlayAnimMontage(OffAimMontage);
 	
 	if (StateComp->IsIdle() == false) {
 		StateComp->SetIdle();
+		ComboCount = 0;
 	}
 }

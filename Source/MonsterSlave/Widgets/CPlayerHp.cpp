@@ -4,7 +4,7 @@
 
 #include "Global.h"
 
-void UCPlayerHp::UpdateHealth(float MaxHp, float CurrentHp) {
+void UCPlayerHp::UpdateHealth(float CurrentHp, float MaxHp) {
 	PlayerHpBar->SetPercent(CurrentHp / MaxHp);
 
 }

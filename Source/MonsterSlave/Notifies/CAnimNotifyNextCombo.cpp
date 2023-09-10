@@ -1,11 +1,10 @@
 #include "Notifies/CAnimNotifyNextCombo.h"
 
-#include "Player/CPlayer.h"
-#include "Items/CEquipItem.h"
 #include "Component/CWeaponComponent.h"
+#include "Items/CEquipItem.h"
+#include "Items/Weapons/CEquipSword.h"
 
 #include "Global.h"
-
 
 FString UCAnimNotifyNextCombo::GetNotifyName_Implementation() const {
 	return "NextCombo";
@@ -17,5 +16,10 @@ void UCAnimNotifyNextCombo::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 	CheckNull(weaponComp);
-	weaponComp->GetCurrentWeapon()->ComboCount++;
+	
+	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+	CheckNull(equipItem);
+
+	ACEquipSword* swordItem = Cast<ACEquipSword>(equipItem);
+	swordItem->NextCombo();
 }

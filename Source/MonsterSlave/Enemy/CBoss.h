@@ -27,7 +27,10 @@ private:
 	class AActor* Causer;
 	float DamageValue;
 	int32 BossPhase = 1;
-	bool bFly = false;
+	bool bFly = false; 
+
+	TSubclassOf<class UUserWidget> BossHpWidgetClass;
+	class UCBossHp* BossHpWidget;
 // =================================================================
 public:
 	UFUNCTION(BlueprintCallable)
@@ -37,14 +40,16 @@ public:
 		void BossLand();
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCStatusComponent* Status;
+		class UCStatusComponent* StatusComponent;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCStateComponent* State;
+		class UCStateComponent* StateComponent;
 
 	UPROPERTY(EditDefaultsOnly)
 		class UBehaviorTree* BehaviorTree;
 
+// =================================================================
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
 		class UAnimMontage* LandFlameMontage;
 

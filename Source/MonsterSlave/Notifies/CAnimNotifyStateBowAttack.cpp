@@ -23,8 +23,6 @@ void UCAnimNotifyStateBowAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	CLog::Log("Bow Shoot Arrow");
 	bow->ShotArrow();
 
-
-
 }
 
 void UCAnimNotifyStateBowAttack::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {

@@ -15,7 +15,8 @@ public:
 	ACEquipItem();
 	virtual void Tick(float DeltaTime) override;
 	virtual void Attack() override;
-
+// ===================================================
+public:
 	// CPlayer에서 1번이나 2번 눌렀을 때 호출하는 함수
 	void Equip();
 	void UnEquip();
@@ -23,16 +24,16 @@ public:
 	void Attach();
 	void Detach();
 	virtual void Equipped();
-	void UnEquipped();
+	virtual void UnEquipped();
 	virtual void OnAim();
 	virtual void OffAim();
-	
+
+	virtual void EndAttack() {}
 
 protected:
 	virtual void BeginPlay() override;
 
 private:	
-	
 
 // ===================================================
 public:
@@ -45,10 +46,9 @@ protected:
 protected:
 	class UCStateComponent* StateComp;
 	class UCWeaponComponent* WeaponComp;
-	bool bEquipping;
+	bool bEquipping = false;
 
 // ===================================================
-
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
@@ -80,7 +80,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 		class UAnimMontage* OffAimMontage;
-
-	
-
 };

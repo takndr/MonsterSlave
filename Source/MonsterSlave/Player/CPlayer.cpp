@@ -17,6 +17,7 @@
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
+#include "Component/CActionComponent.h"
 
 #include "Player/CPlayerHair.h"
 #include "Items/Weapons/CEquipBow.h"
@@ -38,6 +39,7 @@ ACPlayer::ACPlayer() {
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
+	CHelpers::CreateActorComponent(this, &ActionComponent, "Action");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
@@ -97,15 +99,13 @@ void ACPlayer::BeginPlay() {
 	InventoryWidget->AddToViewport();
 	InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	PlayerHpWidget = CreateWidget<UCPlayerHp>(GetController<APlayerController>(), PlayerHpWidgetClass);
-	PlayerHpWidget->AddToViewport();
-	PlayerHpWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+	//PlayerHpWidget = CreateWidget<UCPlayerHp>(GetController<APlayerController>(), PlayerHpWidgetClass);
+	//PlayerHpWidget->AddToViewport();
+	//PlayerHpWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	// Status Setting
 	CheckNull(StatusComponent);
-	StatusComponent->MaxHp = 100;
-	StatusComponent->CurrentHp = 100;
-	PlayerHpWidget->UpdateHealth(StatusComponent->MaxHp, StatusComponent->CurrentHp);
+	//PlayerHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	// Event Binding
 	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ACPlayer::MeshComponentBeginOverlap);
@@ -198,6 +198,7 @@ void ACPlayer::OnBowWeapon() {
 void ACPlayer::Attack() {
 	if (WeaponComponent->GetCurrentWeapon() != nullptr) {
 		WeaponComponent->GetCurrentWeapon()->Attack();
+		// ActionComponent->Action();
 	}
 
 }

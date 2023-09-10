@@ -32,8 +32,8 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
 	// 적에게 데미지 주기
-	//FDamageEvent damageEvent;
-	//InOtherCharacter->TakeDamage(Datas[ComboCount].Power, damageEvent, InAttacker->GetController(), InCauser);
+	FDamageEvent damageEvent;
+	OtherActor->TakeDamage(30.0f, damageEvent, Owner->GetController(), this);
 }
 
 void ACEquipSword::Attack() {
@@ -42,15 +42,38 @@ void ACEquipSword::Attack() {
 	CheckTrue(AimAttackMontage.Num() == 0);
 	CheckTrue(AttackMontage.Num() == 0);
 
-	// TODO : 첫 번쨰 공격만 다시 안나가고 이후는 계속 끊겨서 나감
-	if (StateComp->IsIdle() == false) {
-		if (ComboCount == 0) {
-			return;
-		}
+	if (bCanCombo == true) {
+		bCanCombo = false;
+		bSucceed = true;
+		return;
 	}
 
+	CheckFalse(StateComp->IsIdle());
+
 	StateComp->SetAttack();
-	CLog::Print("Current Combo : " + FString::FromInt(ComboCount));
+
+	ACPlayer* player = Cast<ACPlayer>(Owner);
+	CheckNull(player);
+
+	if (player->IsAim()) {
+		player->PlayAnimMontage(AimAttackMontage[ComboCount]);
+	}
+	else {
+		player->PlayAnimMontage(AttackMontage[ComboCount]);
+	}
+}
+
+void ACEquipSword::EndAttack() {
+	Super::EndAttack();
+	
+	StateComp->SetIdle();
+	ComboCount = 0;
+}
+
+void ACEquipSword::NextCombo() {
+	CheckFalse(bSucceed);
+	bSucceed = false;
+	ComboCount++;
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	CheckNull(player);

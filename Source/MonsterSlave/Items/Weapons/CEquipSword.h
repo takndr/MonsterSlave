@@ -15,9 +15,13 @@ protected:
 // =========================================================
 public:
 	virtual void Attack() override;
+	virtual void EndAttack() override;
+	void NextCombo();
 	void OnCollision();
 	void OffCollision();
 
+	FORCEINLINE void EnabledCombo() { bCanCombo = true; }
+	FORCEINLINE void DisabledCombo() { bCanCombo = false; }
 // =========================================================
 private:
 	UFUNCTION()
@@ -26,7 +30,8 @@ private:
 // =========================================================
 private:
 	TArray<AActor*> HittedActors;
-
+	bool bCanCombo = false;
+	bool bSucceed = false;
 // =========================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)

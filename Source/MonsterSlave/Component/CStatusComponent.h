@@ -18,6 +18,8 @@ protected:
 // =================================================================
 public:
 	FORCEINLINE bool IsDead() { return CurrentHp <= 0; }
+	FORCEINLINE float GetCurrentHp() { return CurrentHp; }
+	FORCEINLINE float GetMaxHp() { return MaxHp; }
 // =================================================================
 public:	
 	UFUNCTION(BlueprintCallable)
@@ -26,15 +28,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void DecreaseHealth(float Dx);
 // =================================================================
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status : Hp")
-		float MaxHp = 100.0f;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status : Hp")
-		float CurrentHp;
-
-protected:
-
 private:
-
+	float CurrentHp;
+// =================================================================
+private:
+	UPROPERTY(EditAnywhere, Category = "Status : Hp")
+		float MaxHp = 100.0f;
 };

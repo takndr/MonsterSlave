@@ -10,7 +10,7 @@ class MONSTERSLAVE_API UCPlayerHp : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void UpdateHealth(float MaxHp, float CurrentHp);
+	void UpdateHealth(float CurrentHp, float MaxHp);
 
 // ======================================================
 

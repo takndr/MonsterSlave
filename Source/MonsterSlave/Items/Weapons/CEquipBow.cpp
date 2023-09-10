@@ -17,6 +17,8 @@ ACEquipBow::ACEquipBow() {
 	if (animAsset.Succeeded()) {
 		SkeletalMesh->SetAnimInstanceClass(animAsset.Class);
 	}
+
+	CHelpers::GetClass(&ArrowClass, "/Game/Items/Weapons/Arrow/BP_Arrow");
 }
 
 void ACEquipBow::BeginPlay() {
@@ -52,6 +54,15 @@ void ACEquipBow::Attack() {
 	}
 }
 
+void ACEquipBow::EndAttack() {
+	Super::EndAttack();
+
+	StateComp->SetIdle();
+	ComboCount = 0;
+
+	// TODO : 화살 재소환
+
+}
 
 void ACEquipBow::OnAim() {
 	Super::OnAim();
@@ -83,6 +94,16 @@ void ACEquipBow::Equipped() {
 	SpawnArrow();
 }
 
+void ACEquipBow::UnEquipped() {
+	Super::UnEquipped();
+
+	// 활에 화살 붙이기
+	if (Arrow != nullptr) {
+		Arrow->Destroy();
+		Arrow = nullptr;
+	}
+}
+
 void ACEquipBow::ShotArrow() {
 	CheckNull(Arrow);
 
@@ -91,7 +112,8 @@ void ACEquipBow::ShotArrow() {
 }
 
 void ACEquipBow::SpawnArrow() {
-	Arrow = ACArrow::Spawn(GetWorld(), Owner);
-	CheckNull(Arrow);
-	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform, "arrow_socket");
+	FTransform transform = SkeletalMesh->GetSocketTransform("arrow_socket");
+	Arrow = GetWorld()->SpawnActorDeferred<ACArrow>(ArrowClass, transform, Owner);
+	Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, "arrow_socket");
+	Arrow->FinishSpawning(transform);
 }
