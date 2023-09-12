@@ -59,9 +59,6 @@ void ACEquipBow::EndAttack() {
 
 	StateComp->SetIdle();
 	ComboCount = 0;
-
-	// TODO : 화살 재소환
-
 }
 
 void ACEquipBow::OnAim() {

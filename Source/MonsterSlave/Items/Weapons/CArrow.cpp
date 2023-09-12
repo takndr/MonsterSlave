@@ -28,8 +28,6 @@ ACArrow::ACArrow() {
 	Projectile->bAutoActivate = false;
 	Projectile->bInitialVelocityInLocalSpace = false;
 
-	// Test to See
-	SetActorScale3D(FVector(3.0f));
 }
 
 void ACArrow::BeginPlay() {
@@ -41,20 +39,23 @@ void ACArrow::BeginPlay() {
 void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
 	CheckTrue(Owner == OtherActor);
-	// TODO : 다단히트 생성 안되게 HittedActors의 TArray를 생성하여 방지하자
-	// 현재 Collision이 접촉한 다른 Actor가 HittedActors배열에 있을 경우 return하여 코드 더 진행 못하게
+
 	if (HittedActors.Find(OtherActor) != -1) {
 		return;
 	}
 	HittedActors.AddUnique(OtherActor);
 
 	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
-	// 적에게 데미지 주기
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(10.0f, damageEvent, Owner->GetController(), this);
+
+	// TODO : Damage Effect
+
+
+	// TODO : Damage Widget
 }
 
-// TODO :: 발사는 되지만 아직 방향이 정확하지 않음, 방향은 캐릭터가 보고 있는 쪽으로 진행을 할 예정
+// TODO :: 발사는 되지만 아직 방향이 정확하지 않음, 방향은 캐릭터가 보고 있는 쪽으로 진행을 할 예정, 아직 완벽히 만족하진 않음
 void ACArrow::ShootArrow() {
 	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	

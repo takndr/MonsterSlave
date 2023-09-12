@@ -5,6 +5,8 @@
 
 #include "Component/CStatusComponent.h"
 #include "Widgets/CBossHp.h"
+#include "Enemy/CBossController.h"
+#include "etc/CDamageText.h"
 
 #include "Global.h"
 
@@ -35,6 +37,10 @@ ACBoss::ACBoss()
 
 	// Widget Setting
 	CHelpers::GetClass(&BossHpWidgetClass, "WidgetBlueprint'/Game/Widgets/Widget/Enemy/WB_BossHp.WB_BossHp_C'");
+
+	// AI Controller Setting
+	CHelpers::GetClass(&AIControllerClass, "/Game/Boss/BP_CBossController");
+
 }
 
 void ACBoss::BeginPlay()
@@ -47,6 +53,7 @@ void ACBoss::BeginPlay()
 	BossHpWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+	BossHpWidget->UpdateName(BossName);
 }
 
 void ACBoss::Tick(float DeltaTime)
@@ -75,10 +82,17 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	Causer = DamageCauser;
 
 	StatusComponent->DecreaseHealth(DamageValue);
-	CLog::Print(DamageValue);
-	// 체력 위젯 줄어들게
+
 	// TODO : 보스전용 체력 위젯 만들기
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+
+	// 데미지 보여주기
+	// TODO : damageTransform 수정
+	FTransform damageTransform = GetActorTransform();
+	ACDamageText* damageText = GetWorld()->SpawnActorDeferred<ACDamageText>(ACDamageText::StaticClass(), damageTransform);
+	damageText->SetDamageText(Damage);
+	damageText->FinishSpawning(damageTransform);
+
 
 	// 만약 체력이 다 닳아서 0이되면 죽는 거로 처리
 	if (StatusComponent->IsDead()) {

@@ -10,7 +10,7 @@ class MONSTERSLAVE_API UCBossHp : public UUserWidget
 	GENERATED_BODY()
 public:
 	void UpdateHealth(float currentHealth, float maxHealth);
-
+	void UpdateName(FText InText);
 protected:
 
 private:

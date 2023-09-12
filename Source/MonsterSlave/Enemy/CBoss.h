@@ -8,7 +8,6 @@ UCLASS()
 class MONSTERSLAVE_API ACBoss : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
 	ACBoss();
 protected:
@@ -20,7 +19,7 @@ public:
 public:
 	FORCEINLINE void SetFly(bool InFly) { bFly = InFly; }
 	FORCEINLINE bool IsFly() { return bFly; }
-
+	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 // =================================================================
 private:
 	class ACharacter* Attacker;
@@ -38,6 +37,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void BossLand();
+// =================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStatusComponent* StatusComponent;
@@ -76,4 +76,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "OtherMontage")
 		class UAnimMontage* ScreamMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Details")
+		FText BossName;
+
 };
