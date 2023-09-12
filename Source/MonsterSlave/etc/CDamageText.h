@@ -11,6 +11,7 @@ class MONSTERSLAVE_API ACDamageText : public AActor
 	
 public:	
 	ACDamageText();
+	//void OnConstruction(const FTransform& Transform) override;
 protected:
 	virtual void BeginPlay() override;
 public:	
@@ -20,12 +21,14 @@ public:
 	void SetDamageText(float InDamage);
 
 // =================================================================
+
 // =================================================================
+private:
 // =================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Scene;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UTextRenderComponent* Text;
+		class UWidgetComponent* DamageWidgetComp;
 };

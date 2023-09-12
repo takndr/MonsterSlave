@@ -4,6 +4,7 @@
 #include "Components/CapsuleComponent.h"
 
 #include "Component/CStatusComponent.h"
+#include "Component/CStateComponent.h"
 #include "Widgets/CBossHp.h"
 #include "Enemy/CBossController.h"
 #include "etc/CDamageText.h"
@@ -90,8 +91,8 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	// TODO : damageTransform 수정
 	FTransform damageTransform = GetActorTransform();
 	ACDamageText* damageText = GetWorld()->SpawnActorDeferred<ACDamageText>(ACDamageText::StaticClass(), damageTransform);
-	damageText->SetDamageText(Damage);
 	damageText->FinishSpawning(damageTransform);
+	damageText->SetDamageText(Damage);
 
 
 	// 만약 체력이 다 닳아서 0이되면 죽는 거로 처리
