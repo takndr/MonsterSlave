@@ -29,16 +29,10 @@ void ACDamageText::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	DamageWidgetComp->InitWidget();
+	if (DamageWidgetComp->GetUserWidgetObject() == nullptr) {
+		DamageWidgetComp->InitWidget();
+	}
 }
-
-//void ACDamageText::OnConstruction(const FTransform& Transform)
-//{
-//	Super::OnConstruction(Transform);
-//
-//	DamageWidgetComp->InitWidget();
-//
-//}
 
 void ACDamageText::Tick(float DeltaTime)
 {
@@ -47,6 +41,10 @@ void ACDamageText::Tick(float DeltaTime)
 }
 
 void ACDamageText::SetDamageText(float InDamage) {
+	if (DamageWidgetComp->GetUserWidgetObject() == nullptr) {
+		DamageWidgetComp->InitWidget();
+	}
+
 	UCDamageWidget* damageWidget = Cast<UCDamageWidget>(DamageWidgetComp->GetUserWidgetObject());
 	CLog::Log("SetDamageText");
 	FText text = UKismetTextLibrary::Conv_FloatToText(InDamage, ERoundingMode::HalfToEven);

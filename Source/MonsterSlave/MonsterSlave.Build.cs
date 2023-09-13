@@ -21,6 +21,7 @@ public class MonsterSlave : ModuleRules
 			"UMG",
 			"OnlineSubSystem",
 			"AIModule",
+			"GameplayTasks",
 		});
 
 
