@@ -10,4 +10,10 @@ class MONSTERSLAVE_API ACBossController : public AAIController
 	GENERATED_BODY()
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+// ==================================================================
+public:
+	FORCEINLINE class ACBoss* GetPossessedBoss() { return PossessedBoss; }
+// ==================================================================
+private:
+	class ACBoss* PossessedBoss;
 };
