@@ -11,7 +11,8 @@ void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData) {
 	ACBossController* controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
 	OwnerBoss = controller->GetPossessedBoss();
 	CLog::Print("Service Start : " + OwnerBoss->GetName());
-
+	
+	FBlackboardKeySelector;
 	return;
 }
 

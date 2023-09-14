@@ -18,6 +18,13 @@ protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 // ==================================================================
+public:
+	UPROPERTY(EditAnywhere)
+		FBlackboardKeySelector PhaseKey;
+
+	UPROPERTY(EditAnywhere)
+		FBlackboardKeySelector PhaseChangedKey;
+
 private:
 	class ACBoss* OwnerBoss;
 };
