@@ -20,23 +20,34 @@ public:
 	FORCEINLINE void SetFly(bool InFly) { bFly = InFly; }
 	FORCEINLINE bool IsFly() { return bFly; }
 	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
+	FORCEINLINE bool IsAblePhaseChange() { return bPhaseChange; }
+	FORCEINLINE int32 GetCurrentPhase() { return BossPhase; }
+
+	void ChangePhase();
+
 // =================================================================
+public:
+	bool bPhaseChange = false;
+	int32 BossPhase = 0;
+
 private:
 	class ACharacter* Attacker;
 	class AActor* Causer;
 	float DamageValue;
-	int32 BossPhase = 1;
-	bool bFly = false; 
 
+private:
+	bool bFly = false;
+
+private:
 	TSubclassOf<class UUserWidget> BossHpWidgetClass;
 	class UCBossHp* BossHpWidget;
 // =================================================================
 public:
 	UFUNCTION(BlueprintCallable)
-		void BossFly();
+		void SetPhaseChangeTrue() { bPhaseChange = true; }
 
 	UFUNCTION(BlueprintCallable)
-		void BossLand();
+		void SetPhaseChangeFalse() { bPhaseChange = false; }
 // =================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -62,11 +73,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
 		class UAnimMontage* AttackMouthMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "FlyMontage")
-		class UAnimMontage* LandMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "FlyMontage")
-		class UAnimMontage* FlyMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "PhaseChangeMontage")
+		TArray<class UAnimMontage*> PhaseChangeMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "OtherMontage")
 		class UAnimMontage* DieMontage;

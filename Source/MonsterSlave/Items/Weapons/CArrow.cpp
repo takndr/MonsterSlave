@@ -61,7 +61,6 @@ void ACArrow::ShootArrow() {
 	
 	FVector vector = Owner->GetControlRotation().Vector();
 	Projectile->Velocity = vector * Projectile->InitialSpeed;
-	CLog::Log(Projectile->Velocity);
 
 	Projectile->Activate(true);
 	SetLifeSpan(1.0f);

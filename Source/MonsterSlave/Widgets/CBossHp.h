@@ -9,8 +9,11 @@ class MONSTERSLAVE_API UCBossHp : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	void UpdateHealth(float currentHealth, float maxHealth);
-	void UpdateName(FText InText);
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateHealth(float currentHealth, float maxHealth);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateBossName(const FText& InText);
 protected:
 
 private:
@@ -20,12 +23,12 @@ private:
 public:
 
 protected:
-
-private:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UProgressBar* BossHp;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* BossName;
+
+private:
 
 };

@@ -31,7 +31,8 @@ void ACEquipBow::BeginPlay() {
 	bowAnim->SetOwnerCharacter(Owner);
 }
 
-void ACEquipBow::Attack() {
+void ACEquipBow::Attack()
+{
 	// attack몽타주의 길이가 0보다 클때 진행하도록 조건 설정
 	Super::Attack();
 
@@ -39,16 +40,18 @@ void ACEquipBow::Attack() {
 	CheckTrue(AimAttackMontage.Num() == 0);
 	CheckTrue(AttackMontage.Num() == 0);
 
-	StateComp->SetAttack();
+	StateComp->SetAction();
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	CheckNull(player);
 
-	if (player->IsAim()) {
+	if (player->IsAim())
+	{
 		player->PlayAnimMontage(AimAttackMontage[ComboCount]);
 		SkeletalMesh->GetAnimInstance()->Montage_Play(AimAttackBowMontage);
 	}
-	else {
+	else
+	{
 		player->PlayAnimMontage(AttackMontage[ComboCount]);
 		SkeletalMesh->GetAnimInstance()->Montage_Play(AttackBowMontage);
 	}

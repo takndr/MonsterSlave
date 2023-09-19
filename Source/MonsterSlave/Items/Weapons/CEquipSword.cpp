@@ -41,13 +41,15 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	// TODO : Damage Widget
 }
 
-void ACEquipSword::Attack() {
+void ACEquipSword::Attack()
+{
 	Super::Attack();
 
 	CheckTrue(AimAttackMontage.Num() == 0);
 	CheckTrue(AttackMontage.Num() == 0);
 
-	if (bCanCombo == true) {
+	if (bCanCombo == true)
+	{
 		bCanCombo = false;
 		bSucceed = true;
 		return;
@@ -55,15 +57,17 @@ void ACEquipSword::Attack() {
 
 	CheckFalse(StateComp->IsIdle());
 
-	StateComp->SetAttack();
+	StateComp->SetAction();
 
 	ACPlayer* player = Cast<ACPlayer>(Owner);
 	CheckNull(player);
 
-	if (player->IsAim()) {
+	if (player->IsAim())
+	{
 		player->PlayAnimMontage(AimAttackMontage[ComboCount]);
 	}
-	else {
+	else
+	{
 		player->PlayAnimMontage(AttackMontage[ComboCount]);
 	}
 }

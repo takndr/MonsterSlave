@@ -9,22 +9,25 @@
 
 #include "Global.h"
 
-ACEquipItem::ACEquipItem() {
+ACEquipItem::ACEquipItem()
+{
 	PrimaryActorTick.bCanEverTick = true;
 
 	CHelpers::CreateSceneComponent(this, &Scene, "Scene");
 	CHelpers::CreateSceneComponent(this, &SkeletalMesh, "Mesh", Scene);
 }
 
-void ACEquipItem::BeginPlay() {
+void ACEquipItem::BeginPlay()
+{
 	Super::BeginPlay();
-	CLog::Log("EquipItem BeginPlay Called");
+
 	Owner = Cast<ACharacter>(GetOwner());
 	StateComp = CHelpers::GetComponent<UCStateComponent>(Owner);
 	WeaponComp = CHelpers::GetComponent<UCWeaponComponent>(Owner);
 }
 
-void ACEquipItem::Tick(float DeltaTime) {
+void ACEquipItem::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
 
 }

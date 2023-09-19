@@ -1,22 +1,35 @@
 #include "BehaviorTree/Service/CRootService.h"
 
-#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Enemy/CBoss.h"
 #include "Enemy/CBossController.h"
 
 #include "Global.h"
 
-void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData) {
-	ACBossController* controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
-	OwnerBoss = controller->GetPossessedBoss();
-	CLog::Print("Service Start : " + OwnerBoss->GetName());
+/*
+	Blackboard->SetValueAsBool();
+	Blackboard->SetValueAsClass();
+	Blackboard->SetValueAsEnum();
+	Blackboard->SetValueAsFloat();
+	Blackboard->SetValueAsInt();
+	Blackboard->SetValueAsName();
+	Blackboard->SetValueAsObject();
+	Blackboard->SetValueAsRotator();
+	Blackboard->SetValueAsString();
+	Blackboard->SetValueAsVector();
+*/
+
+void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData)
+{
+	Controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
+	OwnerBoss = Controller->GetPossessedBoss();
 	
-	FBlackboardKeySelector;
-	return;
+	Controller->GetBlackboardComponent()->SetValueAsBool("PhaseChangedKey", OwnerBoss->IsAblePhaseChange());
+	Controller->GetBlackboardComponent()->SetValueAsInt("PhaseKey", OwnerBoss->GetCurrentPhase());
 }
 
-void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) {
-
+void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
 	
 }

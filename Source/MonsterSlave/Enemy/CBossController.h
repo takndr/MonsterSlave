@@ -8,6 +8,8 @@ UCLASS()
 class MONSTERSLAVE_API ACBossController : public AAIController
 {
 	GENERATED_BODY()
+public:
+	ACBossController();
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
 // ==================================================================

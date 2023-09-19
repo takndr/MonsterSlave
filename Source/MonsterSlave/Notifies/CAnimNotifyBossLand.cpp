@@ -1,6 +1,7 @@
 #include "Notifies/CAnimNotifyBossLand.h"
 
 #include "Enemy/CBoss.h"
+#include "Component/CStateComponent.h"
 
 #include "Global.h"
 
@@ -16,5 +17,11 @@ void UCAnimNotifyBossLand::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	ACBoss* boss = Cast<ACBoss>(MeshComp->GetOwner());
 	CheckNull(boss);
 
+	UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(boss);
+	CheckNull(stateComp);
+
 	boss->SetFly(false);
+	// TODO : °íÄ¥Á¡
+	boss->SetPhaseChangeFalse();
+	stateComp->SetIdle();
 }

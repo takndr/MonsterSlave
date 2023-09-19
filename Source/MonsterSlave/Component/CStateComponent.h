@@ -6,7 +6,7 @@
 
 UENUM(BlueprintType)
 enum class EStateType : uint8 {
-	Idle, Equip, Attack, Evade, Inventory
+	Idle, Equip, Action, Evade,
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -22,12 +22,12 @@ protected:
 public:	
 	FORCEINLINE bool IsIdle() { return State == EStateType::Idle; }
 	FORCEINLINE bool IsEquip() { return State == EStateType::Equip; }
-	FORCEINLINE bool IsAttack() { return State == EStateType::Attack; }
+	FORCEINLINE bool IsAction() { return State == EStateType::Action; }
 	FORCEINLINE bool IsEavde() { return State == EStateType::Evade; }
 
 	FORCEINLINE void SetIdle() { State = EStateType::Idle; }
 	FORCEINLINE void SetEquip() { State = EStateType::Equip; }
-	FORCEINLINE void SetAttack() { State = EStateType::Attack; }
+	FORCEINLINE void SetAction() { State = EStateType::Action; }
 	FORCEINLINE void SetEvade() { State = EStateType::Evade; }
 //===================================================================
 

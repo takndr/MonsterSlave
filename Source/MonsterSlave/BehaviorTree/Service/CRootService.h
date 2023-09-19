@@ -9,12 +9,7 @@ class MONSTERSLAVE_API UCRootService : public UBTService
 {
 	GENERATED_BODY()
 protected:
-	/** called when search enters underlying branch
-	 * this function should be considered as const (don't modify state of object) if node is not instanced! */
 	virtual void OnSearchStart(FBehaviorTreeSearchData& SearchData) override;
-
-	/** update next tick interval
-	 * this function should be considered as const (don't modify state of object) if node is not instanced! */
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 // ==================================================================
@@ -26,5 +21,6 @@ public:
 		FBlackboardKeySelector PhaseChangedKey;
 
 private:
+	class ACBossController* Controller;
 	class ACBoss* OwnerBoss;
 };

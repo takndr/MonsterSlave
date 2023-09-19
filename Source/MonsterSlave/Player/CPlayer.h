@@ -25,10 +25,10 @@ public:
 	FORCEINLINE const bool IsAim() { return bAim; }
 
 	UFUNCTION(BlueprintImplementableEvent, Exec)
-		void TestMontageFly();
+		void TestPhaseChangeTrue();
 
 	UFUNCTION(BlueprintImplementableEvent, Exec)
-		void TestMontageLand();
+		void TestPhaseChangeFalse();
 
 private:
 	// Axis Event

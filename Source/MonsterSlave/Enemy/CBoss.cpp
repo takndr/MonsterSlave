@@ -54,7 +54,7 @@ void ACBoss::BeginPlay()
 	BossHpWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
-	BossHpWidget->UpdateName(BossName);
+	BossHpWidget->UpdateBossName(BossName);
 }
 
 void ACBoss::Tick(float DeltaTime)
@@ -63,21 +63,10 @@ void ACBoss::Tick(float DeltaTime)
 
 }
 
-void ACBoss::BossFly()
+float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	CLog::Print("Fly");
-	//GetMesh()->GetAnimInstance()->Montage_Play(FlyMontage);
-	PlayAnimMontage(FlyMontage);
-}
+	CheckTrueResult(bPhaseChange, Damage);
 
-void ACBoss::BossLand()
-{
-	CLog::Print("Land");
-	//GetMesh()->GetAnimInstance()->Montage_Play(LandMontage);
-	PlayAnimMontage(LandMontage);
-}
-
-float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	Attacker = Cast<ACharacter>(EventInstigator->GetPawn());
 	Causer = DamageCauser;
@@ -94,18 +83,40 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	damageText->FinishSpawning(damageTransform);
 	damageText->SetDamageText(Damage);
 
-
-	// 만약 체력이 다 닳아서 0이되면 죽는 거로 처리
-	if (StatusComponent->IsDead()) {
-		PlayAnimMontage(DieMontage);
-		GetMesh()->SetGenerateOverlapEvents(false);
-		GetMesh()->SetCollisionProfileName("NoCollision");
+	// 체력 전부 줄으면 페이즈 전환 / 마지막 페이즈라면 보스 사망
+	if (StatusComponent->IsDead())
+	{
+		// TODO : 현재 마지막 페이즈인지는 하드코딩으로 넣어 놓았음
+		if (BossPhase == 2)
+		{
+			PlayAnimMontage(DieMontage);
+			GetMesh()->SetGenerateOverlapEvents(false);
+			GetMesh()->SetCollisionProfileName("NoCollision");
+			// TODO : 보스가 죽어서 HP 위젯이 사라지는 것을 타이머로 설정하는 것이 나을 것 같음
+			BossHpWidget->RemoveFromViewport();
+		}
+		else
+		{
+			bPhaseChange = true;
+			StatusComponent->IncreaseHealth(StatusComponent->GetMaxHp());
+			BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+		}
 	}
 
-	// 체력이 일정 부분까지 줄으면 페이즈 전환
 	
+
 
 
 	return DamageValue;
 }
 
+// TODO : 보스 체력 위젯이 다시 차오르게(체력설정도 다시)
+void ACBoss::ChangePhase()
+{
+	CheckFalse(bPhaseChange);
+
+	StateComponent->SetAction();
+	PlayAnimMontage(PhaseChangeMontage[BossPhase]);
+
+	BossPhase++;
+}
