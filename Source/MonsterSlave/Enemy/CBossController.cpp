@@ -2,6 +2,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "Perception/AIPerceptionComponent.h"
 
 #include "Enemy/CBoss.h"
 
@@ -10,23 +11,20 @@
 ACBossController::ACBossController()
 {
 	CHelpers::CreateActorComponent(this, &Blackboard, "Blackboard");
-	Blackboard;
+	CHelpers::CreateActorComponent(this, &Perception, "Perception");
+
+
 }
 
 void ACBossController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ACBoss* boss = Cast<ACBoss>(InPawn);
-	CheckNull(boss);
+	PossessedBoss = Cast<ACBoss>(InPawn);
 
-	PossessedBoss = boss;
-
-	UBehaviorTree* behaviorTree = boss->GetBehaviorTree();
+	UBehaviorTree* behaviorTree = PossessedBoss->GetBehaviorTree();
 	CheckNull(behaviorTree);
 
-	Blackboard->InitializeBlackboard(*(behaviorTree->GetBlackboardAsset()));
-
-	
+	UseBlackboard(behaviorTree->GetBlackboardAsset(), Blackboard);
 	RunBehaviorTree(behaviorTree);
 }

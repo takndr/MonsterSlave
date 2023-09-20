@@ -18,4 +18,8 @@ public:
 // ==================================================================
 private:
 	class ACBoss* PossessedBoss;
+// ==================================================================
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class UAIPerceptionComponent* Perception;
 };
