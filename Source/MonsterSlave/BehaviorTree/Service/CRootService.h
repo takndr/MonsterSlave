@@ -14,11 +14,6 @@ protected:
 
 // ==================================================================
 public:
-	UPROPERTY(EditAnywhere)
-		FBlackboardKeySelector PhaseKey;
-
-	UPROPERTY(EditAnywhere)
-		FBlackboardKeySelector PhaseChangedKey;
 
 private:
 	class ACBossController* Controller;

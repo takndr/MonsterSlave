@@ -2,23 +2,12 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 
+#include "Component/CBehaviorComponent.h"
 #include "Enemy/CBoss.h"
 #include "Enemy/CBossController.h"
+#include "Player/CPlayer.h"
 
 #include "Global.h"
-
-/*
-	Blackboard->SetValueAsBool();
-	Blackboard->SetValueAsClass();
-	Blackboard->SetValueAsEnum();
-	Blackboard->SetValueAsFloat();
-	Blackboard->SetValueAsInt();
-	Blackboard->SetValueAsName();
-	Blackboard->SetValueAsObject();
-	Blackboard->SetValueAsRotator();
-	Blackboard->SetValueAsString();
-	Blackboard->SetValueAsVector();
-*/
 
 void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData)
 {
@@ -31,5 +20,41 @@ void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData)
 
 void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
+	// TODO : 보스의 이동 혹은 공격 -> Behavior 지정
+	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
+	CheckNull(controller);
+
+	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
+	CheckNull(behaviorComp);
+
+	ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
+	CheckNull(boss);
+
+	UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(boss);
+	CheckNull(stateComp);
+
+	ACPlayer* player = behaviorComp->GetPlayerKey();
+	CheckNull(player);
+
+	// boss의 전방벡터와 플레이어의 전방벡터가 -1이 아닐경우에는 Rotate모드 -> 내적은 아닌것같음
+	FVector bossForward = boss->GetActorForwardVector();
+	FVector bossLoc = boss->GetActorLocation();
+	FVector playerLoc = player->GetActorLocation();
+	FVector temp = playerLoc - bossLoc;
+	FVector cross = bossForward ^ temp;
+	float doc = bossForward | temp;
+
+	if (doc > 0)
+	{
+		CLog::Print(cross.Size());
+	}
 	
+	//CLog::Print(cross.Size()); // 좌우는 확인, 근데 뒤에 있어도 이게 0근사치로 찍히면 안됨, 내적이랑 외적 같이 써야할것같음
+
+	// boss의 거리가 플레이어와의 일정 거리가 아니면 Move모드 -> 어떤 공격이냐에 따라 거리가 달라지는데?
+	float distance = 0.0f;
+
+	// boss의 거리가 플레이어와의 일정 거리가 충족하면 Action모드
+
+
 }
