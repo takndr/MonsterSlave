@@ -43,6 +43,11 @@ void ACBossController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CheckFalse(bDebugMode);
+
+	FVector center = PossessedBoss->GetActorLocation();
+
+	DrawDebugSphere(GetWorld(), center, SightPerception->SightRadius, 30, FColor::Green);
+	DrawDebugSphere(GetWorld(), center, BehaviorRange, 30, FColor::Red);
 }
 
 void ACBossController::OnPossess(APawn* InPawn)

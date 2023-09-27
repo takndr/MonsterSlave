@@ -27,7 +27,7 @@ private:
 	class ACBoss* PossessedBoss;
 	class UAISenseConfig_Sight* SightPerception;
 
-	bool bDebugMode = true;
+	
 // ==================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -35,6 +35,12 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCBehaviorComponent* Behavior;
+
+	UPROPERTY(EditAnywhere)
+		float BehaviorRange = 150.0f;
+
+	UPROPERTY(EditAnywhere)
+		bool bDebugMode = true;
 
 
 };

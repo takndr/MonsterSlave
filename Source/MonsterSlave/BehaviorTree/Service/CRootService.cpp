@@ -41,19 +41,24 @@ void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	FVector bossLoc = boss->GetActorLocation();
 	FVector playerLoc = player->GetActorLocation();
 	FVector temp = playerLoc - bossLoc;
-	FVector cross = bossForward ^ temp;
-	float doc = bossForward | temp;
+	float doc = bossForward.GetSafeNormal2D() | temp.GetSafeNormal2D();
 
-	if (doc > 0)
+	if (doc < 0.98)
 	{
-		CLog::Print(cross.Size());
+		behaviorComp->SetRotateMode();
+		return;
 	}
 	
-	//CLog::Print(cross.Size()); // 좌우는 확인, 근데 뒤에 있어도 이게 0근사치로 찍히면 안됨, 내적이랑 외적 같이 써야할것같음
 
 	// boss의 거리가 플레이어와의 일정 거리가 아니면 Move모드 -> 어떤 공격이냐에 따라 거리가 달라지는데?
-	float distance = 0.0f;
+	float distance = player->GetDistanceTo(boss);
+	if (distance >= 1000)
+	{
+		behaviorComp->SetMoveMode();
+		return;
+	}
 
+	behaviorComp->SetWaitMode();
 	// boss의 거리가 플레이어와의 일정 거리가 충족하면 Action모드
 
 
