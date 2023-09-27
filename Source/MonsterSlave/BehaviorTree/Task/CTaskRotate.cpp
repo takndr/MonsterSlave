@@ -16,21 +16,6 @@ UCTaskRotate::UCTaskRotate()
 EBTNodeResult::Type UCTaskRotate::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
-	CLog::Print("RotateTask Start");
-	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
-	CheckNullResult(controller, EBTNodeResult::Failed);
-	
-	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
-	CheckNullResult(behaviorComp, EBTNodeResult::Failed);
-
-	ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
-	CheckNullResult(boss, EBTNodeResult::Failed);
-
-	ACPlayer* player = behaviorComp->GetPlayerKey();
-
-	FVector target = player->GetActorLocation() - boss->GetActorLocation();
-	boss->AddMovementInput(target.GetSafeNormal2D());
-	//boss->Add
 
 	return EBTNodeResult::InProgress;
 }
@@ -49,14 +34,19 @@ void UCTaskRotate::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 	CheckNull(boss);
 
 	ACPlayer* player = behaviorComp->GetPlayerKey();
+	CheckNull(player);
 
 	FVector bossForward = boss->GetActorForwardVector();
 	FVector bossLoc = boss->GetActorLocation();
 	FVector playerLoc = player->GetActorLocation();
 	FVector temp = playerLoc - bossLoc;
+
+	FRotator rotation = UKismetMathLibrary::RInterpTo(boss->GetActorRotation(), temp.Rotation(), DeltaSeconds, 2.0f);
+	boss->SetActorRotation(rotation);
+
 	float doc = bossForward.GetSafeNormal2D() | temp.GetSafeNormal2D();
-	
-	if (doc > 0.707)
+
+	if (doc > 0.85)
 	{
 		CLog::Print("RotateTask End");
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
