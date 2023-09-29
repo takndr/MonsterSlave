@@ -58,7 +58,7 @@ void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 		return;
 	}
 
-	behaviorComp->SetWaitMode();
+	behaviorComp->SetActionMode();
 	// boss의 거리가 플레이어와의 일정 거리가 충족하면 Action모드
 
 

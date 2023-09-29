@@ -23,7 +23,7 @@ EBTNodeResult::Type UCTaskRotate::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
 void UCTaskRotate::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
-	CLog::Log("Rotate Task Start");
+
 	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
 	CheckNull(controller);
 
@@ -39,16 +39,15 @@ void UCTaskRotate::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 	FVector bossForward = boss->GetActorForwardVector();
 	FVector bossLoc = boss->GetActorLocation();
 	FVector playerLoc = player->GetActorLocation();
-	FVector temp = playerLoc - bossLoc;
+	FVector bossToPlayer = playerLoc - bossLoc;
 
-	FRotator rotation = UKismetMathLibrary::RInterpTo(boss->GetActorRotation(), temp.Rotation(), DeltaSeconds, 2.0f);
+	FRotator rotation = UKismetMathLibrary::RInterpTo(boss->GetActorRotation(), bossToPlayer.Rotation(), DeltaSeconds, 2.0f);
 	boss->SetActorRotation(rotation);
 
-	float doc = bossForward.GetSafeNormal2D() | temp.GetSafeNormal2D();
+	float doc = bossForward.GetSafeNormal2D() | bossToPlayer.GetSafeNormal2D();
 
 	if (doc > 0.85)
 	{
-		CLog::Print("RotateTask End");
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }

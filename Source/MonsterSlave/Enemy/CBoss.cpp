@@ -103,9 +103,6 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 		}
 	}
 
-	
-
-
 
 	return DamageValue;
 }
@@ -119,4 +116,32 @@ void ACBoss::ChangePhase()
 	PlayAnimMontage(PhaseChangeMontage[BossPhase]);
 
 	BossPhase++;
+}
+
+void ACBoss::SlashAttack()
+{
+	CheckFalse(StateComponent->IsIdle());
+	StateComponent->SetAction();
+	PlayAnimMontage(AttackSlashMontage);
+}
+
+void ACBoss::BiteAttack()
+{
+	CheckFalse(StateComponent->IsIdle());
+	StateComponent->SetAction();
+	PlayAnimMontage(AttackBiteMontage);
+}
+
+void ACBoss::BreathAttack()
+{
+	CheckFalse(StateComponent->IsIdle());
+	StateComponent->SetAction();
+	if (bFly == true)
+	{
+		PlayAnimMontage(FlyFlameMontage);
+	}
+	else
+	{
+		PlayAnimMontage(LandFlameMontage);
+	}
 }

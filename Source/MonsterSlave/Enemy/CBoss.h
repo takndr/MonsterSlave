@@ -25,6 +25,9 @@ public:
 
 	void ChangePhase();
 
+	void SlashAttack();
+	void BiteAttack();
+	void BreathAttack();
 // =================================================================
 public:
 	bool bPhaseChange = false;
@@ -68,10 +71,10 @@ private:
 		class UAnimMontage* FlyFlameMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
-		class UAnimMontage* AttackHandMontage;
+		class UAnimMontage* AttackSlashMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
-		class UAnimMontage* AttackMouthMontage;
+		class UAnimMontage* AttackBiteMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "PhaseChangeMontage")
 		TArray<class UAnimMontage*> PhaseChangeMontage;
