@@ -23,6 +23,8 @@
 #include "Items/Weapons/CEquipBow.h"
 #include "Items/Weapons/CEquipSword.h"
 
+#include "Enemy/CBoss.h"
+
 #include "Global.h"
 
 ACPlayer::ACPlayer() {
@@ -279,3 +281,56 @@ void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStr
 	MyItems.Insert(NewItem, index);
 }
 
+float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float damageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	CheckTrueResult(StatusComponent->IsDead(), damageValue);
+
+	CLog::Print(damageValue);
+
+	StatusComponent->DecreaseHealth(damageValue);
+
+	if (StatusComponent->IsDead())
+	{
+		CheckNullResult(DeadMontage, damageValue);
+		PlayAnimMontage(DeadMontage);
+
+		// TODO : 죽으면 아무것도 못하게
+		return damageValue;
+	}
+
+	ACBoss* boss = Cast<ACBoss>(DamageCauser);
+	if (boss->IsHeavyHit())
+	{
+		switch (WeaponComponent->GetWeaponType())
+		{
+		case EWeaponType::Unarmed:
+			//PlayAnimMontage();
+			break;
+		case EWeaponType::Sword:
+			//PlayAnimMontage();
+			break;
+		case EWeaponType::Bow:
+			//PlayAnimMontage();
+			break;
+		}
+
+	} 
+	else
+	{
+		switch (WeaponComponent->GetWeaponType())
+		{
+		case EWeaponType::Unarmed:
+			//PlayAnimMontage();
+			break;
+		case EWeaponType::Sword:
+			//PlayAnimMontage();
+			break;
+		case EWeaponType::Bow:
+			//PlayAnimMontage();
+			break;
+		}
+	}
+
+	return damageValue;
+}

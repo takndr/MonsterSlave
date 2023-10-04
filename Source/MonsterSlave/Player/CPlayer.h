@@ -14,6 +14,7 @@ public:
 	ACPlayer();
 protected:
 	virtual void BeginPlay() override;
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 // ============================================================================
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -53,25 +54,6 @@ private:
 	UFUNCTION()
 		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 // ===========================================================
-public:
-	UPROPERTY(EditDefaultsOnly)
-		class UPaperSpriteComponent* MinimapSprite;
-
-	UPROPERTY(EditDefaultsOnly)
-		class UCStatusComponent* StatusComponent;
-
-	UPROPERTY(EditDefaultsOnly)
-		class UCStateComponent* StateComponent;
-
-	UPROPERTY(EditDefaultsOnly)
-		class UCWeaponComponent* WeaponComponent;
-
-	UPROPERTY(EditDefaultsOnly)
-		class UCActionComponent* ActionComponent;
-
-protected:
-	
-
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCameraComponent* MeshCamera;
@@ -84,6 +66,43 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MinimapSpringArm;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UPaperSpriteComponent* MinimapSprite;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCStatusComponent* StatusComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCStateComponent* StateComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCWeaponComponent* WeaponComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCActionComponent* ActionComponent;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* DeadMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* UnarmedHeavyHitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* UnarmedHitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* SwordHeavyHitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* SwordHitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* BowHeavyHitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* BowHitMontage;
 // ===========================================================
 public:
 	TSubclassOf<class UUserWidget> InventoryWidgetClass;

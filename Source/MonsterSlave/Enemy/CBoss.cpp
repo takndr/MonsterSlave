@@ -8,6 +8,7 @@
 #include "Widgets/CBossHp.h"
 #include "Enemy/CBossController.h"
 #include "etc/CDamageText.h"
+#include "Player/CPlayer.h"
 
 #include "Global.h"
 
@@ -17,6 +18,9 @@ ACBoss::ACBoss()
 
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
+
+	CHelpers::CreateSceneComponent(this, &Mouth, "MouthCollision", GetMesh());
+	CHelpers::CreateSceneComponent(this, &Hand, "HandCollision", GetMesh());
 
 	// SkeletalMesh Setting
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
@@ -35,6 +39,8 @@ ACBoss::ACBoss()
 
 	// Collision Setting
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	Mouth->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Hand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// Widget Setting
 	CHelpers::GetClass(&BossHpWidgetClass, "WidgetBlueprint'/Game/Widgets/Widget/Enemy/WB_BossHp.WB_BossHp_C'");
@@ -55,6 +61,12 @@ void ACBoss::BeginPlay()
 	
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 	BossHpWidget->UpdateBossName(BossName);
+
+	Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
+	Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
+
+	Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
+	Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
 }
 
 void ACBoss::Tick(float DeltaTime)
@@ -103,6 +115,7 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 		}
 	}
 
+	// TODO : Player가 칼을들고 3번째 공격시 피격 몽타주 진행
 
 	return DamageValue;
 }
@@ -121,6 +134,7 @@ void ACBoss::ChangePhase()
 void ACBoss::SlashAttack()
 {
 	CheckFalse(StateComponent->IsIdle());
+	SetHeavyHit(true);
 	StateComponent->SetAction();
 	PlayAnimMontage(AttackSlashMontage);
 }
@@ -144,4 +158,38 @@ void ACBoss::BreathAttack()
 	{
 		PlayAnimMontage(LandFlameMontage);
 	}
+}
+
+void ACBoss::OnCollision(FName InName)
+{
+	UCapsuleComponent* capsule = Cast<UCapsuleComponent>(GetDefaultSubobjectByName(InName));
+	CheckNull(capsule);
+
+	capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void ACBoss::OffCollision(FName InName)
+{
+	UCapsuleComponent* capsule = Cast<UCapsuleComponent>(GetDefaultSubobjectByName(InName));
+	CheckNull(capsule);
+
+	capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ACBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// 본인 제외
+	CheckTrue(OtherActor == this);
+
+	ACPlayer* player = Cast<ACPlayer>(OtherActor);
+	CheckNull(player);
+
+	if (HittedCharacters.Find(player) != -1) {
+		return;
+	}
+	HittedCharacters.AddUnique(player);
+	
+	// Take Damage
+	FDamageEvent damageEvent;
+	OtherActor->TakeDamage(30.0f, damageEvent, GetController(), this);
 }

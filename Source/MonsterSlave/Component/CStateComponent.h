@@ -6,7 +6,7 @@
 
 UENUM(BlueprintType)
 enum class EStateType : uint8 {
-	Idle, Equip, Action, Evade,
+	Idle, Equip, Action, Evade, Dead
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

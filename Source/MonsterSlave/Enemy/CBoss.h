@@ -22,12 +22,19 @@ public:
 	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 	FORCEINLINE bool IsAblePhaseChange() { return bPhaseChange; }
 	FORCEINLINE int32 GetCurrentPhase() { return BossPhase; }
+	FORCEINLINE void ClearHittedCharacters() { HittedCharacters.Empty(); }
+	FORCEINLINE void SetHeavyHit(bool InHit) { bHeavyHit = InHit; }
+	FORCEINLINE bool IsHeavyHit() { return bHeavyHit; }
 
 	void ChangePhase();
 
 	void SlashAttack();
 	void BiteAttack();
 	void BreathAttack();
+
+	void OnCollision(FName InName);
+	void OffCollision(FName InName);
+
 // =================================================================
 public:
 	bool bPhaseChange = false;
@@ -40,10 +47,12 @@ private:
 
 private:
 	bool bFly = false;
+	bool bHeavyHit = false;
 
 private:
 	TSubclassOf<class UUserWidget> BossHpWidgetClass;
 	class UCBossHp* BossHpWidget;
+	TArray<class ACharacter*> HittedCharacters;
 // =================================================================
 public:
 	UFUNCTION(BlueprintCallable)
@@ -51,6 +60,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetPhaseChangeFalse() { bPhaseChange = false; }
+
+private:
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 // =================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -58,6 +71,12 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStateComponent* StateComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCapsuleComponent* Mouth;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCapsuleComponent* Hand;
 
 	UPROPERTY(EditDefaultsOnly)
 		class UBehaviorTree* BehaviorTree;

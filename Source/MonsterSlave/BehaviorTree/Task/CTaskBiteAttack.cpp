@@ -46,7 +46,6 @@ void UCTaskBiteAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 
 	if (stateComp->IsIdle() && (RunningTime >= Delay))
 	{
-		CLog::Print("BiteEnd");
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
