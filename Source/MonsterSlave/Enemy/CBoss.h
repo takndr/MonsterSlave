@@ -25,6 +25,7 @@ public:
 	FORCEINLINE void ClearHittedCharacters() { HittedCharacters.Empty(); }
 	FORCEINLINE void SetHeavyHit(bool InHit) { bHeavyHit = InHit; }
 	FORCEINLINE bool IsHeavyHit() { return bHeavyHit; }
+	FORCEINLINE class ACBossBreath* GetBossBreath() { return BossBreath; }
 
 	void ChangePhase();
 
@@ -49,10 +50,13 @@ private:
 	bool bFly = false;
 	bool bHeavyHit = false;
 
+public:
+	TArray<class ACharacter*> HittedCharacters;
+
 private:
 	TSubclassOf<class UUserWidget> BossHpWidgetClass;
 	class UCBossHp* BossHpWidget;
-	TArray<class ACharacter*> HittedCharacters;
+	class ACBossBreath* BossBreath;
 // =================================================================
 public:
 	UFUNCTION(BlueprintCallable)

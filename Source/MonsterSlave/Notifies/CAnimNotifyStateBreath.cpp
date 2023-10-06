@@ -12,12 +12,26 @@ FString UCAnimNotifyStateBreath::GetNotifyName_Implementation() const
 
 void UCAnimNotifyStateBreath::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
-	// Breath의 Collision 켜기
-	// Breath의 Particle 켜기
+	ACBoss* boss = Cast<ACBoss>(MeshComp->GetOwner());
+	CheckNull(boss);
+
+	ACBossBreath* breath = boss->GetBossBreath();
+	CheckNull(breath);
+
+	breath->OnCollision();
+	breath->SetActivate(true);
 }
 
 void UCAnimNotifyStateBreath::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
-	// Breath의 Collision 끄기
-	// Breath의 Particle 끄기
+	ACBoss* boss = Cast<ACBoss>(MeshComp->GetOwner());
+	CheckNull(boss);
+
+	ACBossBreath* breath = boss->GetBossBreath();
+	CheckNull(breath);
+
+	breath->OffCollision();
+	breath->SetActivate(false);
+	
+	boss->ClearHittedCharacters();
 }

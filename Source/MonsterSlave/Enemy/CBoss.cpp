@@ -8,6 +8,7 @@
 #include "Widgets/CBossHp.h"
 #include "Enemy/CBossController.h"
 #include "etc/CDamageText.h"
+#include "etc/CBossBreath.h"
 #include "Player/CPlayer.h"
 
 #include "Global.h"
@@ -65,6 +66,16 @@ void ACBoss::BeginPlay()
 	Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
 	Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
 
+	// TODO : Spawn Breath
+	FActorSpawnParameters param;
+	param.Owner = this;
+
+	BossBreath = GetWorld()->SpawnActor<ACBossBreath>(ACBossBreath::StaticClass(), param);
+	//BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+	BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
+	// TODO : AttachToComponent가 정상적으로 안되는 부분 확인
+
+
 	Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
 	Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
 }
@@ -85,7 +96,7 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 
 	StatusComponent->DecreaseHealth(DamageValue);
 
-	// TODO : 보스전용 체력 위젯 만들기
+	// TODO : 보스전용 체력 위젯 만들기(보강)
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	// 데미지 보여주기
@@ -152,10 +163,12 @@ void ACBoss::BreathAttack()
 	StateComponent->SetAction();
 	if (bFly == true)
 	{
+		BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "FlyBreathSocket");
 		PlayAnimMontage(FlyFlameMontage);
 	}
 	else
 	{
+		BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
 		PlayAnimMontage(LandFlameMontage);
 	}
 }
