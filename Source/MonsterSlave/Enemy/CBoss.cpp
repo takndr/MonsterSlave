@@ -66,15 +66,10 @@ void ACBoss::BeginPlay()
 	Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
 	Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
 
-	// TODO : Spawn Breath
 	FActorSpawnParameters param;
 	param.Owner = this;
 
 	BossBreath = GetWorld()->SpawnActor<ACBossBreath>(ACBossBreath::StaticClass(), param);
-	//BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-	BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
-	// TODO : AttachToComponent가 정상적으로 안되는 부분 확인
-
 
 	Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
 	Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
@@ -100,7 +95,6 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	// 데미지 보여주기
-	// TODO : damageTransform 수정
 	FTransform damageTransform = GetActorTransform();
 	ACDamageText* damageText = GetWorld()->SpawnActorDeferred<ACDamageText>(ACDamageText::StaticClass(), damageTransform);
 	damageText->FinishSpawning(damageTransform);
@@ -109,7 +103,6 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	// 체력 전부 줄으면 페이즈 전환 / 마지막 페이즈라면 보스 사망
 	if (StatusComponent->IsDead())
 	{
-		// TODO : 현재 마지막 페이즈인지는 하드코딩으로 넣어 놓았음
 		if (BossPhase == 2)
 		{
 			PlayAnimMontage(DieMontage);

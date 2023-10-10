@@ -20,7 +20,7 @@ void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData)
 
 void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	// TODO : 보스의 이동 혹은 공격 -> Behavior 지정
+	// TODO : 보스의 공격 선택(보강)
 	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
 	CheckNull(controller);
 
