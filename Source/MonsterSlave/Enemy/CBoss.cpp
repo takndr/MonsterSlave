@@ -70,6 +70,8 @@ void ACBoss::BeginPlay()
 	param.Owner = this;
 
 	BossBreath = GetWorld()->SpawnActor<ACBossBreath>(ACBossBreath::StaticClass(), param);
+	BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
+	//BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "FlyBreathSocket");
 
 	Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
 	Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
@@ -108,7 +110,7 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 			PlayAnimMontage(DieMontage);
 			GetMesh()->SetGenerateOverlapEvents(false);
 			GetMesh()->SetCollisionProfileName("NoCollision");
-			// TODO : 보스가 죽어서 HP 위젯이 사라지는 것을 타이머로 설정하는 것이 나을 것 같음
+			// TODO : 보스가 죽어서 HP 위젯이 사라지는 것을 타이머로 설정하는 것이 나을 것 같음(보강)
 			BossHpWidget->RemoveFromViewport();
 		}
 		else

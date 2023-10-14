@@ -45,17 +45,12 @@ void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	}
 	HittedActors.AddUnique(OtherActor);
 
-	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
+	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함(선택)
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(10.0f, damageEvent, Owner->GetController(), this);
 
-	// TODO : Damage Effect
-
-
-	// TODO : Damage Widget
 }
 
-// TODO :: 발사는 되지만 아직 방향이 정확하지 않음, 방향은 캐릭터가 보고 있는 쪽으로 진행을 할 예정, 아직 완벽히 만족하진 않음
 void ACArrow::ShootArrow() {
 	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	

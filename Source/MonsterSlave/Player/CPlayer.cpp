@@ -295,7 +295,7 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 		CheckNullResult(DeadMontage, damageValue);
 		PlayAnimMontage(DeadMontage);
 
-		// TODO : 죽으면 아무것도 못하게
+		// TODO : 죽으면 아무것도 못하게(보강)
 		return damageValue;
 	}
 
