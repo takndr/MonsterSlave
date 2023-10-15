@@ -58,7 +58,7 @@ void ACBoss::BeginPlay()
 	BossHpWidget->AddToViewport();
 
 	CheckNull(BossHpWidget);
-	BossHpWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	BossHpWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 	BossHpWidget->UpdateBossName(BossName);
