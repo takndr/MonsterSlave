@@ -9,17 +9,16 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MONSTERSLAVE_API UCStatusComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
 public:	
 	UCStatusComponent();
 protected:
 	virtual void BeginPlay() override;
-
 // =================================================================
 public:
 	FORCEINLINE bool IsDead() { return CurrentHp <= 0; }
 	FORCEINLINE float GetCurrentHp() { return CurrentHp; }
 	FORCEINLINE float GetMaxHp() { return MaxHp; }
+	FORCEINLINE float GetHpRatio() { return CurrentHp / MaxHp; }
 // =================================================================
 public:	
 	UFUNCTION(BlueprintCallable)

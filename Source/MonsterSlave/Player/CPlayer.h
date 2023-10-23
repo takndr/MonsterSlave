@@ -9,7 +9,6 @@ UCLASS()
 class MONSTERSLAVE_API ACPlayer : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
 	ACPlayer();
 protected:
@@ -23,13 +22,7 @@ public:
 	void RemoveInventoryItem(const FCItemStruct& InItem);
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
 
-	FORCEINLINE const bool IsAim() { return bAim; }
-
-	UFUNCTION(BlueprintImplementableEvent, Exec)
-		void TestPhaseChangeTrue();
-
-	UFUNCTION(BlueprintImplementableEvent, Exec)
-		void TestPhaseChangeFalse();
+	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
 
 private:
 	// Axis Event
@@ -44,9 +37,11 @@ private:
 	void Inventory();
 	void Attack();
 	void PickUp();
-	void OnAim();
-	void OffAim();
 // ============================================================================
+public:
+	UFUNCTION(Exec)
+		void TakeDamageTest();
+
 private:
 	UFUNCTION()
 		void MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -78,10 +73,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCWeaponComponent* WeaponComponent;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCActionComponent* ActionComponent;
-
+// ===========================================================
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 		class UAnimMontage* DeadMontage;
@@ -105,21 +97,20 @@ private:
 		class UAnimMontage* BowHitMontage;
 // ===========================================================
 public:
-	TSubclassOf<class UUserWidget> InventoryWidgetClass;
-	class UCInventory* InventoryWidget;
-
 	bool bCanPickUp = false;
-	bool bAim = false;
 
 private:
 	class USkeletalMesh* PlayerBody;
 	class ACPlayerHair* PlayerHair;
 	
-	TSubclassOf<class UCPlayerHp> PlayerHpWidgetClass;
-	class UCPlayerHp* PlayerHpWidget;
+	TSubclassOf<class UCPlayerMain> PlayerMainWidgetClass;
+	class UCPlayerMain* PlayerMainWidget;
+
+	TSubclassOf<class UUserWidget> InventoryWidgetClass;
+	class UCInventory* InventoryWidget;
 
 	class ACFieldItem* PickableActor;
 	TArray<FCItemStruct> MyItems;
-	int32 MaxItem = 15;
+	int32 MaxItem = 30;
 
 };

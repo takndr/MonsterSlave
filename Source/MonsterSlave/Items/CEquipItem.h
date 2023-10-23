@@ -3,36 +3,34 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ItemStruct.h"
-#include "Interface/CInterfaceWeapon.h"
 #include "CEquipItem.generated.h"
 
 UCLASS()
-class MONSTERSLAVE_API ACEquipItem : public AActor, public ICInterfaceWeapon
+class MONSTERSLAVE_API ACEquipItem : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
 	ACEquipItem();
 	virtual void Tick(float DeltaTime) override;
-	virtual void Attack() override;
+protected:
+	virtual void BeginPlay() override;
 // ===================================================
 public:
-	// CPlayer에서 1번이나 2번 눌렀을 때 호출하는 함수
+	virtual void Attack();
+	virtual void NextCombo();
+	virtual void EndAttack();
+
 	void Equip();
 	void UnEquip();
 
 	void Attach();
 	void Detach();
+
 	virtual void Equipped();
 	virtual void UnEquipped();
-	virtual void OnAim();
-	virtual void OffAim();
 
-	virtual void EndAttack() {}
-
-protected:
-	virtual void BeginPlay() override;
-
+	FORCEINLINE void EnabledCombo() { bCanCombo = true; }
+	FORCEINLINE void DisabledCombo() { bCanCombo = false; }
 private:	
 
 // ===================================================
@@ -42,42 +40,37 @@ public:
 protected:
 	class ACharacter* Owner;
 	EWeaponType WeaponType;		// 자식에서 초기화
+	TArray<AActor*> HittedActors;
 
 protected:
 	class UCStateComponent* StateComp;
 	class UCWeaponComponent* WeaponComp;
 	bool bEquipping = false;
 
+private:
+	bool bCanCombo = false;
+	bool bSucceed = false;
 // ===================================================
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
-		class USkeletalMeshComponent* SkeletalMesh;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-		TArray<class UAnimMontage*> AttackMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-		TArray<class UAnimMontage*> AimAttackMontage;
+		class UStaticMeshComponent* StaticMesh;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Scene;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		TArray<class UAnimMontage*> AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 		FName UnEquippedHolster;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 		FName EquippedHolster;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	UPROPERTY(EditDefaultsOnly, Category = "Equip/UnEquip")
 		class UAnimMontage* EquipMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	UPROPERTY(EditDefaultsOnly, Category = "Equip/UnEquip")
 		class UAnimMontage* UnEquipMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
-		class UAnimMontage* OnAimMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Character")
-		class UAnimMontage* OffAimMontage;
 };

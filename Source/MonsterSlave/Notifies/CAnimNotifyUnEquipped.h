@@ -11,8 +11,4 @@ class MONSTERSLAVE_API UCAnimNotifyUnEquipped : public UAnimNotify
 public:
 	virtual FString GetNotifyName_Implementation() const override;
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-protected:
-
-private:
-
 };

@@ -1,6 +1,5 @@
 #include "Notifies/CAnimNotifyEquipped.h"
 
-#include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
 #include "Component/CWeaponComponent.h"
 
@@ -14,13 +13,10 @@ void UCAnimNotifyEquipped::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	Super::Notify(MeshComp, Animation);
 	CheckNull(MeshComp);
 
-	ACPlayer* player = Cast<ACPlayer>(MeshComp->GetOwner());
-	CheckNull(player);
+	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
+	CheckNull(weaponComp);
 
-	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
-	CheckNull(weapon);
-
-	ACEquipItem* equipItem = weapon->GetCurrentWeapon();
+	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
 	CheckNull(equipItem);
 
 	equipItem->Equipped();

@@ -17,7 +17,6 @@ void UCPlayerAnim::NativeUpdateAnimation(float DeltaSeconds) {
 	Speed = player->GetVelocity().Size2D();
 	Direction = CalculateDirection(player->GetVelocity(), player->GetControlRotation());
 	Pitch = player->GetBaseAimRotation().Pitch;
-	bAim = player->IsAim();
 
 	WeaponType = WeaponComponent->GetWeaponType();
 }

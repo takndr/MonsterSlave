@@ -8,7 +8,6 @@ UCLASS()
 class MONSTERSLAVE_API UCPlayerHp : public UUserWidget
 {
 	GENERATED_BODY()
-	
 public:
 	void UpdateHealth(float CurrentHp, float MaxHp);
 

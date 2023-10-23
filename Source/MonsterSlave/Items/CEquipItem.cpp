@@ -2,10 +2,10 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
-#include "Player/CPlayer.h"
 
 #include "Global.h"
 
@@ -14,7 +14,10 @@ ACEquipItem::ACEquipItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CHelpers::CreateSceneComponent(this, &Scene, "Scene");
-	CHelpers::CreateSceneComponent(this, &SkeletalMesh, "Mesh", Scene);
+	CHelpers::CreateSceneComponent(this, &StaticMesh, "Mesh", Scene);
+
+	StaticMesh->SetCollisionProfileName("NoCollision");
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ACEquipItem::BeginPlay()
@@ -32,11 +35,42 @@ void ACEquipItem::Tick(float DeltaTime)
 
 }
 
-void ACEquipItem::Attack() {
+void ACEquipItem::Attack() 
+{
+	CheckTrue(AttackMontage.Num() == 0);
+	CheckNull(Owner);
+
+	if (bCanCombo == true)
+	{
+		bCanCombo = false;
+		bSucceed = true;
+		return;
+	}
+	CheckFalse(StateComp->IsIdle());
+	StateComp->SetAction();
+
+	Owner->PlayAnimMontage(AttackMontage[ComboCount]);
 }
 
+void ACEquipItem::NextCombo()
+{
+	CheckFalse(bSucceed);
+	CheckNull(Owner);
 
-void ACEquipItem::Equip() {
+	bSucceed = false;
+	ComboCount++;
+
+	Owner->PlayAnimMontage(AttackMontage[ComboCount]);
+}
+
+void ACEquipItem::EndAttack()
+{
+	StateComp->SetIdle();
+	ComboCount = 0;
+}
+
+void ACEquipItem::Equip()
+{
 	if (EquipMontage == nullptr) {
 		CLog::Log("Set Equip Montage");
 		return;
@@ -49,7 +83,8 @@ void ACEquipItem::Equip() {
 	Owner->PlayAnimMontage(EquipMontage);
 }
 
-void ACEquipItem::UnEquip() {
+void ACEquipItem::UnEquip()
+{
 	if (UnEquipMontage == nullptr) {
 		CLog::Log("Set UnEquip Montage");
 		return;
@@ -60,24 +95,28 @@ void ACEquipItem::UnEquip() {
 	Owner->PlayAnimMontage(UnEquipMontage);
 }
 
-void ACEquipItem::Attach() {
+void ACEquipItem::Attach()
+{
 	CLog::Log("EquipItem Attach Called");
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), EquippedHolster);
 }
 
-void ACEquipItem::Detach() {
+void ACEquipItem::Detach()
+{
 	CLog::Log("EquipItem Detach Called");
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), UnEquippedHolster);
 }
 
-void ACEquipItem::Equipped() {
+void ACEquipItem::Equipped()
+{
 	CLog::Log("EquipItem Equipped Called");
 	CheckNull(StateComp);
 
 	StateComp->SetIdle();
 }
 
-void ACEquipItem::UnEquipped() {
+void ACEquipItem::UnEquipped()
+{
 	CLog::Log("EquipItem UnEquipped Called");
 	CheckNull(StateComp);
 	CheckNull(WeaponComp);
@@ -87,24 +126,4 @@ void ACEquipItem::UnEquipped() {
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
 	Owner->bUseControllerRotationYaw = false;
-}
-
-void ACEquipItem::OnAim() {
-	CLog::Log("EquipItem OnAim Called");
-	CheckNull(OnAimMontage);
-	CheckNull(Owner);
-	Owner->PlayAnimMontage(OnAimMontage);
-}
-
-
-void ACEquipItem::OffAim() {
-	CLog::Log("EquipItem OffAim Called");
-	CheckNull(OffAimMontage);
-	CheckNull(Owner);
-	Owner->PlayAnimMontage(OffAimMontage);
-	
-	if (StateComp->IsIdle() == false) {
-		StateComp->SetIdle();
-		ComboCount = 0;
-	}
 }

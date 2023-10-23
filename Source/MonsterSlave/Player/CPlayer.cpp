@@ -9,15 +9,14 @@
 
 #include "CPlayerAnim.h"
 
-#include "Widgets/CInventory.h"
-#include "Widgets/CPlayerHp.h"
+#include "Widgets/Inventory/CInventory.h"
+#include "Widgets/Player/CPlayerMain.h"
 
 #include "Items/CFieldItem.h"
 
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
-#include "Component/CActionComponent.h"
 
 #include "Player/CPlayerHair.h"
 #include "Items/Weapons/CEquipBow.h"
@@ -41,13 +40,15 @@ ACPlayer::ACPlayer() {
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
-	CHelpers::CreateActorComponent(this, &ActionComponent, "Action");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
 	MeshSpringArm->TargetArmLength = 300.0f;
 	MeshSpringArm->bDoCollisionTest = false;
 	MeshSpringArm->bUsePawnControlRotation = true;
+
+	// MeshCamera Setting
+	MeshCamera->bUsePawnControlRotation = true;
 
 	// MinimapSpringArm Setting
 	MinimapSpringArm->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
@@ -86,7 +87,7 @@ ACPlayer::ACPlayer() {
 
 	// Widget Setting
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
-	CHelpers::GetClass(&PlayerHpWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerHp");
+	CHelpers::GetClass(&PlayerMainWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerMain");
 	
 }
 
@@ -101,13 +102,13 @@ void ACPlayer::BeginPlay() {
 	InventoryWidget->AddToViewport();
 	InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	//PlayerHpWidget = CreateWidget<UCPlayerHp>(GetController<APlayerController>(), PlayerHpWidgetClass);
-	//PlayerHpWidget->AddToViewport();
-	//PlayerHpWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
+	PlayerMainWidget->AddToViewport();
+	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	// Status Setting
 	CheckNull(StatusComponent);
-	//PlayerHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+	PlayerMainWidget->UpdateHealth();
 
 	// Event Binding
 	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ACPlayer::MeshComponentBeginOverlap);
@@ -128,8 +129,6 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ACPlayer::Attack);
 	PlayerInputComponent->BindAction("SwordWeapon", IE_Pressed, this, &ACPlayer::OnSwordWeapon);
 	PlayerInputComponent->BindAction("BowWeapon", IE_Pressed, this, &ACPlayer::OnBowWeapon);
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ACPlayer::OnAim);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ACPlayer::OffAim);
 	// Inventory 관련
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
@@ -170,12 +169,10 @@ void ACPlayer::OnSwordWeapon() {
 	}
 
 	if (WeaponComponent->IsUnarmed() == true) {
-		CLog::Log("Sword Equipping");
 		WeaponComponent->EquipSword();
 	}
 	else {
 		// 일단은 장비 해제만
-		CLog::Log("Sword UnEquipping");
 		WeaponComponent->UnEquip();
 	}
 }
@@ -187,12 +184,10 @@ void ACPlayer::OnBowWeapon() {
 	}
 
 	if (WeaponComponent->IsUnarmed() == true) {
-		CLog::Log("Bow Equipping");
 		WeaponComponent->EquipBow();
 	}
 	else {
 		// 일단은 장비 해제만
-		CLog::Log("Bow UnEquipping");
 		WeaponComponent->UnEquip();
 	}
 }
@@ -200,27 +195,7 @@ void ACPlayer::OnBowWeapon() {
 void ACPlayer::Attack() {
 	if (WeaponComponent->GetCurrentWeapon() != nullptr) {
 		WeaponComponent->GetCurrentWeapon()->Attack();
-		// ActionComponent->Action();
 	}
-
-}
-
-void ACPlayer::OnAim() {
-	if (WeaponComponent->IsUnarmed() == true) {
-		CLog::Log("Do Not Equipped Item");
-		return;
-	}
-	bAim = true;
-	WeaponComponent->GetCurrentWeapon()->OnAim();
-}
-
-void ACPlayer::OffAim() {
-	if (WeaponComponent->IsUnarmed() == true) {
-		CLog::Log("Do Not Equipped Item");
-		return;
-	}
-	bAim = false;
-	WeaponComponent->GetCurrentWeapon()->OffAim();
 }
 
 void ACPlayer::Inventory() {
@@ -333,4 +308,10 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 	}
 
 	return damageValue;
+}
+
+void ACPlayer::TakeDamageTest()
+{
+	StatusComponent->DecreaseHealth(10);
+	PlayerMainWidget->UpdateHealth();
 }

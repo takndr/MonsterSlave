@@ -1,8 +1,7 @@
 #include "Notifies/CAnimNotifyNextCombo.h"
 
-#include "Component/CWeaponComponent.h"
 #include "Items/CEquipItem.h"
-#include "Items/Weapons/CEquipSword.h"
+#include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
@@ -20,6 +19,5 @@ void UCAnimNotifyNextCombo::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
 	CheckNull(equipItem);
 
-	ACEquipSword* swordItem = Cast<ACEquipSword>(equipItem);
-	swordItem->NextCombo();
+	equipItem->NextCombo();
 }

@@ -2,7 +2,6 @@
 
 #include "Component/CWeaponComponent.h"
 #include "Items/CEquipItem.h"
-#include "Items/Weapons/CEquipSword.h"
 
 #include "Global.h"
 
@@ -21,8 +20,7 @@ void UCAnimNotifyStateCheckCombo::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
 	CheckNull(equipItem);
 
-	ACEquipSword* swordItem = Cast<ACEquipSword>(equipItem);
-	swordItem->EnabledCombo();
+	equipItem->EnabledCombo();
 }
 
 void UCAnimNotifyStateCheckCombo::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {
@@ -36,6 +34,5 @@ void UCAnimNotifyStateCheckCombo::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
 	CheckNull(equipItem);
 
-	ACEquipSword* swordItem = Cast<ACEquipSword>(equipItem);
-	swordItem->EnabledCombo();
+	equipItem->DisabledCombo();
 }

@@ -1,11 +1,9 @@
 #include "Notifies/CAnimNotifyAttach.h"
 
-#include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
 #include "Component/CWeaponComponent.h"
 
 #include "Global.h"
-
 
 FString UCAnimNotifyAttach::GetNotifyName_Implementation() const {
 	return "Attach";
@@ -15,11 +13,11 @@ void UCAnimNotifyAttach::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	Super::Notify(MeshComp, Animation);
 	CheckNull(MeshComp);
 
-	ACPlayer* player = Cast<ACPlayer>(MeshComp->GetOwner());
-	CheckNull(player);
+	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
+	CheckNull(weaponComp);
 
-	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
-	CheckNull(weapon);
+	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+	CheckNull(equipItem);
 
-	weapon->GetCurrentWeapon()->Attach();
+	equipItem->Attach();
 }

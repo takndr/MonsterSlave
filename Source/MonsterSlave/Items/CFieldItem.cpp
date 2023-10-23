@@ -11,14 +11,18 @@
 
 #include "Global.h"
 
-ACFieldItem::ACFieldItem() {
+ACFieldItem::ACFieldItem() 
+{
 	PrimaryActorTick.bCanEverTick = true;
 	
 	// Component Setting
 	CHelpers::CreateSceneComponent(this, &Scene, "Scene");
-	CHelpers::CreateSceneComponent(this, &SkeletalMesh, "SkeletalMesh", Scene);
-	CHelpers::CreateSceneComponent(this, &Sphere, "Sphere", SkeletalMesh);
+	CHelpers::CreateSceneComponent(this, &StaticMesh, "StaticMesh", Scene);
+	CHelpers::CreateSceneComponent(this, &Sphere, "Sphere", StaticMesh);
 	CHelpers::CreateSceneComponent(this, &MinimapSprite, "Sprite", Sphere);
+
+	StaticMesh->SetCollisionProfileName("NoCollision");
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// Sphere Collision Setting
 	Sphere->SetSphereRadius(80.0f);
@@ -31,7 +35,8 @@ ACFieldItem::ACFieldItem() {
 	CHelpers::GetClass(&InteractWidgetClass, "/Game/Widgets/Widget/WB_Interact");
 }
 
-void ACFieldItem::BeginPlay() {
+void ACFieldItem::BeginPlay() 
+{
 	Super::BeginPlay();
 	
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACFieldItem::BeginOverlap);
@@ -50,9 +55,9 @@ void ACFieldItem::BeginPlay() {
 	CLog::Log("Item : " + ItemDescription.Name + ", Index : " + FString::FromInt(ItemDescription.GetIndex()));
 }
 
-void ACFieldItem::Tick(float DeltaTime) {
+void ACFieldItem::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
-
 }
 
 void ACFieldItem::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
