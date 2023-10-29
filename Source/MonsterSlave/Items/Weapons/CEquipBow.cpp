@@ -1,6 +1,7 @@
 #include "Items/Weapons/CEquipBow.h"
 
 #include "GameFramework/Character.h"
+#include "Camera/CameraComponent.h"
 
 #include "Player/CPlayer.h"
 #include "Component/CStateComponent.h"
@@ -13,6 +14,8 @@ ACEquipBow::ACEquipBow() {
 	WeaponType = EWeaponType::Bow;
 	StaticMesh->SetRelativeLocation(FVector(0.365274f, -5.794907f, -3.626544f));
 	StaticMesh->SetRelativeRotation(FRotator(-7.968262f, 77.989388f, -23.575928f));
+
+	CHelpers::GetClass(&ArrowClass, "/Game/Items/Weapons/Arrow/BP_Arrow");
 }
 
 void ACEquipBow::BeginPlay() {
@@ -43,16 +46,14 @@ void ACEquipBow::UnEquipped() {
 	//}
 }
 
-void ACEquipBow::ShotArrow() {
-	CheckNull(Arrow);
-
-	Arrow->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	Arrow->ShootArrow();
-}
-
 void ACEquipBow::SpawnArrow() {
-	//FTransform transform = SkeletalMesh->GetSocketTransform("arrow_socket");
+	FTransform transform = Owner->GetMesh()->GetSocketTransform("bow_socket");
+	ACPlayer* player = Cast<ACPlayer>(Owner);
+
+	//transform.SetRotation(FQuat(Owner->GetActorForwardVector().Rotation()));
+	transform.SetRotation(FQuat(player->GetMeshCamera()->GetForwardVector().Rotation()));
 	//Arrow = GetWorld()->SpawnActorDeferred<ACArrow>(ArrowClass, transform, Owner);
-	//Arrow->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, "arrow_socket");
-	//Arrow->FinishSpawning(transform);
+	Arrow = GetWorld()->SpawnActorDeferred<AActor>(ArrowClass, transform, Owner);
+
+	Arrow->FinishSpawning(transform);
 }

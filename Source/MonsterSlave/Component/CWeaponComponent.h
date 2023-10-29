@@ -34,6 +34,8 @@ public:
 	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
 
 	FORCEINLINE bool IsUnarmed() { return WeaponType == EWeaponType::Unarmed; }
+	FORCEINLINE bool IsEquipSword() { return WeaponType == EWeaponType::Sword; }
+	FORCEINLINE bool IsEquipBow() { return WeaponType == EWeaponType::Bow; }
 	FORCEINLINE bool IsSetSword() { return Weapons[(int32)EWeaponType::Sword] != nullptr; }
 	FORCEINLINE bool IsSetBow() { return Weapons[(int32)EWeaponType::Bow] != nullptr; }
 

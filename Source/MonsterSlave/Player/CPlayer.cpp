@@ -26,7 +26,8 @@
 
 #include "Global.h"
 
-ACPlayer::ACPlayer() {
+ACPlayer::ACPlayer()
+{
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Create Scene Component
@@ -81,7 +82,8 @@ ACPlayer::ACPlayer() {
 	GetMesh()->SetSkeletalMesh(PlayerBody);
 
 	ConstructorHelpers::FClassFinder<UCPlayerAnim> animAsset(TEXT("AnimBlueprint'/Game/Player/ABP_Player.ABP_Player_C'"));
-	if (animAsset.Succeeded()) {
+	if (animAsset.Succeeded())
+	{
 		GetMesh()->SetAnimInstanceClass(animAsset.Class);
 	}
 
@@ -91,7 +93,8 @@ ACPlayer::ACPlayer() {
 	
 }
 
-void ACPlayer::BeginPlay() {
+void ACPlayer::BeginPlay()
+{
 	Super::BeginPlay();
 
 	// Hair Set
@@ -116,12 +119,14 @@ void ACPlayer::BeginPlay() {
 
 }
 
-void ACPlayer::Tick(float DeltaTime) {
+void ACPlayer::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
 
 }
 
-void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// Action Event Binding
@@ -129,6 +134,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ACPlayer::Attack);
 	PlayerInputComponent->BindAction("SwordWeapon", IE_Pressed, this, &ACPlayer::OnSwordWeapon);
 	PlayerInputComponent->BindAction("BowWeapon", IE_Pressed, this, &ACPlayer::OnBowWeapon);
+	PlayerInputComponent->BindAction("FirstSkill", IE_Pressed, this, &ACPlayer::FirstSkill);
+	PlayerInputComponent->BindAction("SecondSkill", IE_Pressed, this, &ACPlayer::SecondSkill);
+
 	// Inventory 관련
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
@@ -140,80 +148,132 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
 	PlayerInputComponent->BindAxis("VerticalLook", this, &ACPlayer::OnVerticalLook);
 }
 
-void ACPlayer::OnMoveForward(float Axis) {
+void ACPlayer::OnMoveForward(float Axis)
+{
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetForwardVector().GetSafeNormal2D();
 
 	AddMovementInput(direction, Axis);
 }
 
-void ACPlayer::OnMoveRight(float Axis) {
+void ACPlayer::OnMoveRight(float Axis)
+{
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(rotator).GetRightVector().GetSafeNormal2D();
 
 	AddMovementInput(direction, Axis);
 }
 
-void ACPlayer::OnHorizontalLook(float Axis) {
+void ACPlayer::OnHorizontalLook(float Axis)
+{
 	AddControllerYawInput(Axis * GetWorld()->GetDeltaSeconds() * 45);
 }
 
-void ACPlayer::OnVerticalLook(float Axis) {
+void ACPlayer::OnVerticalLook(float Axis)
+{
 	AddControllerPitchInput(Axis * GetWorld()->GetDeltaSeconds() * 45);
 }
 
-void ACPlayer::OnSwordWeapon() {
-	if (WeaponComponent->IsSetSword() == false) {
+void ACPlayer::OnSwordWeapon()
+{
+	if (WeaponComponent->IsSetSword() == false)
+	{
 		CLog::Log("Do Not Equip Sword, Check the Sword Equip Slot");
 		return;
 	}
 
-	if (WeaponComponent->IsUnarmed() == true) {
+	if (WeaponComponent->IsUnarmed() == true)
+	{
 		WeaponComponent->EquipSword();
 	}
-	else {
+	else
+	{
 		// 일단은 장비 해제만
-		WeaponComponent->UnEquip();
+		if (WeaponComponent->IsEquipBow())
+		{
+			WeaponComponent->UnEquip();
+			WeaponComponent->EquipSword();
+		}
+		else
+		{
+			WeaponComponent->UnEquip();
+		}
+		
 	}
 }
 
-void ACPlayer::OnBowWeapon() {
-	if (WeaponComponent->IsSetBow() == false) {
+void ACPlayer::OnBowWeapon()
+{
+	if (WeaponComponent->IsSetBow() == false)
+	{
 		CLog::Log("Do Not Equip Bow, Check the Bow Equip Slot");
 		return;
 	}
 
-	if (WeaponComponent->IsUnarmed() == true) {
+	if (WeaponComponent->IsUnarmed() == true)
+	{
 		WeaponComponent->EquipBow();
 	}
-	else {
+	else
+	{
 		// 일단은 장비 해제만
-		WeaponComponent->UnEquip();
+		if (WeaponComponent->IsEquipSword())
+		{
+			WeaponComponent->UnEquip();
+			WeaponComponent->EquipBow();
+		}
+		else
+		{
+			WeaponComponent->UnEquip();
+		}
 	}
 }
 
-void ACPlayer::Attack() {
-	if (WeaponComponent->GetCurrentWeapon() != nullptr) {
+void ACPlayer::Attack()
+{
+	if (WeaponComponent->GetCurrentWeapon() != nullptr)
+	{
 		WeaponComponent->GetCurrentWeapon()->Attack();
 	}
 }
 
-void ACPlayer::Inventory() {
+void ACPlayer::FirstSkill()
+{
+	if (WeaponComponent->GetCurrentWeapon() != nullptr)
+	{
+		WeaponComponent->GetCurrentWeapon()->FirstSkill();
+	}
+}
+
+void ACPlayer::SecondSkill()
+{
+	if (WeaponComponent->GetCurrentWeapon() != nullptr)
+	{
+		WeaponComponent->GetCurrentWeapon()->SecondSkill();
+	}
+}
+
+void ACPlayer::Inventory()
+{
 	CheckNull(InventoryWidget);
 
-	if (InventoryWidget->IsOpened() == false) {
+	if (InventoryWidget->IsOpened() == false)
+	{
 		InventoryWidget->Attach();
 	}
-	else {
+	else
+	{
 		InventoryWidget->Detach();
 	}
 }
 
-void ACPlayer::PickUp() {
+void ACPlayer::PickUp()
+{
 	CheckFalse(bCanPickUp);
 	CheckNull(PickableActor);
 
-	if (MyItems.Num() == MaxItem) {
+	if (MyItems.Num() == MaxItem)
+	{
 		CLog::Log("Not Enough Inventory...");
 		return;
 	}
@@ -228,27 +288,32 @@ void ACPlayer::PickUp() {
 	PickableActor->Destroy();
 }
 
-void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 	PickableActor = Cast<ACFieldItem>(OtherActor);
 	CheckNull(PickableActor);
 }
 
-void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
+void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	PickableActor = nullptr;
 }
 
-void ACPlayer::AddItem(const FCItemStruct& InItem) {
+void ACPlayer::AddItem(const FCItemStruct& InItem)
+{
 	CLog::Log("Add Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
 	int32 index = InventoryWidget->AddItem(InItem);
 	MyItems.Insert(InItem, index);
 }
 
-void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem) {
+void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)
+{
 	CLog::Log("Remove Inventory Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
 	MyItems.Remove(InItem);
 }
 
-void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem) {
+void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem)
+{
 	CLog::Log("Replace Inventory Item");
 	int32 index;
 	index = MyItems.Find(OldItem);

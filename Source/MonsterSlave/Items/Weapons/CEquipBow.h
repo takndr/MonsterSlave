@@ -18,16 +18,17 @@ public:
 	virtual void Equipped() override;
 	virtual void UnEquipped() override;
 
-	void ShotArrow();
 	void SpawnArrow();
-
-	FORCEINLINE class ACArrow* GetArrow() { return Arrow; }
 // =========================================================
 private:
 
-
 // =========================================================
 private:
-	TSubclassOf<ACArrow> ArrowClass;
-	class ACArrow* Arrow;
+	//TSubclassOf<ACArrow> ArrowClass;
+	//class ACArrow* Arrow;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AActor> ArrowClass;
+
+	class AActor* Arrow;
 };

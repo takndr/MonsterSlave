@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ItemStruct.h"
+#include "Components/TimeLineComponent.h"
 #include "CEquipItem.generated.h"
 
 UCLASS()
@@ -19,6 +20,8 @@ public:
 	virtual void Attack();
 	virtual void NextCombo();
 	virtual void EndAttack();
+	virtual void FirstSkill();
+	virtual void SecondSkill();
 
 	void Equip();
 	void UnEquip();
@@ -34,6 +37,10 @@ public:
 private:	
 
 // ===================================================
+private:
+	UFUNCTION()
+		void Dissolving(float Output);
+// ===================================================
 public:
 	int32 ComboCount = 0;
 
@@ -48,8 +55,13 @@ protected:
 	bool bEquipping = false;
 
 private:
+	class UMaterialInstanceDynamic* DynamicMaterial;
 	bool bCanCombo = false;
 	bool bSucceed = false;
+
+	class UCurveFloat* DissolveCurve;
+	FTimeline Timeline;
+	FOnTimelineFloat OnTimeline;
 // ===================================================
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -61,6 +73,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		TArray<class UAnimMontage*> AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		class UAnimMontage* FirstSkillMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		class UAnimMontage* SecondSkillMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 		FName UnEquippedHolster;

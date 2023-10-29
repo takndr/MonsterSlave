@@ -3,6 +3,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
@@ -18,6 +19,8 @@ ACEquipItem::ACEquipItem()
 
 	StaticMesh->SetCollisionProfileName("NoCollision");
 	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	CHelpers::GetAsset(&DissolveCurve, "/Game/Items/Weapons/_Asset/Dissolve/Curve_Dissolve");
 }
 
 void ACEquipItem::BeginPlay()
@@ -27,12 +30,19 @@ void ACEquipItem::BeginPlay()
 	Owner = Cast<ACharacter>(GetOwner());
 	StateComp = CHelpers::GetComponent<UCStateComponent>(Owner);
 	WeaponComp = CHelpers::GetComponent<UCWeaponComponent>(Owner);
+
+	DynamicMaterial = UMaterialInstanceDynamic::Create(StaticMesh->GetMaterial(0), nullptr);
+	StaticMesh->SetMaterial(0, DynamicMaterial);
+
+	OnTimeline.BindUFunction(this, "Dissolving");
+	Timeline.AddInterpFloat(DissolveCurve, OnTimeline);
+	Timeline.SetPlayRate(2.0f);
 }
 
 void ACEquipItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	Timeline.TickTimeline(DeltaTime);
 }
 
 void ACEquipItem::Attack() 
@@ -69,15 +79,30 @@ void ACEquipItem::EndAttack()
 	ComboCount = 0;
 }
 
+void ACEquipItem::FirstSkill()
+{
+	CheckNull(FirstSkillMontage);
+	Owner->PlayAnimMontage(FirstSkillMontage);
+}
+
+void ACEquipItem::SecondSkill()
+{
+	CheckNull(SecondSkillMontage);
+	Owner->PlayAnimMontage(SecondSkillMontage);
+}
+
 void ACEquipItem::Equip()
 {
 	if (EquipMontage == nullptr) {
-		CLog::Log("Set Equip Montage");
+		Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
+		Owner->bUseControllerRotationYaw = true;
+		Attach();
+		Equipped();
 		return;
 	}
+
 	CheckNull(StateComp);
 	StateComp->SetEquip();
-
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
 	Owner->bUseControllerRotationYaw = true;
 	Owner->PlayAnimMontage(EquipMontage);
@@ -86,30 +111,36 @@ void ACEquipItem::Equip()
 void ACEquipItem::UnEquip()
 {
 	if (UnEquipMontage == nullptr) {
-		CLog::Log("Set UnEquip Montage");
+		Detach();
+		UnEquipped();
 		return;
 	}
+
 	CheckNull(StateComp);
 	StateComp->SetEquip();
-
 	Owner->PlayAnimMontage(UnEquipMontage);
 }
 
 void ACEquipItem::Attach()
 {
-	CLog::Log("EquipItem Attach Called");
+	Timeline.PlayFromStart();
+	FLatentActionInfo actionInfo;
+	UKismetSystemLibrary::Delay(GetWorld(), 0.5, actionInfo);
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), EquippedHolster);
+	Timeline.ReverseFromEnd();
 }
 
 void ACEquipItem::Detach()
 {
-	CLog::Log("EquipItem Detach Called");
+	Timeline.PlayFromStart();
+	FLatentActionInfo actionInfo;
+	UKismetSystemLibrary::Delay(GetWorld(), 0.5, actionInfo);
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), UnEquippedHolster);
+	Timeline.ReverseFromEnd();
 }
 
 void ACEquipItem::Equipped()
 {
-	CLog::Log("EquipItem Equipped Called");
 	CheckNull(StateComp);
 
 	StateComp->SetIdle();
@@ -117,7 +148,6 @@ void ACEquipItem::Equipped()
 
 void ACEquipItem::UnEquipped()
 {
-	CLog::Log("EquipItem UnEquipped Called");
 	CheckNull(StateComp);
 	CheckNull(WeaponComp);
 
@@ -126,4 +156,9 @@ void ACEquipItem::UnEquipped()
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
 	Owner->bUseControllerRotationYaw = false;
+}
+
+void ACEquipItem::Dissolving(float Output)
+{
+	DynamicMaterial->SetScalarParameterValue("Amount", Output);
 }

@@ -20,20 +20,20 @@ ACArrow::ACArrow() {
 	StaticMesh->SetGenerateOverlapEvents(false);
 	StaticMesh->SetCollisionProfileName("NoCollision");
 
-	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	Projectile->ProjectileGravityScale = 0.0f;
 	Projectile->InitialSpeed = 200.0f;
 	Projectile->MaxSpeed = 200.0f;
-	Projectile->bAutoActivate = false;
-	Projectile->bInitialVelocityInLocalSpace = false;
-
 }
 
 void ACArrow::BeginPlay() {
 	Super::BeginPlay();
 	Owner = Cast<ACharacter>(GetOwner());
+
 	Capsule->OnComponentBeginOverlap.AddDynamic(this, &ACArrow::OnOverlap);
+
+	//SetLifeSpan(1.0f);
 }
 
 void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
@@ -48,15 +48,5 @@ void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함(선택)
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(10.0f, damageEvent, Owner->GetController(), this);
-
 }
 
-void ACArrow::ShootArrow() {
-	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	
-	FVector vector = Owner->GetControlRotation().Vector();
-	Projectile->Velocity = vector * Projectile->InitialSpeed;
-
-	Projectile->Activate(true);
-	SetLifeSpan(1.0f);
-}

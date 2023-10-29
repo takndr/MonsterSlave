@@ -23,7 +23,7 @@ public:
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
 
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
-
+	FORCEINLINE class UCameraComponent* GetMeshCamera() { return MeshCamera; }
 private:
 	// Axis Event
 	void OnMoveForward(float Axis);
@@ -37,6 +37,9 @@ private:
 	void Inventory();
 	void Attack();
 	void PickUp();
+	void FirstSkill();
+	void SecondSkill();
+
 // ============================================================================
 public:
 	UFUNCTION(Exec)
