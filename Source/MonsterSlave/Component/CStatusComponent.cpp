@@ -15,7 +15,6 @@ void UCStatusComponent::BeginPlay() {
 
 
 void UCStatusComponent::IncreaseHealth(float Dx) {
-	//UKismetMathLibrary::ClampAngle();
 	CurrentHp += Dx;
 	CurrentHp = FMath::Clamp(CurrentHp, 0.0f, MaxHp);
 }

@@ -1,5 +1,8 @@
 #include "Notifies/CAnimNotifyEndAttack.h"
 
+#include "Player/CPlayer.h"
+#include "Enemy/CBoss.h"
+#include "Enemy/CDummyEnemy.h"
 #include "Component/CWeaponComponent.h"
 #include "Component/CStateComponent.h"
 #include "Items/CEquipItem.h"
@@ -25,4 +28,20 @@ void UCAnimNotifyEndAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 	CheckNull(equipItem);
 
 	equipItem->EndAttack();
+
+
+	if (!!Cast<ACPlayer>(MeshComp->GetOwner()))
+	{
+
+	}
+
+	if (!!Cast<ACBoss>(MeshComp->GetOwner()))
+	{
+
+	}
+
+	if (!!Cast<ACDummyEnemy>(MeshComp->GetOwner()))
+	{
+
+	}
 }

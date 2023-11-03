@@ -5,7 +5,7 @@
 
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
-#include "Widgets/CBossHp.h"
+#include "Widgets/Enemy/CBossHp.h"
 #include "Enemy/CBossController.h"
 #include "etc/CDamageText.h"
 #include "etc/CBossBreath.h"

@@ -2,6 +2,7 @@
 
 #include "Player/CPlayer.h"
 #include "Enemy/CBoss.h"
+#include "Enemy/CDummyEnemy.h"
 #include "Component/CWeaponComponent.h"
 #include "Items/Weapons/CEquipSword.h"
 
@@ -35,6 +36,10 @@ void UCAnimNotifyStateCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 		boss->OnCollision(CollisionName);
 	}
 	
+	if (!!Cast<ACDummyEnemy>(MeshComp->GetOwner()))
+	{
+
+	}
 }
 
 void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {
@@ -61,5 +66,10 @@ void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 
 		boss->SetHeavyHit(false);
 		boss->ClearHittedCharacters();
+	}
+
+	if (!!Cast<ACDummyEnemy>(MeshComp->GetOwner()))
+	{
+
 	}
 }
