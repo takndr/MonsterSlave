@@ -17,6 +17,7 @@
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
+#include "Component/COptionComponent.h"
 
 #include "Player/CPlayerHair.h"
 #include "Items/Weapons/CEquipBow.h"
@@ -41,6 +42,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
+	CHelpers::CreateActorComponent(this, &OptionComponent, "Option");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
@@ -146,6 +148,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayer::OnMoveRight);
 	PlayerInputComponent->BindAxis("HorizontalLook", this, &ACPlayer::OnHorizontalLook);
 	PlayerInputComponent->BindAxis("VerticalLook", this, &ACPlayer::OnVerticalLook);
+	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::OnZoom);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -166,12 +169,22 @@ void ACPlayer::OnMoveRight(float Axis)
 
 void ACPlayer::OnHorizontalLook(float Axis)
 {
-	AddControllerYawInput(Axis * GetWorld()->GetDeltaSeconds() * 45);
+	float speed = OptionComponent->GetHorizontalSpeed();
+	AddControllerYawInput(Axis * GetWorld()->GetDeltaSeconds() * speed);
 }
 
 void ACPlayer::OnVerticalLook(float Axis)
 {
-	AddControllerPitchInput(Axis * GetWorld()->GetDeltaSeconds() * 45);
+	float speed = OptionComponent->GetVerticalSpeed();
+	AddControllerPitchInput(Axis * GetWorld()->GetDeltaSeconds() * speed);
+}
+
+void ACPlayer::OnZoom(float Axis)
+{
+	float rate = OptionComponent->GetZoomSpeed() * Axis * GetWorld()->GetDeltaSeconds();
+	MeshSpringArm->TargetArmLength += rate;
+
+	MeshSpringArm->TargetArmLength = FMath::Clamp(MeshSpringArm->TargetArmLength, OptionComponent->GetZoomMin(), OptionComponent->GetZoomMax());
 }
 
 void ACPlayer::OnSwordWeapon()

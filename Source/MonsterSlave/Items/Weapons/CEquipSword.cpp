@@ -31,6 +31,9 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
 	FDamageEvent damageEvent;
+	damageEvent.DamageTypeClass;
+	
+	
 	OtherActor->TakeDamage(30.0f, damageEvent, Owner->GetController(), this);
 }
 

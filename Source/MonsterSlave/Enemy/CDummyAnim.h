@@ -17,7 +17,7 @@ public:
 		float Speed = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animation")
-		bool bFly;
+		float Direction = 0.0f;
 
 private:
 	class ACharacter* OwnerCharacter;

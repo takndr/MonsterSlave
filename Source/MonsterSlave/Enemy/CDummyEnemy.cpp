@@ -61,6 +61,23 @@ void ACDummyEnemy::OnCollision()
 void ACDummyEnemy::OffCollision()
 {
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ClearHittedCharacters();
+}
+
+void ACDummyEnemy::Attack()
+{
+	CheckNull(AttackMontage);
+	CheckNull(SkillMontage);
+	// 스킬 쿨타임이면 일반공격
+	StateComponent->SetAction();
+	// 아니면 스킬공격
+
+	PlayAnimMontage(AttackMontage);
+}
+
+void ACDummyEnemy::EndAttack()
+{
+	StateComponent->SetIdle();
 }
 
 void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -84,16 +101,50 @@ void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	
-	if (StatusComponent->IsDead())
-	{
-		CLog::Print("Die");
-		return DamageValue;
-	}
 	StatusComponent->DecreaseHealth(DamageValue);
 
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
+	if (StatusComponent->IsDead())
+	{
+		CLog::Print("Die");
+		StateComponent->SetDead();
+		Dead();
+		return DamageValue;
+	}
+
+	Hitted(DamageEvent);
+
 	return DamageValue;
+}
+
+void ACDummyEnemy::Hitted(FDamageEvent const& DamageEvent)
+{
+	CheckNull(HitMontage);
+	CheckNull(KnockbackMontage);
+
+	if (DamageEvent.ClassID == 0)
+	{
+		PlayAnimMontage(HitMontage);
+	}
+	else
+	{
+		PlayAnimMontage(KnockbackMontage);
+	}
+}
+
+void ACDummyEnemy::Dead()
+{
+	CheckNull(DieMontage);
+
+	PlayAnimMontage(DieMontage);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	Weapon->SetGenerateOverlapEvents(false);
+	UKismetSystemLibrary::K2_SetTimer(this, "EndDead", 3.0f, false);
+}
+
+void ACDummyEnemy::EndDead()
+{
+	this->Destroy();
 }

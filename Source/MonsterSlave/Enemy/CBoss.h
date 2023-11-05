@@ -32,6 +32,7 @@ public:
 	void SlashAttack();
 	void BiteAttack();
 	void BreathAttack();
+	void EndAttack();
 
 	void OnCollision(FName InName);
 	void OffCollision(FName InName);

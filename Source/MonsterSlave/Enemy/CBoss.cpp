@@ -168,6 +168,11 @@ void ACBoss::BreathAttack()
 	}
 }
 
+void ACBoss::EndAttack()
+{
+	StateComponent->SetIdle();
+}
+
 void ACBoss::OnCollision(FName InName)
 {
 	UCapsuleComponent* capsule = Cast<UCapsuleComponent>(GetDefaultSubobjectByName(InName));

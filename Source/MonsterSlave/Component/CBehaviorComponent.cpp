@@ -37,6 +37,11 @@ void UCBehaviorComponent::SetActionMode()
 	Blackboard->SetValueAsEnum("BehaviorKey", (uint8)EBehaviorType::Action);
 }
 
+void UCBehaviorComponent::SetPatrolMode()
+{
+	Blackboard->SetValueAsEnum("BehaviorKey", (uint8)EBehaviorType::Patrol);
+}
+
 ACPlayer* UCBehaviorComponent::GetPlayerKey()
 {
 	ACPlayer* player = Cast<ACPlayer>(Blackboard->GetValueAsObject("PlayerKey"));
@@ -73,3 +78,7 @@ bool UCBehaviorComponent::IsActionMode()
 	return GetCurrentBehavior() == EBehaviorType::Action;
 }
 
+bool UCBehaviorComponent::IsPatrolMode()
+{
+	return GetCurrentBehavior() == EBehaviorType::Patrol;
+}

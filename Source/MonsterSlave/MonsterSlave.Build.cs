@@ -22,6 +22,7 @@ public class MonsterSlave : ModuleRules
 			"OnlineSubSystem",
 			"AIModule",
 			"GameplayTasks",
+			"NavigationSystem",
 		});
 
 

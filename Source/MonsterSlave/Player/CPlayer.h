@@ -30,6 +30,7 @@ private:
 	void OnMoveRight(float Axis);
 	void OnHorizontalLook(float Axis);
 	void OnVerticalLook(float Axis);
+	void OnZoom(float Axis);
 	void OnSwordWeapon();
 	void OnBowWeapon();
 
@@ -73,6 +74,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStateComponent* StateComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCOptionComponent* OptionComponent;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCWeaponComponent* WeaponComponent;

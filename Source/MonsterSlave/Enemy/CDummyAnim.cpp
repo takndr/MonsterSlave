@@ -10,7 +10,7 @@ void UCDummyAnim::NativeUpdateAnimation(float DeltaSeconds)
 	CheckNull(OwnerCharacter);
 
 	Speed = OwnerCharacter->GetVelocity().Size2D();
-	
+	Direction = CalculateDirection(OwnerCharacter->GetVelocity(), OwnerCharacter->GetControlRotation());
 }
 
 void UCDummyAnim::NativeBeginPlay()

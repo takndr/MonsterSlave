@@ -38,7 +38,10 @@ void UCAnimNotifyStateCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	
 	if (!!Cast<ACDummyEnemy>(MeshComp->GetOwner()))
 	{
+		ACDummyEnemy* enemy = Cast<ACDummyEnemy>(MeshComp->GetOwner());
+		CheckNull(enemy);
 
+		enemy->OnCollision();
 	}
 }
 
@@ -70,6 +73,9 @@ void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 
 	if (!!Cast<ACDummyEnemy>(MeshComp->GetOwner()))
 	{
+		ACDummyEnemy* enemy = Cast<ACDummyEnemy>(MeshComp->GetOwner());
+		CheckNull(enemy);
 
+		enemy->OffCollision();
 	}
 }
