@@ -118,7 +118,6 @@ void ACPlayer::BeginPlay()
 	// Event Binding
 	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ACPlayer::MeshComponentBeginOverlap);
 	GetMesh()->OnComponentEndOverlap.AddDynamic(this, &ACPlayer::MeshComponentEndOverlap);
-
 }
 
 void ACPlayer::Tick(float DeltaTime)

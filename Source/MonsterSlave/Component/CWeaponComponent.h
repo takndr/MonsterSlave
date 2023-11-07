@@ -5,9 +5,11 @@
 #include "Items/ItemStruct.h"
 #include "CWeaponComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponTypeChangedSignature, EWeaponType, InPrevType, EWeaponType, InNewType);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MONSTERSLAVE_API UCWeaponComponent : public UActorComponent {
+class MONSTERSLAVE_API UCWeaponComponent : public UActorComponent
+{
 	GENERATED_BODY()
 public:	
 	UCWeaponComponent();
@@ -39,6 +41,8 @@ public:
 	FORCEINLINE bool IsSetSword() { return Weapons[(int32)EWeaponType::Sword] != nullptr; }
 	FORCEINLINE bool IsSetBow() { return Weapons[(int32)EWeaponType::Bow] != nullptr; }
 
+private:
+	void ChangeType(EWeaponType InNewType);
 //===================================================================
 
 //===================================================================
@@ -46,9 +50,10 @@ public:
 //===================================================================
 public:	
 	EWeaponType WeaponType = EWeaponType::Unarmed;
-	class ACEquipItem* Weapons[(int32)EWeaponType::Max];
+	class ACEquipItem* Weapons[(int32)EWeaponType::Max] = { nullptr };
 	
-
-private:
-		
+//===================================================================
+public:
+	UPROPERTY(BlueprintAssignable)
+		FWeaponTypeChangedSignature OnWeaponTypeChanged;
 };

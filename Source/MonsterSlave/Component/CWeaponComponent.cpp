@@ -17,17 +17,28 @@ void UCWeaponComponent::BeginPlay()
 
 void UCWeaponComponent::SetUnarmed()
 {
-	WeaponType = EWeaponType::Unarmed;
+	ChangeType(EWeaponType::Unarmed);
 }
 
 void UCWeaponComponent::SetSwordType()
 {
-	WeaponType = EWeaponType::Sword;
+	ChangeType(EWeaponType::Sword);
 }
 
 void UCWeaponComponent::SetBowType()
 {
-	WeaponType = EWeaponType::Bow;
+	ChangeType(EWeaponType::Bow);
+}
+
+void UCWeaponComponent::ChangeType(EWeaponType InNewType)
+{
+	EWeaponType prev = WeaponType;
+	WeaponType = InNewType;
+
+	if (OnWeaponTypeChanged.IsBound())
+	{
+		OnWeaponTypeChanged.Broadcast(prev, InNewType);
+	}
 }
 
 void UCWeaponComponent::SetSword(ACEquipItem* InItem)
@@ -95,4 +106,5 @@ void UCWeaponComponent::EquipBow()
 void UCWeaponComponent::UnEquip()
 {
 	Weapons[(int32)WeaponType]->UnEquip();
+	SetUnarmed();
 }

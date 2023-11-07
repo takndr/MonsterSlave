@@ -37,12 +37,37 @@ void ACEquipItem::BeginPlay()
 	OnTimeline.BindUFunction(this, "Dissolving");
 	Timeline.AddInterpFloat(DissolveCurve, OnTimeline);
 	Timeline.SetPlayRate(2.0f);
+
+	FirstSkillTemp = FirstSkillCoolDown;
+	SecondSkillTemp = SecondSkillCoolDown;
 }
 
 void ACEquipItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Timeline.TickTimeline(DeltaTime);
+
+	if (bCanFirstSkill == false)
+	{
+		FirstSkillTemp -= DeltaTime;
+		FirstSkillTemp = FMath::Clamp(FirstSkillTemp, 0.0f, FirstSkillCoolDown);
+
+		if (OnFirstSkillCoolDown.IsBound())
+		{
+			OnFirstSkillCoolDown.Broadcast(FirstSkillTemp);
+		}
+	}
+
+	if (bCanSecondSkill == false)
+	{
+		SecondSkillTemp -= DeltaTime;
+		SecondSkillTemp = FMath::Clamp(SecondSkillTemp, 0.0f, SecondSkillCoolDown);
+
+		if (OnSecondSkillCoolDown.IsBound())
+		{
+			OnSecondSkillCoolDown.Broadcast(SecondSkillTemp);
+		}
+	}
 }
 
 void ACEquipItem::Attack() 
@@ -82,13 +107,45 @@ void ACEquipItem::EndAttack()
 void ACEquipItem::FirstSkill()
 {
 	CheckNull(FirstSkillMontage);
+	CheckFalse(bCanFirstSkill);
+
 	Owner->PlayAnimMontage(FirstSkillMontage);
+
+	bCanFirstSkill = false;
+	UKismetSystemLibrary::K2_SetTimer(this, "EndFirstSkillCool", FirstSkillCoolDown, false);
+}
+
+void ACEquipItem::EndFirstSkillCool()
+{
+	bCanFirstSkill = true;
+	FirstSkillTemp = FirstSkillCoolDown;
+
+	if (OffFirstSkillCoolDown.IsBound())
+	{
+		OffFirstSkillCoolDown.Broadcast();
+	}
 }
 
 void ACEquipItem::SecondSkill()
 {
 	CheckNull(SecondSkillMontage);
+	CheckFalse(bCanSecondSkill);
+
 	Owner->PlayAnimMontage(SecondSkillMontage);
+
+	bCanSecondSkill = false;
+	UKismetSystemLibrary::K2_SetTimer(this, "EndSecondSkillCool", SecondSkillCoolDown, false);
+}
+
+void ACEquipItem::EndSecondSkillCool()
+{
+	bCanSecondSkill = true;
+	SecondSkillTemp = SecondSkillCoolDown;
+
+	if (OffSecondSkillCoolDown.IsBound())
+	{
+		OffSecondSkillCoolDown.Broadcast();
+	}
 }
 
 void ACEquipItem::Equip()

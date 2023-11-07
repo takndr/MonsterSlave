@@ -6,6 +6,11 @@
 #include "Components/TimeLineComponent.h"
 #include "CEquipItem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFirstSkillSignature, float, InCoolDown);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSecondSkillSignature, float, InCoolDown);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOffFirstSkillSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOffSecondSkillSignature);
+
 UCLASS()
 class MONSTERSLAVE_API ACEquipItem : public AActor
 {
@@ -40,6 +45,13 @@ private:
 private:
 	UFUNCTION()
 		void Dissolving(float Output);
+
+	UFUNCTION()
+		void EndFirstSkillCool();
+
+	UFUNCTION()
+		void EndSecondSkillCool();
+
 // ===================================================
 public:
 	int32 ComboCount = 0;
@@ -64,7 +76,23 @@ private:
 	class UCurveFloat* DissolveCurve;
 	FTimeline Timeline;
 	FOnTimelineFloat OnTimeline;
+
+	float FirstSkillTemp;
+	float SecondSkillTemp;
 // ===================================================
+public:
+	UPROPERTY(BlueprintAssignable)
+		FFirstSkillSignature OnFirstSkillCoolDown;
+	
+	UPROPERTY(BlueprintAssignable)
+		FSecondSkillSignature OnSecondSkillCoolDown;
+
+	UPROPERTY(BlueprintAssignable)
+		FOffFirstSkillSignature OffFirstSkillCoolDown;
+
+	UPROPERTY(BlueprintAssignable)
+		FOffSecondSkillSignature OffSecondSkillCoolDown;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UStaticMeshComponent* StaticMesh;
@@ -95,8 +123,8 @@ private:
 		class UAnimMontage* UnEquipMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
-		float FirstSkillCoolDown;
+		float FirstSkillCoolDown = 5.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
-		float SecondSkillCoolDown;
+		float SecondSkillCoolDown = 10.0f;
 };
