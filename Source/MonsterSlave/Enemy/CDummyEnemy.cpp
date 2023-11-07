@@ -13,8 +13,10 @@
 ACDummyEnemy::ACDummyEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 	CHelpers::CreateSceneComponent(this, &Weapon, "Weapon", GetMesh());
 	CHelpers::CreateSceneComponent(this, &HPWidget, "HPWidget", GetCapsuleComponent());
+
 	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	
@@ -23,6 +25,7 @@ ACDummyEnemy::ACDummyEnemy()
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "WeaponSocket");
 
 	// HP Widget Setting
 	CHelpers::GetClass(&HPWidgetClass, "/Game/Widgets/Widget/Enemy/WB_DummyHp");
@@ -40,6 +43,7 @@ void ACDummyEnemy::BeginPlay()
 
 	HPWidget->InitWidget();
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
+	CheckNull(hpWidget);
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	Weapon->OnComponentBeginOverlap.AddDynamic(this, &ACDummyEnemy::OnOverlap);
@@ -66,13 +70,21 @@ void ACDummyEnemy::OffCollision()
 
 void ACDummyEnemy::Attack()
 {
-	CheckNull(AttackMontage);
-	CheckNull(SkillMontage);
-	// 스킬 쿨타임이면 일반공격
-	StateComponent->SetAction();
-	// 아니면 스킬공격
-
-	PlayAnimMontage(AttackMontage);
+	CheckTrue(StateComponent->IsIdle());
+	if (bCanSkill)
+	{
+		CheckNull(SkillMontage);
+		StateComponent->SetAction();
+		PlayAnimMontage(SkillMontage);
+		bCanSkill = false;
+		UKismetSystemLibrary::K2_SetTimer(this, "OnSkillCoolDown", SkillCoolDown, false);
+	}
+	else
+	{
+		CheckNull(AttackMontage);
+		StateComponent->SetAction();
+		PlayAnimMontage(AttackMontage);
+	}
 }
 
 void ACDummyEnemy::EndAttack()
@@ -80,9 +92,13 @@ void ACDummyEnemy::EndAttack()
 	StateComponent->SetIdle();
 }
 
+void ACDummyEnemy::OnSkillCoolDown()
+{
+	bCanSkill = true;
+}
+
 void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 본인 제외
 	CheckTrue(OtherActor == this);
 
 	ACPlayer* player = Cast<ACPlayer>(OtherActor);
@@ -93,7 +109,7 @@ void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 	HittedCharacters.AddUnique(player);
 
-	// Take Damage
+	// TODO : 스킬인지, 일반 공격인지
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(30.0f, damageEvent, GetController(), this);
 }
@@ -108,7 +124,6 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 	if (StatusComponent->IsDead())
 	{
-		CLog::Print("Die");
 		StateComponent->SetDead();
 		Dead();
 		return DamageValue;
@@ -137,7 +152,7 @@ void ACDummyEnemy::Hitted(FDamageEvent const& DamageEvent)
 void ACDummyEnemy::Dead()
 {
 	CheckNull(DieMontage);
-
+	StateComponent->SetDead();
 	PlayAnimMontage(DieMontage);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	Weapon->SetGenerateOverlapEvents(false);

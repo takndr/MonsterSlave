@@ -28,8 +28,6 @@ EBTNodeResult::Type UCTaskDummyPatrol::ExecuteTask(UBehaviorTreeComponent& Owner
 	UNavigationSystemV1* navSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	CheckNullResult(navSystem, EBTNodeResult::Failed);
 
-	CLog::Print("Test");
-
 	while (1)
 	{
 		if (navSystem->GetRandomReachablePointInRadius(enemy->GetActorLocation(), 500.0f, NextLocation))

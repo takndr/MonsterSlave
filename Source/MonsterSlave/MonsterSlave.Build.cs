@@ -23,6 +23,7 @@ public class MonsterSlave : ModuleRules
 			"AIModule",
 			"GameplayTasks",
 			"NavigationSystem",
+			"Niagara",
 		});
 
 

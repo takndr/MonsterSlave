@@ -93,7 +93,8 @@ void ACEquipItem::SecondSkill()
 
 void ACEquipItem::Equip()
 {
-	if (EquipMontage == nullptr) {
+	if (EquipMontage == nullptr) 
+	{
 		Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
 		Owner->bUseControllerRotationYaw = true;
 		Attach();
@@ -110,7 +111,8 @@ void ACEquipItem::Equip()
 
 void ACEquipItem::UnEquip()
 {
-	if (UnEquipMontage == nullptr) {
+	if (UnEquipMontage == nullptr) 
+	{
 		Detach();
 		UnEquipped();
 		return;

@@ -24,19 +24,26 @@ public:
 	class ACharacter* Owner;
 
 private:
-	class ACEquipBow* EquippedBow;
-	TArray<AActor*> HittedActors;
 // ==================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-		class USceneComponent* Scene;
+		class USphereComponent* Sphere;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UStaticMeshComponent* StaticMesh;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCapsuleComponent* Capsule;
+		class UNiagaraComponent* ProjectileEffect;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UProjectileMovementComponent* Projectile;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UNiagaraSystem* FlashEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UNiagaraSystem* HitEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+		float ArrowSpeed = 1500.0f;
+
+	UPROPERTY(EditDefaultsOnly)
+		float Damage = 20.0f;
 };

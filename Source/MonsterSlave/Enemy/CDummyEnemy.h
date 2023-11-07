@@ -35,6 +35,9 @@ private:
 	
 	UFUNCTION()
 		void EndDead();
+
+	UFUNCTION()
+		void OnSkillCoolDown();
 // =================================================================
 public:
 	TArray<class ACharacter*> HittedCharacters;
@@ -42,6 +45,7 @@ public:
 private:
 	TSubclassOf<class UUserWidget> HPWidgetClass;
 	float DamageValue;
+	bool bCanSkill = true;
 // =================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -51,16 +55,16 @@ private:
 		class UCStateComponent* StateComponent;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCapsuleComponent* Weapon;
-
-	UPROPERTY(VisibleDefaultsOnly)
 		class UWidgetComponent* HPWidget;
 
-	UPROPERTY(EditDefaultsOnly)
-		class UBehaviorTree* BehaviorTree;
-
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+		class UCapsuleComponent* Weapon;
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		class UBehaviorTree* BehaviorTree;
+
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
 		class UAnimMontage* AttackMontage;
 
@@ -75,4 +79,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "OtherMontage")
 		class UAnimMontage* KnockbackMontage;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		float SkillCoolDown = 5.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		float AttackDamage = 10.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+		float SkillDamage = 30.0f;
 };

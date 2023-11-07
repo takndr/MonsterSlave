@@ -58,6 +58,8 @@ private:
 	class UMaterialInstanceDynamic* DynamicMaterial;
 	bool bCanCombo = false;
 	bool bSucceed = false;
+	bool bCanFirstSkill = true;
+	bool bCanSecondSkill = true;
 
 	class UCurveFloat* DissolveCurve;
 	FTimeline Timeline;
@@ -91,4 +93,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Equip/UnEquip")
 		class UAnimMontage* UnEquipMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
+		float FirstSkillCoolDown;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
+		float SecondSkillCoolDown;
 };

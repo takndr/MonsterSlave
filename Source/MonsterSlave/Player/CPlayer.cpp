@@ -294,8 +294,6 @@ void ACPlayer::PickUp()
 	FCItemStruct item;
 	item = PickableActor->ItemDescription;
 	
-	CLog::Log("PickUP : " + item.Name + ", Index : " + FString::FromInt(item.GetIndex()));
-
 	AddItem(item);
 
 	PickableActor->Destroy();
@@ -314,14 +312,12 @@ void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent,
 
 void ACPlayer::AddItem(const FCItemStruct& InItem)
 {
-	CLog::Log("Add Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
 	int32 index = InventoryWidget->AddItem(InItem);
 	MyItems.Insert(InItem, index);
 }
 
 void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)
 {
-	CLog::Log("Remove Inventory Item | Item : " + InItem.Name + ", Index : " + FString::FromInt(InItem.GetIndex()));
 	MyItems.Remove(InItem);
 }
 
@@ -342,6 +338,7 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 	CLog::Print(damageValue);
 
 	StatusComponent->DecreaseHealth(damageValue);
+	PlayerMainWidget->UpdateHealth();
 
 	if (StatusComponent->IsDead())
 	{
@@ -392,4 +389,14 @@ void ACPlayer::TakeDamageTest()
 {
 	StatusComponent->DecreaseHealth(10);
 	PlayerMainWidget->UpdateHealth();
+}
+
+void ACPlayer::Dead()
+{
+
+}
+
+void ACPlayer::EndDead()
+{
+
 }

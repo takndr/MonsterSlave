@@ -21,7 +21,8 @@ public:
 	void AddItem(const FCItemStruct& InItem);
 	void RemoveInventoryItem(const FCItemStruct& InItem);
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
-
+	void Dead();
+	
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
 	FORCEINLINE class UCameraComponent* GetMeshCamera() { return MeshCamera; }
 private:
@@ -52,6 +53,9 @@ private:
 	
 	UFUNCTION()
 		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void EndDead();
 // ===========================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -86,22 +90,11 @@ private:
 		class UAnimMontage* DeadMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* UnarmedHeavyHitMontage;
+		class UAnimMontage* KnockbackMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* UnarmedHitMontage;
+		class UAnimMontage* HitMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* SwordHeavyHitMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* SwordHitMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* BowHeavyHitMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* BowHitMontage;
 // ===========================================================
 public:
 	bool bCanPickUp = false;

@@ -28,9 +28,13 @@ public:
 		void DecreaseHealth(float Dx);
 // =================================================================
 private:
+	class ACharacter* OwnerCharacter;
 	float CurrentHp;
 // =================================================================
 private:
 	UPROPERTY(EditAnywhere, Category = "Status : Hp")
 		float MaxHp = 100.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Status : Hp")
+		float MoveSpeed = 600.0f;
 };

@@ -15,20 +15,24 @@ protected:
 // =========================================================
 public:
 	virtual void Attack() override;
-	virtual void Equipped() override;
-	virtual void UnEquipped() override;
+	virtual void FirstSkill() override;
+	virtual void SecondSkill() override;
 
 	void SpawnArrow();
-// =========================================================
-private:
 
 // =========================================================
 private:
-	//TSubclassOf<ACArrow> ArrowClass;
-	//class ACArrow* Arrow;
-
+	UFUNCTION()
+		void SpawnArrowRain();
+// =========================================================
+private:
+	TSubclassOf<class ACArrow> ArrowClass;
+	TSubclassOf<class ACArrowRain> ArrowRainClass;
+	class ACArrow* Arrow;
+// =========================================================
+private:
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<AActor> ArrowClass;
+		float ArrowRainRange = 700.0f;
 
-	class AActor* Arrow;
+
 };
