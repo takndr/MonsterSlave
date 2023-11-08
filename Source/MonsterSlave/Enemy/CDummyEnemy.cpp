@@ -70,7 +70,7 @@ void ACDummyEnemy::OffCollision()
 
 void ACDummyEnemy::Attack()
 {
-	CheckTrue(StateComponent->IsIdle());
+	CheckFalse(StateComponent->IsIdle());
 	if (bCanSkill)
 	{
 		CheckNull(SkillMontage);

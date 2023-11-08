@@ -16,12 +16,13 @@ EBTNodeResult::Type UCTaskDummyAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 
+	RunningTime = 0.0f;
+
 	ACDummyController* controller = Cast<ACDummyController>(OwnerComp.GetOwner());
 	CheckNullResult(controller, EBTNodeResult::Failed);
 
 	ACDummyEnemy* enemy = Cast<ACDummyEnemy>(controller->GetPawn());
 	CheckNullResult(enemy, EBTNodeResult::Failed);
-
 	enemy->Attack();
 
 	return EBTNodeResult::InProgress;
