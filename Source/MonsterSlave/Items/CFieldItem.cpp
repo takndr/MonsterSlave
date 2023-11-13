@@ -13,8 +13,6 @@
 
 ACFieldItem::ACFieldItem() 
 {
-	PrimaryActorTick.bCanEverTick = true;
-	
 	// Component Setting
 	CHelpers::CreateSceneComponent(this, &Scene, "Scene");
 	CHelpers::CreateSceneComponent(this, &StaticMesh, "StaticMesh", Scene);
@@ -51,13 +49,6 @@ void ACFieldItem::BeginPlay()
 	ItemDescription.Init();
 
 	InteractWidget->SetInteractText(ItemDescription.Interact);
-
-	CLog::Log("Item : " + ItemDescription.Name + ", Index : " + FString::FromInt(ItemDescription.GetIndex()));
-}
-
-void ACFieldItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ACFieldItem::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
@@ -67,7 +58,8 @@ void ACFieldItem::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 	CheckNull(InteractWidget);
 	InteractWidget->SetVisibility(ESlateVisibility::Visible);
-	player->bCanPickUp = true;
+
+	player->OnInteract.BindUFunction(this, "OnInteract");
 }
 
 void ACFieldItem::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
@@ -77,6 +69,22 @@ void ACFieldItem::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	CheckNull(InteractWidget);
 	InteractWidget->SetVisibility(ESlateVisibility::Hidden);
-	player->bCanPickUp = false;
+
+	player->OnInteract.Unbind();
 }
 
+void ACFieldItem::OnInteract()
+{
+	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	CheckNull(player);
+
+	if (player->MyItems.Num() == player->MaxItem)
+	{
+		CLog::Log("Not Enough Inventory...");
+		return;
+	}
+
+	player->AddItem(ItemDescription);
+
+	this->Destroy();
+}

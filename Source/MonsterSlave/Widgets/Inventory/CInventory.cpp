@@ -16,15 +16,12 @@ bool UCInventory::Initialize()
 
 void UCInventory::Attach()
 {
-	CLog::Log("Inventory Opened!!");
-
 	Opened = true;
 	SetVisibility(ESlateVisibility::Visible);
 
 	bIsFocusable = true;
 
 	FInputModeGameAndUI inputMode;
-	//FInputModeUIOnly inputMode;
 	inputMode.SetWidgetToFocus(TakeWidget());
 	inputMode.SetHideCursorDuringCapture(true);
 
@@ -39,8 +36,6 @@ void UCInventory::Attach()
 
 void UCInventory::Detach()
 {
-	CLog::Log("Inventory Closed!!");
-
 	Opened = false;
 	SetVisibility(ESlateVisibility::Collapsed);
 

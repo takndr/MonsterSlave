@@ -21,8 +21,8 @@ private:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 // ==================================================================
 public:
-	class ACharacter* Owner;
-
+	class ACharacter* OwnerCharacter;
+	class AActor* OwnerBow;
 private:
 // ==================================================================
 private:

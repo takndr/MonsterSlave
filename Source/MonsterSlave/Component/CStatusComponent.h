@@ -32,6 +32,7 @@ private:
 	float CurrentHp;
 // =================================================================
 private:
+
 	UPROPERTY(EditAnywhere, Category = "Status : Hp")
 		float MaxHp = 100.0f;
 

@@ -25,6 +25,7 @@ public:
 	void SetSword(const FCItemStruct& InItem);
 	void SetBow(class ACEquipItem* InItem);
 	void SetBow(const FCItemStruct& InItem);
+
 	void RemoveSword();
 	void RemoveBow();
 
@@ -50,6 +51,7 @@ private:
 //===================================================================
 public:	
 	EWeaponType WeaponType = EWeaponType::Unarmed;
+
 	class ACEquipItem* Weapons[(int32)EWeaponType::Max] = { nullptr };
 	
 //===================================================================

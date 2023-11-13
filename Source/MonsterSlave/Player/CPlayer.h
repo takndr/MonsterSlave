@@ -5,6 +5,8 @@
 #include "Items/ItemStruct.h"
 #include "CPlayer.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE(FInteractSignature);
+
 UCLASS()
 class MONSTERSLAVE_API ACPlayer : public ACharacter
 {
@@ -25,6 +27,7 @@ public:
 	
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
 	FORCEINLINE class UCameraComponent* GetMeshCamera() { return MeshCamera; }
+	FORCEINLINE void SetInteractActor(class AActor* InActor) { InteractActor = InActor; }
 private:
 	// Axis Event
 	void OnMoveForward(float Axis);
@@ -38,7 +41,7 @@ private:
 	// Action Event
 	void Inventory();
 	void Attack();
-	void PickUp();
+	void Interact();
 	void FirstSkill();
 	void SecondSkill();
 
@@ -48,12 +51,6 @@ public:
 		void TakeDamageTest();
 
 private:
-	UFUNCTION()
-		void MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-		void MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 	UFUNCTION()
 		void EndDead();
 // ===========================================================
@@ -84,6 +81,9 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCWeaponComponent* WeaponComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCQuestComponent* QuestComponent;
 // ===========================================================
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
@@ -97,7 +97,9 @@ private:
 
 // ===========================================================
 public:
-	bool bCanPickUp = false;
+	FInteractSignature OnInteract;
+	TArray<FCItemStruct> MyItems;
+	int32 MaxItem = 30;
 
 private:
 	class USkeletalMesh* PlayerBody;
@@ -109,8 +111,8 @@ private:
 	TSubclassOf<class UUserWidget> InventoryWidgetClass;
 	class UCInventory* InventoryWidget;
 
-	class ACFieldItem* PickableActor;
-	TArray<FCItemStruct> MyItems;
-	int32 MaxItem = 30;
+	TSubclassOf<class UCQuestMain> QuestMainWidgetClass;
+	class UCQuestMain* QuestMainWidget;
 
+	bool bKnockDown = false;
 };

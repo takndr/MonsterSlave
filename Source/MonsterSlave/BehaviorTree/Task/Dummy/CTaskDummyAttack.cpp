@@ -43,6 +43,8 @@ void UCTaskDummyAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	RunningTime += DeltaSeconds;
 
+	// TODO : 모션이 끝나고 딜레이 시간 적용되게 설정해야 할 듯
+
 	if (stateComp->IsIdle() && (RunningTime >= Delay))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

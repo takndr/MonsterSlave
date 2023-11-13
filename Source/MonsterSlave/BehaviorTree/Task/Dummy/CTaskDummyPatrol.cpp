@@ -2,6 +2,7 @@
 
 #include "NavigationSystem.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Component/CStateComponent.h"
 #include "Enemy/CDummyEnemy.h"
@@ -35,6 +36,7 @@ EBTNodeResult::Type UCTaskDummyPatrol::ExecuteTask(UBehaviorTreeComponent& Owner
 			break;
 		}
 	}
+	controller->GetBlackboardComponent()->SetValueAsVector("LocationKey", NextLocation.Location);
 
 	return EBTNodeResult::InProgress;
 }
@@ -49,16 +51,9 @@ void UCTaskDummyPatrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	ACDummyEnemy* enemy = Cast<ACDummyEnemy>(controller->GetPawn());
 	CheckNull(enemy);
 
-	EPathFollowingRequestResult::Type result;
-	result = controller->MoveToLocation(NextLocation.Location);
+	Result = controller->MoveToLocation(controller->GetBlackboardComponent()->GetValueAsVector("LocationKey"), 5.0f);
 
-	if (result == EPathFollowingRequestResult::Failed)
-	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
-		return;
-	}
-
-	if (result == EPathFollowingRequestResult::AlreadyAtGoal)
+	if (Result == EPathFollowingRequestResult::AlreadyAtGoal)
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;

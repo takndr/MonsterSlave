@@ -5,7 +5,8 @@
 #include "CStateComponent.generated.h"
 
 UENUM(BlueprintType)
-enum class EStateType : uint8 {
+enum class EStateType : uint8 
+{
 	Idle, Equip, Action, Evade, Dead, Wait
 };
 

@@ -1,6 +1,5 @@
 #include "Enemy/CBoss.h"
 
-#include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 
 #include "Component/CStatusComponent.h"

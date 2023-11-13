@@ -34,9 +34,6 @@ public:
 	void Attach();
 	void Detach();
 
-	virtual void Equipped();
-	virtual void UnEquipped();
-
 	FORCEINLINE void EnabledCombo() { bCanCombo = true; }
 	FORCEINLINE void DisabledCombo() { bCanCombo = false; }
 private:	
@@ -55,9 +52,11 @@ private:
 // ===================================================
 public:
 	int32 ComboCount = 0;
+	bool bNormal = false;
+	bool bKnockBack = false;
 
 protected:
-	class ACharacter* Owner;
+	class ACharacter* OwnerCharacter;
 	EWeaponType WeaponType;		// 자식에서 초기화
 	TArray<AActor*> HittedActors;
 
@@ -115,12 +114,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 		FName EquippedHolster;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Equip/UnEquip")
-		class UAnimMontage* EquipMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Equip/UnEquip")
-		class UAnimMontage* UnEquipMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
 		float FirstSkillCoolDown = 5.0f;

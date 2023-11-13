@@ -10,20 +10,24 @@
 #include "CPlayerAnim.h"
 
 #include "Widgets/Inventory/CInventory.h"
+#include "Widgets/Quest/CQuestMain.h"
 #include "Widgets/Player/CPlayerMain.h"
-
-#include "Items/CFieldItem.h"
 
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
 #include "Component/COptionComponent.h"
+#include "Component/CQuestComponent.h"
 
 #include "Player/CPlayerHair.h"
 #include "Items/Weapons/CEquipBow.h"
 #include "Items/Weapons/CEquipSword.h"
 
 #include "Enemy/CBoss.h"
+
+#include "Quest/CNpc.h"
+#include "Items/CFieldItem.h"
+#include "etc/CPortal.h"
 
 #include "Global.h"
 
@@ -43,6 +47,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
 	CHelpers::CreateActorComponent(this, &OptionComponent, "Option");
+	CHelpers::CreateActorComponent(this, &QuestComponent, "Quest");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
@@ -92,6 +97,7 @@ ACPlayer::ACPlayer()
 	// Widget Setting
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
 	CHelpers::GetClass(&PlayerMainWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerMain");
+	CHelpers::GetClass(&QuestMainWidgetClass, "/Game/Widgets/Widget/Quest/WB_QuestMain");
 	
 }
 
@@ -107,6 +113,10 @@ void ACPlayer::BeginPlay()
 	InventoryWidget->AddToViewport();
 	InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 
+	QuestMainWidget = CreateWidget<UCQuestMain, APlayerController>(GetController<APlayerController>(), QuestMainWidgetClass);
+	QuestMainWidget->AddToViewport();
+	QuestMainWidget->SetVisibility(ESlateVisibility::Collapsed);
+
 	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
 	PlayerMainWidget->AddToViewport();
 	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
@@ -114,16 +124,11 @@ void ACPlayer::BeginPlay()
 	// Status Setting
 	CheckNull(StatusComponent);
 	PlayerMainWidget->UpdateHealth();
-
-	// Event Binding
-	GetMesh()->OnComponentBeginOverlap.AddDynamic(this, &ACPlayer::MeshComponentBeginOverlap);
-	GetMesh()->OnComponentEndOverlap.AddDynamic(this, &ACPlayer::MeshComponentEndOverlap);
 }
 
 void ACPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -140,7 +145,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	// Inventory 관련
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
-	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &ACPlayer::PickUp);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ACPlayer::Interact);
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -200,7 +205,6 @@ void ACPlayer::OnSwordWeapon()
 	}
 	else
 	{
-		// 일단은 장비 해제만
 		if (WeaponComponent->IsEquipBow())
 		{
 			WeaponComponent->UnEquip();
@@ -228,7 +232,6 @@ void ACPlayer::OnBowWeapon()
 	}
 	else
 	{
-		// 일단은 장비 해제만
 		if (WeaponComponent->IsEquipSword())
 		{
 			WeaponComponent->UnEquip();
@@ -279,34 +282,13 @@ void ACPlayer::Inventory()
 	}
 }
 
-void ACPlayer::PickUp()
-{
-	CheckFalse(bCanPickUp);
-	CheckNull(PickableActor);
-
-	if (MyItems.Num() == MaxItem)
+// bool에 따라 상호작용 내용을 다르게
+void ACPlayer::Interact()
+{	
+	if (OnInteract.IsBound())
 	{
-		CLog::Log("Not Enough Inventory...");
-		return;
+		OnInteract.Execute();
 	}
-
-	FCItemStruct item;
-	item = PickableActor->ItemDescription;
-	
-	AddItem(item);
-
-	PickableActor->Destroy();
-}
-
-void ACPlayer::MeshComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	PickableActor = Cast<ACFieldItem>(OtherActor);
-	CheckNull(PickableActor);
-}
-
-void ACPlayer::MeshComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	PickableActor = nullptr;
 }
 
 void ACPlayer::AddItem(const FCItemStruct& InItem)

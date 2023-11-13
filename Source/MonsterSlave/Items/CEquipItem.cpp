@@ -27,9 +27,9 @@ void ACEquipItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Owner = Cast<ACharacter>(GetOwner());
-	StateComp = CHelpers::GetComponent<UCStateComponent>(Owner);
-	WeaponComp = CHelpers::GetComponent<UCWeaponComponent>(Owner);
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	StateComp = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
+	WeaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
 
 	DynamicMaterial = UMaterialInstanceDynamic::Create(StaticMesh->GetMaterial(0), nullptr);
 	StaticMesh->SetMaterial(0, DynamicMaterial);
@@ -73,7 +73,18 @@ void ACEquipItem::Tick(float DeltaTime)
 void ACEquipItem::Attack() 
 {
 	CheckTrue(AttackMontage.Num() == 0);
-	CheckNull(Owner);
+	CheckNull(OwnerCharacter);
+
+	//if (ComboCount == 1)
+	//{
+	//	bNormal = false;
+	//	bKnockBack = true;
+	//} 
+	//else
+	//{
+	//	bNormal = true;
+	//	bKnockBack = false;
+	//}
 
 	if (bCanCombo == true)
 	{
@@ -82,26 +93,28 @@ void ACEquipItem::Attack()
 		return;
 	}
 	CheckFalse(StateComp->IsIdle());
-	StateComp->SetAction();
 
-	Owner->PlayAnimMontage(AttackMontage[ComboCount]);
+	StateComp->SetAction();
+	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount]);
 }
 
 void ACEquipItem::NextCombo()
 {
 	CheckFalse(bSucceed);
-	CheckNull(Owner);
+	CheckNull(OwnerCharacter);
 
 	bSucceed = false;
 	ComboCount++;
 
-	Owner->PlayAnimMontage(AttackMontage[ComboCount]);
+	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount]);
 }
 
 void ACEquipItem::EndAttack()
 {
 	StateComp->SetIdle();
 	ComboCount = 0;
+	bNormal = false;
+	bKnockBack = false;
 }
 
 void ACEquipItem::FirstSkill()
@@ -109,7 +122,8 @@ void ACEquipItem::FirstSkill()
 	CheckNull(FirstSkillMontage);
 	CheckFalse(bCanFirstSkill);
 
-	Owner->PlayAnimMontage(FirstSkillMontage);
+	StateComp->SetAction();
+	OwnerCharacter->PlayAnimMontage(FirstSkillMontage);
 
 	bCanFirstSkill = false;
 	UKismetSystemLibrary::K2_SetTimer(this, "EndFirstSkillCool", FirstSkillCoolDown, false);
@@ -131,7 +145,8 @@ void ACEquipItem::SecondSkill()
 	CheckNull(SecondSkillMontage);
 	CheckFalse(bCanSecondSkill);
 
-	Owner->PlayAnimMontage(SecondSkillMontage);
+	StateComp->SetAction();
+	OwnerCharacter->PlayAnimMontage(SecondSkillMontage);
 
 	bCanSecondSkill = false;
 	UKismetSystemLibrary::K2_SetTimer(this, "EndSecondSkillCool", SecondSkillCoolDown, false);
@@ -150,34 +165,19 @@ void ACEquipItem::EndSecondSkillCool()
 
 void ACEquipItem::Equip()
 {
-	if (EquipMontage == nullptr) 
-	{
-		Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
-		Owner->bUseControllerRotationYaw = true;
-		Attach();
-		Equipped();
-		return;
-	}
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+	OwnerCharacter->bUseControllerRotationYaw = true;
 
-	CheckNull(StateComp);
-	StateComp->SetEquip();
-	Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
-	Owner->bUseControllerRotationYaw = true;
-	Owner->PlayAnimMontage(EquipMontage);
+	Attach();
 }
 
 void ACEquipItem::UnEquip()
 {
-	if (UnEquipMontage == nullptr) 
-	{
-		Detach();
-		UnEquipped();
-		return;
-	}
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+	OwnerCharacter->bUseControllerRotationYaw = false;
 
-	CheckNull(StateComp);
-	StateComp->SetEquip();
-	Owner->PlayAnimMontage(UnEquipMontage);
+	ComboCount = 0;
+	Detach();
 }
 
 void ACEquipItem::Attach()
@@ -185,7 +185,7 @@ void ACEquipItem::Attach()
 	Timeline.PlayFromStart();
 	FLatentActionInfo actionInfo;
 	UKismetSystemLibrary::Delay(GetWorld(), 0.5, actionInfo);
-	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), EquippedHolster);
+	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), EquippedHolster);
 	Timeline.ReverseFromEnd();
 }
 
@@ -194,27 +194,8 @@ void ACEquipItem::Detach()
 	Timeline.PlayFromStart();
 	FLatentActionInfo actionInfo;
 	UKismetSystemLibrary::Delay(GetWorld(), 0.5, actionInfo);
-	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), UnEquippedHolster);
+	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), UnEquippedHolster);
 	Timeline.ReverseFromEnd();
-}
-
-void ACEquipItem::Equipped()
-{
-	CheckNull(StateComp);
-
-	StateComp->SetIdle();
-}
-
-void ACEquipItem::UnEquipped()
-{
-	CheckNull(StateComp);
-	CheckNull(WeaponComp);
-
-	StateComp->SetIdle();
-	WeaponComp->SetUnarmed();
-
-	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
-	Owner->bUseControllerRotationYaw = false;
 }
 
 void ACEquipItem::Dissolving(float Output)

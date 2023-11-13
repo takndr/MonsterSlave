@@ -26,7 +26,7 @@ public:
 	void EndAttack();
 
 private:
-	void Hitted(FDamageEvent const& DamageEvent);
+	void Hitted(class AActor* DamageCauser);
 	void Dead();
 // =================================================================
 private:

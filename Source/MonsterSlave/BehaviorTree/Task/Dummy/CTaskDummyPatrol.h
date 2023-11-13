@@ -18,4 +18,5 @@ private:
 // ==================================================================
 private:
 	FNavLocation NextLocation;
+	EPathFollowingRequestResult::Type Result;
 };

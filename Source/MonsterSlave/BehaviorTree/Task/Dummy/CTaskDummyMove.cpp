@@ -1,5 +1,6 @@
 #include "BehaviorTree/Task/Dummy/CTaskDummyMove.h"
 
+#include "Component/CBehaviorComponent.h"
 #include "Component/CStateComponent.h"
 #include "Enemy/CDummyEnemy.h"
 #include "Enemy/CDummyController.h"
@@ -35,9 +36,13 @@ void UCTaskDummyMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	ACDummyEnemy* enemy = Cast<ACDummyEnemy>(controller->GetPawn());
 	CheckNull(enemy);
 
-	UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(enemy);
-	CheckNull(stateComp);
+	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
+	CheckNull(behaviorComp);
 
+	ACPlayer* player = behaviorComp->GetPlayerKey();
+	CheckNull(player);
+
+	controller->MoveToActor(player);
 
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 }

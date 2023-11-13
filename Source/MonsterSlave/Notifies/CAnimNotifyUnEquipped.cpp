@@ -19,5 +19,4 @@ void UCAnimNotifyUnEquipped::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
 	CheckNull(equipItem);
 
-	equipItem->UnEquipped();
 }

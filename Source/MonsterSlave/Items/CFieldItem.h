@@ -13,8 +13,9 @@ public:
 	ACFieldItem();
 protected:
 	virtual void BeginPlay() override;
-public:	
-	virtual void Tick(float DeltaTime) override;
+// ==================================================================
+private:
+
 // ==================================================================
 private:
 	UFUNCTION()
@@ -22,6 +23,9 @@ private:
 
 	UFUNCTION()
 		void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void OnInteract();
 // ==================================================================
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Description")

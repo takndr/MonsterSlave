@@ -9,22 +9,26 @@
 #include "Global.h"
 
 // TODO7 : HittedActor를 OffCollision쪽에 초기화를 진행해두었는데, 이 위치가 맞는지 다시 한번 고심해서 재조정
-ACEquipSword::ACEquipSword() {
+ACEquipSword::ACEquipSword()
+{
 	WeaponType = EWeaponType::Sword;
 	CHelpers::CreateSceneComponent(this, &Capsule, "Collision", StaticMesh);
 }
 
-void ACEquipSword::BeginPlay() {
+void ACEquipSword::BeginPlay()
+{
 	Super::BeginPlay();
 
 	Capsule->OnComponentBeginOverlap.AddDynamic(this, &ACEquipSword::OnOverlap);
 }
 
-void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
-	CheckTrue(OtherActor == Owner);
+	CheckTrue(OtherActor == OwnerCharacter);
 	
-	if (HittedActors.Find(OtherActor) != -1) {
+	if (HittedActors.Find(OtherActor) != -1)
+	{
 		return;
 	}
 	HittedActors.AddUnique(OtherActor);
@@ -33,17 +37,31 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	FDamageEvent damageEvent;
 	damageEvent.DamageTypeClass;
 	
+	if (ComboCount == 2)
+	{
+		CLog::Print("KnockBack");
+		bNormal = false;
+		bKnockBack = true;
+	}
+	else
+	{
+		CLog::Print("Normal");
+		bNormal = true;
+		bKnockBack = false;
+	}
 	
-	OtherActor->TakeDamage(30.0f, damageEvent, Owner->GetController(), this);
+	OtherActor->TakeDamage(30.0f, damageEvent, OwnerCharacter->GetController(), this);
 }
 
-void ACEquipSword::OnCollision() {
+void ACEquipSword::OnCollision()
+{
 	CheckNull(Capsule);
 
 	Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
-void ACEquipSword::OffCollision() {
+void ACEquipSword::OffCollision()
+{
 	CheckNull(Capsule);
 
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);

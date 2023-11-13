@@ -7,6 +7,9 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 
+#include "Component/CWeaponComponent.h"
+
+#include "Items/Weapons/CEquipBow.h"
 #include "Enemy/CBoss.h"
 #include "Enemy/CDummyEnemy.h"
 
@@ -28,7 +31,10 @@ ACArrow::ACArrow() {
 
 void ACArrow::BeginPlay() {
 	Super::BeginPlay();
-	Owner = Cast<ACharacter>(GetOwner());
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+
+	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
+	OwnerBow = Cast<AActor>(weaponComp->GetCurrentWeapon());
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FlashEffect, GetActorLocation(), GetActorRotation());
 	
@@ -40,7 +46,7 @@ void ACArrow::BeginPlay() {
 void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
-	CheckTrue(Owner == OtherActor);
+	CheckTrue(OwnerCharacter == OtherActor);
 
 	FVector impactNormal = SweepResult.ImpactNormal;
 	FVector location = SweepResult.Location;
@@ -48,21 +54,30 @@ void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitEffect, location + impactNormal * 5, rotator);
 
+	ACEquipBow* bow = Cast<ACEquipBow>(OwnerBow);
+	if (bow->ComboCount == 2)
+	{
+		bow->bNormal = false;
+		bow->bKnockBack = true;
+	}
+	else
+	{
+		bow->bNormal = true;
+		bow->bKnockBack = false;
+	}
+
 	// 데미지를 줄 경우는 적일 경우에만
 	if (Cast<ACBoss>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, Owner->GetController(), this);
+		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerBow);
 	}
 	
 	if (Cast<ACDummyEnemy>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, Owner->GetController(), this);
+		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerBow);
 	}
-
-
-
 
 	this->Destroy();
 }

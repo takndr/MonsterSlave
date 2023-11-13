@@ -47,24 +47,24 @@ void ACEquipBow::SecondSkill()
 
 void ACEquipBow::SpawnArrow()
 {
-	FTransform transform = Owner->GetMesh()->GetSocketTransform("bow_socket");
-	ACPlayer* player = Cast<ACPlayer>(Owner);
+	FTransform transform = OwnerCharacter->GetMesh()->GetSocketTransform("bow_socket");
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 
 	//transform.SetRotation(FQuat(Owner->GetActorForwardVector().Rotation()));
 	transform.SetRotation(FQuat(player->GetMeshCamera()->GetForwardVector().Rotation()));
-	Arrow = GetWorld()->SpawnActorDeferred<ACArrow>(ArrowClass, transform, Owner);
+	Arrow = GetWorld()->SpawnActorDeferred<ACArrow>(ArrowClass, transform, OwnerCharacter);
 
 	Arrow->FinishSpawning(transform);
 }
 
 void ACEquipBow::SpawnArrowRain()
 {
-	FVector location = Owner->GetActorLocation() + Owner->GetActorForwardVector() * ArrowRainRange + Owner->GetActorUpVector() * 500;
+	FVector location = OwnerCharacter->GetActorLocation() + OwnerCharacter->GetActorForwardVector() * ArrowRainRange + OwnerCharacter->GetActorUpVector() * 500;
 	FTransform transform;
 	transform.SetLocation(location);
 
 	FActorSpawnParameters spawnParameter;
-	spawnParameter.Owner = Owner;
+	spawnParameter.Owner = OwnerCharacter;
 
 	GetWorld()->SpawnActor<ACArrowRain>(ArrowRainClass, transform, spawnParameter);
 }

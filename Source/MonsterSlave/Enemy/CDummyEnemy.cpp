@@ -2,11 +2,13 @@
 
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Component/CStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Widgets/Enemy/CDummyHp.h"
 #include "Player/CPlayer.h"
+#include "Items/CEquipItem.h"
 
 #include "Global.h"
 
@@ -119,6 +121,10 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	StatusComponent->DecreaseHealth(DamageValue);
 
+	//LaunchCharacter(FVector(0, 0, 100), false, false);
+	//GetCharacterMovement()->Launch(FVector(0, 0, Damage));
+	ACEquipItem* item = Cast<ACEquipItem>(DamageCauser);
+
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
@@ -129,22 +135,28 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 		return DamageValue;
 	}
 
-	Hitted(DamageEvent);
+	Hitted(DamageCauser);
 
 	return DamageValue;
 }
 
-void ACDummyEnemy::Hitted(FDamageEvent const& DamageEvent)
+void ACDummyEnemy::Hitted(AActor* DamageCauser)
 {
 	CheckNull(HitMontage);
 	CheckNull(KnockbackMontage);
 
-	if (DamageEvent.ClassID == 0)
+	ACEquipItem* item = Cast<ACEquipItem>(DamageCauser);
+	CheckNull(item);
+
+	if (item->bNormal)
 	{
+		CLog::Print("Normal");
 		PlayAnimMontage(HitMontage);
 	}
-	else
+
+	if (item->bKnockBack)
 	{
+		CLog::Print("KnockBack");
 		PlayAnimMontage(KnockbackMontage);
 	}
 }
