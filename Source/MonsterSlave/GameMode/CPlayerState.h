@@ -10,17 +10,8 @@ class MONSTERSLAVE_API ACPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 public:
-	//UPROPERTY(Replicated)
-	//	class UCWeaponComponent* WeaponComponent;
+	ACPlayerState();
+public:
+	TArray<FCItemStruct> MyItems;
 
-	//UPROPERTY(Replicated)
-	//	class UCStatusComponent* StatusComponent;
-
-	//UPROPERTY(Replicated)
-	//	class UCStateComponent* StateComponent;
-
-	//UPROPERTY(Replicated)
-	//	TArray<FCItemStruct> MyItems;
-
-	float Heatlh;
 };

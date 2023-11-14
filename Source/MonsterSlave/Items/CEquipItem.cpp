@@ -75,17 +75,6 @@ void ACEquipItem::Attack()
 	CheckTrue(AttackMontage.Num() == 0);
 	CheckNull(OwnerCharacter);
 
-	//if (ComboCount == 1)
-	//{
-	//	bNormal = false;
-	//	bKnockBack = true;
-	//} 
-	//else
-	//{
-	//	bNormal = true;
-	//	bKnockBack = false;
-	//}
-
 	if (bCanCombo == true)
 	{
 		bCanCombo = false;

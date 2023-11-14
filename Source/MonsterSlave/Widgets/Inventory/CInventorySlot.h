@@ -9,22 +9,23 @@ UCLASS()
 class MONSTERSLAVE_API UCInventorySlot : public UUserWidget
 {
 	GENERATED_BODY()
+protected:
+	virtual void NativeConstruct() override;
 public:
 	void SettingSlot(FCItemStruct InItem);
 	FORCEINLINE bool IsFilled() { return bFilled; }
-protected:
-	virtual bool Initialize() override;
-	UFUNCTION(BlueprintCallable)
-		void EquipItem();
 private:
 	void EquipBow();
 	void EquipSword();
-
-
-// ===========================================
+// ============================================================================
+protected:
+	UFUNCTION(BlueprintCallable)
+		void EquipItem();
+// ============================================================================
 private:
+	class ACharacter* OwnerCharacter;
 	class UCInventory* Inventory;
-// ===========================================
+// ============================================================================
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* SlotButton;

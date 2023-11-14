@@ -19,6 +19,7 @@ public:
 	FORCEINLINE float GetCurrentHp() { return CurrentHp; }
 	FORCEINLINE float GetMaxHp() { return MaxHp; }
 	FORCEINLINE float GetHpRatio() { return CurrentHp / MaxHp; }
+	FORCEINLINE float GetMoveSpeed() { return MoveSpeed; }
 // =================================================================
 public:	
 	UFUNCTION(BlueprintCallable)
@@ -32,7 +33,6 @@ private:
 	float CurrentHp;
 // =================================================================
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Status : Hp")
 		float MaxHp = 100.0f;
 

@@ -2,8 +2,13 @@
 
 #include "Components/BoxComponent.h"
 
+#include "Component/CWeaponComponent.h"
+#include "Component/CStatusComponent.h"
+
 #include "Widgets/CInteract.h"
 #include "Player/CPlayer.h"
+#include "GameMode/CSaveGame.h"
+#include "Items/CEquipItem.h"
 
 #include "Global.h"
 
@@ -61,13 +66,53 @@ void ACPortal::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 
 void ACPortal::OnInteract()
 {
-	CLog::Print("Portal");
-
 	APlayerController* controller = GetWorld()->GetFirstPlayerController();
 	CheckNull(controller);
 
+	ACPlayer* player = Cast<ACPlayer>(controller->GetPawn());
+	CheckNull(player);
+
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	// 인벤토리 저장
+	saveGame->Items = player->MyItems;
+	// 장착장비 인벤 표기
+
+	// 현재 Weapon 장착 정보 저장
+	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
+	if (weaponComp != nullptr)
+	{
+		if (weaponComp->GetSwordWeapon() != nullptr)
+		{
+			saveGame->SwordItem = (weaponComp->GetSwordWeapon()->Item);
+		}
+
+		if (weaponComp->GetBowWeapon() != nullptr)
+		{
+			saveGame->BowItem = (weaponComp->GetBowWeapon()->Item);
+		}
+
+		if (weaponComp->GetWeaponType() != EWeaponType::Unarmed)
+		{
+			saveGame->WeaponType = weaponComp->GetWeaponType();
+		}
+	}
+
+	// 현재 플레이어 Status 저장
+	UCStatusComponent* statusComp = CHelpers::GetComponent<UCStatusComponent>(player);
+	if (statusComp != nullptr)
+	{
+		saveGame->MaxHp = statusComp->GetMaxHp();
+		saveGame->CurrentHp = statusComp->GetCurrentHp();
+		saveGame->MoveSpeed = statusComp->GetMoveSpeed();
+	}
+
+
+	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
+
+
 	FString map = "/Game/Maps/" + NextMap;
 	UGameplayStatics::OpenLevel(GetWorld(), (FName)map);
-
 	//controller->ClientTravel(map, ETravelType::TRAVEL_Absolute);
 }

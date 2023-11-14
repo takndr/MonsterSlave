@@ -3,6 +3,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "GameMode/CSaveGame.h"
+
 #include "Global.h"
 
 UCStatusComponent::UCStatusComponent()
@@ -15,13 +17,26 @@ void UCStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurrentHp = MaxHp;
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-
-	UCharacterMovementComponent* movementComponent = CHelpers::GetComponent<UCharacterMovementComponent>(GetOwner());
+	UCharacterMovementComponent* movementComponent = CHelpers::GetComponent<UCharacterMovementComponent>(OwnerCharacter);
 	CheckNull(movementComponent);
 
-	movementComponent->MaxWalkSpeed = MoveSpeed;
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	// 저장된 정보 있으면 저장
+	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	if (saveGame != nullptr)
+	{
+		MaxHp = saveGame->MaxHp;
+		CurrentHp = saveGame->CurrentHp;
+		movementComponent->MaxWalkSpeed = saveGame->MoveSpeed;
+	}
+	else
+	{
+		CurrentHp = MaxHp;
+		movementComponent->MaxWalkSpeed = MoveSpeed;
+	}
 }
 
 

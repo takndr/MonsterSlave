@@ -36,6 +36,7 @@ public:
 
 	FORCEINLINE void EnabledCombo() { bCanCombo = true; }
 	FORCEINLINE void DisabledCombo() { bCanCombo = false; }
+	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
 private:	
 
 // ===================================================
@@ -51,6 +52,7 @@ private:
 
 // ===================================================
 public:
+	FCItemStruct Item;
 	int32 ComboCount = 0;
 	bool bNormal = false;
 	bool bKnockBack = false;
@@ -78,6 +80,7 @@ private:
 
 	float FirstSkillTemp;
 	float SecondSkillTemp;
+	
 // ===================================================
 public:
 	UPROPERTY(BlueprintAssignable)

@@ -1,17 +1,22 @@
 #include "CInventory.h"
 
 #include "Components/UniformGridPanel.h"
+#include "GameFramework/Character.h"
 
 #include "Widgets/Inventory/CInventorySlot.h"
+#include "Widgets/Inventory/CEquipSlot.h"
+#include "Player/CPlayer.h"
+#include "GameMode/CSaveGame.h"
 
 #include "Global.h"
 
-bool UCInventory::Initialize()
+void UCInventory::NativeConstruct()
 {
-	bool bSuccess = Super::Initialize();
-	CheckFalseResult(bSuccess, false);
+	Super::NativeConstruct();
 
-	return true;
+	OwnerCharacter = Cast<ACharacter>(GetOwningPlayerPawn());
+
+	Update();
 }
 
 void UCInventory::Attach()
@@ -55,8 +60,29 @@ void UCInventory::Detach()
 // 처음 가방 초기화
 void UCInventory::Update()
 {
+	// 저장된 정보 있으면 저장
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
 
+	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	CheckNull(saveGame);
 
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
+	
+	for (uint8 i = 0; i < saveGame->Items.Num(); i++)
+	{
+		AddItem(saveGame->Items[i]);
+	}
+
+	if (saveGame->SwordItem.Name != "NULL")
+	{
+		SwordEquipment->SettingSlot((saveGame->SwordItem));
+	}
+
+	if (saveGame->BowItem.Name != "NULL")
+	{
+		BowEquipment->SettingSlot((saveGame->BowItem));
+	}
 }
 
 // 아이템 먹었을 때 실행

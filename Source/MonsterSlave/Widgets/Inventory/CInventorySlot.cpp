@@ -2,6 +2,7 @@
 
 #include "Components/Button.h"
 #include "Components/Image.h"
+#include "GameFramework/Character.h"
 
 #include "Widgets/Inventory/CInventory.h"
 #include "Widgets/Inventory/CEquipSlot.h"
@@ -10,12 +11,13 @@
 
 #include "Global.h"
 
-bool UCInventorySlot::Initialize()
+void UCInventorySlot::NativeConstruct()
 {
-	bool bSuccess = Super::Initialize();
-	CheckFalseResult(bSuccess, false);
+	Super::NativeConstruct();
 
-	return true;
+	OwnerCharacter = Cast<ACharacter>(GetOwningPlayerPawn());
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
+	Inventory = player->GetInventory();
 }
 
 void UCInventorySlot::SettingSlot(FCItemStruct InItem)
@@ -30,9 +32,6 @@ void UCInventorySlot::SettingSlot(FCItemStruct InItem)
 
 void UCInventorySlot::EquipItem()
 {
-	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Inventory = player->GetInventory();
-
 	switch (InvenSlotItem.WeaponType)
 	{
 		case EWeaponType::Sword:
@@ -50,7 +49,6 @@ void UCInventorySlot::EquipItem()
 
 void UCInventorySlot::EquipSword()
 {
-	CLog::Log("Equip Sword!");
 	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
 
@@ -81,7 +79,7 @@ void UCInventorySlot::EquipBow()
 	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
 
-	// 현재는  EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
+	// 현재는 EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
 	if (weaponComp->IsSetBow())
 	{
 		weaponComp->RemoveBow();

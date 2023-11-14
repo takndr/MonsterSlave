@@ -1,42 +1,39 @@
 #include "CEquipSlot.h"
 
 #include "Components/Image.h"
+#include "GameFramework/Character.h"
 
 #include "Player/CPlayer.h"
 #include "Component/CWeaponComponent.h"
 
 #include "Global.h"
 
+void UCEquipSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	OwnerCharacter = Cast<ACharacter>(GetOwningPlayerPawn());
+}
+
 void UCEquipSlot::SettingSlot(FCItemStruct InItem)
 {
 	SlotImage->SetBrushFromTexture(InItem.Picture);
 
-	EquipSlotItem = InItem;
+	Item = InItem;
 	bEquipped = true;
-}
-
-bool UCEquipSlot::Initialize()
-{
-	bool bSuccess = Super::Initialize();
-	CheckFalseResult(bSuccess, false);
-
-	CheckNullResult(DefaultImage, false);
-	SlotImage->SetBrushFromTexture(DefaultImage);
-
-	return true;
 }
 
 void UCEquipSlot::UnEquipItem()
 {
 	bEquipped = false;
 
-	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	UCWeaponComponent* weapon = CHelpers::GetComponent<UCWeaponComponent>(player);
 
-	player->AddItem(EquipSlotItem);
+	player->AddItem(Item);
 	SlotImage->SetBrushFromTexture(DefaultImage);
 
-	switch (EquipSlotItem.WeaponType)
+	switch (Item.WeaponType)
 	{
 		case EWeaponType::Sword: 
 		{

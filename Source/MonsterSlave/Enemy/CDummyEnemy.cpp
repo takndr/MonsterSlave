@@ -113,7 +113,7 @@ void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	// TODO : 스킬인지, 일반 공격인지
 	FDamageEvent damageEvent;
-	OtherActor->TakeDamage(30.0f, damageEvent, GetController(), this);
+	OtherActor->TakeDamage(AttackDamage, damageEvent, GetController(), this);
 }
 
 float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

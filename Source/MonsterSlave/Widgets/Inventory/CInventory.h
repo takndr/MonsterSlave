@@ -14,15 +14,17 @@ public:
 
 	void Attach();
 	void Detach();
-	uint32 AddItem(FCItemStruct item);			// 아이템 먹었을 때, 가방에 추가해주는 함수 | 매개변수로 item struct 추가 예정
+	uint32 AddItem(FCItemStruct item);
 
 protected:
-	virtual bool Initialize() override;
-
+	virtual void NativeConstruct() override;
 private:
-	void Update();								// 초기 인벤토리 가방 업데이트
+	void Update();
 
-// =====================================
+// ============================================================================
+private:
+	class ACharacter* OwnerCharacter;
+// ============================================================================
 
 public:
 	UPROPERTY(meta = (BindWidget))

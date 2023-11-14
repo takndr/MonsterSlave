@@ -28,6 +28,7 @@
 #include "Quest/CNpc.h"
 #include "Items/CFieldItem.h"
 #include "etc/CPortal.h"
+#include "GameMode/CSaveGame.h"
 
 #include "Global.h"
 
@@ -124,6 +125,15 @@ void ACPlayer::BeginPlay()
 	// Status Setting
 	CheckNull(StatusComponent);
 	PlayerMainWidget->UpdateHealth();
+
+	// 저장된 정보 있으면 저장
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	CheckNull(saveGame);
+
+	MyItems = saveGame->Items;
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -282,7 +292,6 @@ void ACPlayer::Inventory()
 	}
 }
 
-// bool에 따라 상호작용 내용을 다르게
 void ACPlayer::Interact()
 {	
 	if (OnInteract.IsBound())

@@ -21,9 +21,7 @@ public:
 	void SetSwordType();
 	void SetBowType();
 
-	void SetSword(class ACEquipItem* InItem);
 	void SetSword(const FCItemStruct& InItem);
-	void SetBow(class ACEquipItem* InItem);
 	void SetBow(const FCItemStruct& InItem);
 
 	void RemoveSword();
@@ -35,6 +33,8 @@ public:
 
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
 	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
+	FORCEINLINE class ACEquipItem* GetSwordWeapon() { return Weapons[(int32)EWeaponType::Sword]; }
+	FORCEINLINE class ACEquipItem* GetBowWeapon() { return Weapons[(int32)EWeaponType::Bow]; }
 
 	FORCEINLINE bool IsUnarmed() { return WeaponType == EWeaponType::Unarmed; }
 	FORCEINLINE bool IsEquipSword() { return WeaponType == EWeaponType::Sword; }

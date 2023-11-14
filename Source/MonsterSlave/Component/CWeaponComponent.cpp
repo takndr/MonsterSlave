@@ -1,8 +1,12 @@
 #include "Component/CWeaponComponent.h"
 
 #include "GameFramework/Character.h"
+
+#include "GameMode/CSaveGame.h"
 #include "Items/CEquipItem.h"
 
+
+#include "Player/CPlayer.h"
 #include "Global.h"
 
 UCWeaponComponent::UCWeaponComponent()
@@ -13,6 +17,30 @@ UCWeaponComponent::UCWeaponComponent()
 void UCWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 저장된 정보 있으면 저장
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	CheckNull(saveGame);
+
+	if(saveGame->SwordItem.Name != "NULL")
+	{
+		SetSword((saveGame->SwordItem));
+	}
+
+	if(saveGame->BowItem.Name != "NULL")
+	{
+		SetBow((saveGame->BowItem));
+	}
+
+	if(saveGame->WeaponType != EWeaponType::Unarmed)
+	{
+		ChangeType(saveGame->WeaponType);
+		Weapons[(int32)saveGame->WeaponType]->Equip();
+	}
+	
 }
 
 void UCWeaponComponent::SetUnarmed()
@@ -41,11 +69,6 @@ void UCWeaponComponent::ChangeType(EWeaponType InNewType)
 	}
 }
 
-void UCWeaponComponent::SetSword(ACEquipItem* InItem)
-{
-	Weapons[(int32)EWeaponType::Sword] = InItem;
-}
-
 void UCWeaponComponent::SetSword(const FCItemStruct& InItem)
 {
 	ACEquipItem* weapon;
@@ -56,13 +79,9 @@ void UCWeaponComponent::SetSword(const FCItemStruct& InItem)
 
 	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
 	weapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
+	weapon->Item = InItem;
 
 	Weapons[(int32)EWeaponType::Sword] = weapon;
-}
-
-void UCWeaponComponent::SetBow(ACEquipItem* InItem)
-{
-	Weapons[(int32)EWeaponType::Bow] = InItem;
 }
 
 void UCWeaponComponent::SetBow(const FCItemStruct& InItem)
@@ -75,6 +94,7 @@ void UCWeaponComponent::SetBow(const FCItemStruct& InItem)
 
 	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
 	weapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
+	weapon->Item = InItem;
 
 	Weapons[(int32)EWeaponType::Bow] = weapon;
 }

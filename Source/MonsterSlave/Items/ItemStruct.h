@@ -58,7 +58,7 @@ public:
 public:
 	// 아이템 이름
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		FString Name;
+		FString Name = "NULL";
 
 	// 아이템 설명
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -76,9 +76,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		EWeaponType WeaponType;
 
-	// 클래스 래퍼런스
+	// 장착 장비 클래스 래퍼런스
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSubclassOf<class ACEquipItem> EquipWeaponClass;
+
+	// 필드 장비 클래스 래퍼런스
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSubclassOf<class ACFieldItem> FieldWeaponClass;
 
 	// UI에서 보여줄 사진
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -89,7 +93,7 @@ public:
 		bool isWeapon;
 
 private:
-	int32 Index;
+	int32 Index = 0;
 };
 
 FORCEINLINE bool operator==(const FCItemStruct& Lhs, const FCItemStruct& Rhs) {

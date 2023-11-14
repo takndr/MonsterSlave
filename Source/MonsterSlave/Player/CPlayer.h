@@ -16,10 +16,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-// ============================================================================
 public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+// ============================================================================
+public:
 	void AddItem(const FCItemStruct& InItem);
 	void RemoveInventoryItem(const FCItemStruct& InItem);
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
@@ -27,7 +28,6 @@ public:
 	
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
 	FORCEINLINE class UCameraComponent* GetMeshCamera() { return MeshCamera; }
-	FORCEINLINE void SetInteractActor(class AActor* InActor) { InteractActor = InActor; }
 private:
 	// Axis Event
 	void OnMoveForward(float Axis);

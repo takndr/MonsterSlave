@@ -9,26 +9,27 @@ UCLASS()
 class MONSTERSLAVE_API UCEquipSlot : public UUserWidget
 {
 	GENERATED_BODY()
+protected:
+	virtual void NativeConstruct() override;
 public:
 	void SettingSlot(FCItemStruct InItem);
 	FORCEINLINE bool IsEquipped() const { return bEquipped; }
-	FORCEINLINE FCItemStruct GetItem() const { return EquipSlotItem; }
-
-protected:
-	virtual bool Initialize() override;
-
+	FORCEINLINE FCItemStruct GetItem() const { return Item; }
+// ============================================================================
 protected:
 	UFUNCTION(BlueprintCallable)
 		void UnEquipItem();
-
-// ===================================================
+// ============================================================================
+private:
+	class ACharacter* OwnerCharacter;
+// ============================================================================
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)
 		UTexture2D* DefaultImage;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-		FCItemStruct EquipSlotItem;
+		FCItemStruct Item;
 
 private:
 	UPROPERTY(meta = (BindWidget))
