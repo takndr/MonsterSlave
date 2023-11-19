@@ -1,19 +1,35 @@
 #include "Component/CQuestComponent.h"
 
+#include "GameFramework/Character.h"
+
+#include "Quest/CQuest.h"
+
+#include "Global.h"
+
 UCQuestComponent::UCQuestComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UCQuestComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
+
+	for (auto QuestClass : QuestClasses)
+	{
+		ACQuest* temp;
+		FTransform transform = OwnerCharacter->GetActorTransform();
+		temp = GetWorld()->SpawnActorDeferred<ACQuest>(QuestClass, transform, OwnerCharacter);
+		temp->FinishSpawning(transform);
+		temp->AttachToActor(OwnerCharacter, FAttachmentTransformRules::KeepRelativeTransform);
+		Quests.Add(temp);
+	}
 }
 
-void UCQuestComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCQuestComponent::DeleteQuest(class ACQuest* InQuest)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 }
+
 

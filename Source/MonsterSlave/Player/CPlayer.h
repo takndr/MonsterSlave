@@ -22,6 +22,7 @@ public:
 // ============================================================================
 public:
 	void AddItem(const FCItemStruct& InItem);
+	void AddItem(class UCItemData* InItem);
 	void RemoveInventoryItem(const FCItemStruct& InItem);
 	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
 	void Dead();
@@ -99,6 +100,7 @@ private:
 public:
 	FInteractSignature OnInteract;
 	TArray<FCItemStruct> MyItems;
+	TArray<class UCItemData*> Items;
 	int32 MaxItem = 30;
 
 private:

@@ -26,8 +26,11 @@ private:
 		void OnInteract();
 //=============================================================================
 private:
-	class TSubclassOf<UUserWidget> InteractWidgetClass;
+	TSubclassOf<class UUserWidget> InteractWidgetClass;
 	class UCInteract* InteractWidget;
+
+	TSubclassOf<class UCQuestMain> QuestMainWidgetClass;
+	class UCQuestMain* QuestMainWidget;
 
 //=============================================================================
 private:
@@ -35,6 +38,6 @@ private:
 		class USphereComponent* Sphere;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCQuestComponent* Quest;
+		class UCQuestComponent* QuestComp;
 
 };

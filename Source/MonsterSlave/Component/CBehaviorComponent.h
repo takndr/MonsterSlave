@@ -7,7 +7,7 @@
 UENUM(BlueprintType)
 enum class EBehaviorType : uint8
 {
-	Wait, Patrol, Rotate, Move, Action, Max
+	Wait, Patrol, Rotate, Move, Action, Slash, Breath, Max
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,10 +23,12 @@ public:
 	FORCEINLINE void SetBlackboard(class UBlackboardComponent* InBlackBoard) { Blackboard = InBlackBoard; }
 
 	void SetWaitMode();
+	void SetPatrolMode();
 	void SetRotateMode();
 	void SetMoveMode();
 	void SetActionMode();
-	void SetPatrolMode();
+	void SetSlashMode();
+	void SetBreathMode();
 
 	class ACPlayer* GetPlayerKey();
 	FVector GetLocationKey();
@@ -49,6 +51,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool IsPatrolMode();
+
+	UFUNCTION(BlueprintCallable)
+		bool IsSlashMode();
+
+	UFUNCTION(BlueprintCallable)
+		bool IsBreathMode();
 // ==================================================================
 private:
 	class UBlackboardComponent* Blackboard;

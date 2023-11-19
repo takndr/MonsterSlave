@@ -1,4 +1,4 @@
-#include "BehaviorTree/Task/CTaskBreathAttack.h"
+#include "CTaskBreathAttack.h"
 
 #include "Component/CStateComponent.h"
 #include "Enemy/CBoss.h"
@@ -24,6 +24,7 @@ EBTNodeResult::Type UCTaskBreathAttack::ExecuteTask(UBehaviorTreeComponent& Owne
 	ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
 	CheckNullResult(boss, EBTNodeResult::Failed);
 
+	controller->StopMovement();
 	boss->BreathAttack();
 
 	return EBTNodeResult::InProgress;

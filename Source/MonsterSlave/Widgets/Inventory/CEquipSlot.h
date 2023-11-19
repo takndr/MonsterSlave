@@ -22,6 +22,7 @@ protected:
 // ============================================================================
 private:
 	class ACharacter* OwnerCharacter;
+	class UCItemData* Itemd;
 // ============================================================================
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly)

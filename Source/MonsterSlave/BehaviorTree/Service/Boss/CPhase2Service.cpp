@@ -1,6 +1,4 @@
-#include "BehaviorTree/Service/CRootService.h"
-
-#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/Service/Boss/CPhase2Service.h"
 
 #include "Component/CBehaviorComponent.h"
 #include "Enemy/CBoss.h"
@@ -9,18 +7,14 @@
 
 #include "Global.h"
 
-void UCRootService::OnSearchStart(FBehaviorTreeSearchData& SearchData)
+void UCPhase2Service::OnSearchStart(FBehaviorTreeSearchData& SearchData)
 {
 	Controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
 	OwnerBoss = Controller->GetPossessedBoss();
-	
-	Controller->GetBlackboardComponent()->SetValueAsBool("PhaseChangedKey", OwnerBoss->IsAblePhaseChange());
-	Controller->GetBlackboardComponent()->SetValueAsInt("PhaseKey", OwnerBoss->GetCurrentPhase());
 }
 
-void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UCPhase2Service::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	// TODO : 보스의 공격 선택(보강)
 	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
 	CheckNull(controller);
 
@@ -29,9 +23,6 @@ void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 
 	ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
 	CheckNull(boss);
-
-	UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(boss);
-	CheckNull(stateComp);
 
 	ACPlayer* player = behaviorComp->GetPlayerKey();
 	CheckNull(player);
@@ -43,23 +34,17 @@ void UCRootService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 	FVector temp = playerLoc - bossLoc;
 	float doc = bossForward.GetSafeNormal2D() | temp.GetSafeNormal2D();
 
-	if (doc < 0.98)
+	if (boss->bCanBreath)
 	{
-		behaviorComp->SetRotateMode();
-		return;
-	}
-	
+		if (doc < 0.98)
+		{
+			behaviorComp->SetRotateMode();
+			return;
+		}
 
-	// boss의 거리가 플레이어와의 일정 거리가 아니면 Move모드 -> 어떤 공격이냐에 따라 거리가 달라지는데?
-	float distance = player->GetDistanceTo(boss);
-	if (distance >= 1000)
-	{
-		behaviorComp->SetMoveMode();
+		behaviorComp->SetActionMode();
 		return;
 	}
 
-	behaviorComp->SetActionMode();
-	// boss의 거리가 플레이어와의 일정 거리가 충족하면 Action모드
-
-
+	behaviorComp->SetPatrolMode();
 }

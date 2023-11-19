@@ -1,4 +1,4 @@
-#include "BehaviorTree/Task/CTaskPhaseChange.h"
+#include "CTaskPhaseChange.h"
 
 #include "Enemy/CBoss.h"
 #include "Enemy/CBossController.h"
@@ -17,6 +17,7 @@ EBTNodeResult::Type UCTaskPhaseChange::ExecuteTask(UBehaviorTreeComponent& Owner
 		return EBTNodeResult::Failed;
 	}
 
+	Controller->StopMovement();
 	OwnerBoss->ChangePhase();
 
 	return EBTNodeResult::Succeeded;

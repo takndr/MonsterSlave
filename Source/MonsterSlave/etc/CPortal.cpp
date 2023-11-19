@@ -76,7 +76,8 @@ void ACPortal::OnInteract()
 	CheckNull(saveGame);
 
 	// 인벤토리 저장
-	saveGame->Items = player->MyItems;
+	//saveGame->Items = player->MyItems;
+	saveGame->Item = player->Items;
 	// 장착장비 인벤 표기
 
 	// 현재 Weapon 장착 정보 저장

@@ -110,3 +110,13 @@ void UCPlayerMain::OffSecondSkillCoolDown()
 
 
 // 현재 검스킬 하나 돌리고 무기 변경시 튕기는 현상 있음
+
+void UCPlayerMain::OnQuestAccept()
+{
+
+}
+
+void UCPlayerMain::OnQuestClear()
+{
+
+}

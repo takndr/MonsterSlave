@@ -13,6 +13,7 @@ protected:
 	virtual void NativeConstruct() override;
 public:
 	void SettingSlot(FCItemStruct InItem);
+	void SettingSlot(class UCItemData* InItem);
 	FORCEINLINE bool IsFilled() { return bFilled; }
 private:
 	void EquipBow();
@@ -25,6 +26,7 @@ protected:
 private:
 	class ACharacter* OwnerCharacter;
 	class UCInventory* Inventory;
+	class UCItemData* Item;
 // ============================================================================
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

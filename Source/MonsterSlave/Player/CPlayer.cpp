@@ -27,6 +27,7 @@
 
 #include "Quest/CNpc.h"
 #include "Items/CFieldItem.h"
+#include "Items/CItemData.h"
 #include "etc/CPortal.h"
 #include "GameMode/CSaveGame.h"
 
@@ -133,7 +134,8 @@ void ACPlayer::BeginPlay()
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	CheckNull(saveGame);
 
-	MyItems = saveGame->Items;
+	//MyItems = saveGame->Items;
+	Items = saveGame->Item;
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -304,6 +306,12 @@ void ACPlayer::AddItem(const FCItemStruct& InItem)
 {
 	int32 index = InventoryWidget->AddItem(InItem);
 	MyItems.Insert(InItem, index);
+}
+
+void ACPlayer::AddItem(class UCItemData* InItem)
+{
+	int32 index = InventoryWidget->AddItem(InItem);
+	Items.Insert(InItem, index);
 }
 
 void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)

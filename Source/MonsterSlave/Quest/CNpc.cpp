@@ -6,13 +6,15 @@
 
 #include "Player/CPlayer.h"
 #include "Widgets/CInteract.h"
+#include "Quest/CQuest.h"
+#include "Widgets/Quest/CQuestMain.h"
 
 #include "Global.h"
 
 ACNpc::ACNpc()
 {
 	CHelpers::CreateSceneComponent(this, &Sphere, "Sphere", RootComponent);
-	CHelpers::CreateActorComponent(this, &Quest, "Quest");
+	CHelpers::CreateActorComponent(this, &QuestComp, "Quest");
 
 	Sphere->SetSphereRadius(200.0f);
 
@@ -28,6 +30,7 @@ ACNpc::ACNpc()
 
 	// Widget Setting
 	CHelpers::GetClass(&InteractWidgetClass, "/Game/Widgets/Widget/WB_Interact");
+	CHelpers::GetClass(&QuestMainWidgetClass, "/Game/Widgets/Widget/Quest/WB_QuestMain");
 }
 
 void ACNpc::BeginPlay()
@@ -42,8 +45,9 @@ void ACNpc::BeginPlay()
 
 	InteractWidget->AddToViewport();
 	InteractWidget->SetVisibility(ESlateVisibility::Hidden);
-
 	InteractWidget->SetInteractText("Quest");
+
+	QuestMainWidget = CreateWidget<UCQuestMain>(GetWorld(), QuestMainWidgetClass);
 }
 
 void ACNpc::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -70,7 +74,21 @@ void ACNpc::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherAc
 
 void ACNpc::OnInteract()
 {
-	CLog::Print("Check Quest");
+	QuestMainWidget->AddToViewport();
+	QuestMainWidget->SetVisibility(ESlateVisibility::Visible);
+	for (auto quest : QuestComp->GetQuests())
+	{
+		QuestMainWidget->AddQuestList(quest);
+	}
 
-	//CheckNull(QuestMainWidget);
+	FInputModeUIOnly inputMode;
+
+	APlayerController* controller = GetWorld()->GetFirstPlayerController();
+	CheckNull(controller);
+
+	controller->bShowMouseCursor = true;
+	controller->SetInputMode(inputMode);
+
+	// 현재 Npc가 가지고 있는 QuestComponent내부의 Quest들을 가져와서 위젯에 추가
+
 }

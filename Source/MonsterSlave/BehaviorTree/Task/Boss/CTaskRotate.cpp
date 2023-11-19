@@ -1,4 +1,4 @@
-#include "BehaviorTree/Task/CTaskRotate.h"
+#include "CTaskRotate.h"
 
 #include "Component/CBehaviorComponent.h"
 #include "Enemy/CBoss.h"
@@ -16,6 +16,14 @@ UCTaskRotate::UCTaskRotate()
 EBTNodeResult::Type UCTaskRotate::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
+
+	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
+	CheckNullResult(controller, EBTNodeResult::Failed);
+
+	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
+	CheckNullResult(behaviorComp, EBTNodeResult::Failed);
+
+	controller->StopMovement();
 
 	return EBTNodeResult::InProgress;
 }
@@ -41,7 +49,7 @@ void UCTaskRotate::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory
 	FVector playerLoc = player->GetActorLocation();
 	FVector bossToPlayer = playerLoc - bossLoc;
 
-	FRotator rotation = UKismetMathLibrary::RInterpTo(boss->GetActorRotation(), bossToPlayer.Rotation(), DeltaSeconds, 2.0f);
+	FRotator rotation = UKismetMathLibrary::RInterpTo(boss->GetActorRotation(), bossToPlayer.Rotation(), DeltaSeconds, RotateSpeed);
 	boss->SetActorRotation(rotation);
 
 	float doc = bossForward.GetSafeNormal2D() | bossToPlayer.GetSafeNormal2D();

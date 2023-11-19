@@ -53,6 +53,8 @@ private:
 
 public:
 	TArray<class ACharacter*> HittedCharacters;
+	bool bCanSlash = true;
+	bool bCanBreath = true;
 
 private:
 	TSubclassOf<class UUserWidget> BossHpWidgetClass;
@@ -66,6 +68,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetPhaseChangeFalse() { bPhaseChange = false; }
 
+	UFUNCTION()
+		void OnSlashCoolDown();
+
+	UFUNCTION()
+		void OnBreathCoolDown();
 private:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -87,6 +94,13 @@ private:
 		class UBehaviorTree* BehaviorTree;
 
 // =================================================================
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
+		float SlashCoolDown = 5.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
+		float BreathCoolDown = 5.0f;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
 		class UAnimMontage* LandFlameMontage;

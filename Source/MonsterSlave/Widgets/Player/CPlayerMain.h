@@ -34,6 +34,12 @@ private:
 
 	UFUNCTION()
 		void OffSecondSkillCoolDown();
+
+	UFUNCTION()
+		void OnQuestAccept();
+
+	UFUNCTION()
+		void OnQuestClear();
 // ==================================================================
 private:
 	class ACharacter* OwnerCharacter;

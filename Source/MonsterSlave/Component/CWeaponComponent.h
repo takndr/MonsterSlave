@@ -54,6 +54,8 @@ public:
 
 	class ACEquipItem* Weapons[(int32)EWeaponType::Max] = { nullptr };
 	
+private:
+	class ACharacter* OwnerCharacter;
 //===================================================================
 public:
 	UPROPERTY(BlueprintAssignable)

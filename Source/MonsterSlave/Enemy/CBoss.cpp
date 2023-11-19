@@ -136,19 +136,26 @@ void ACBoss::ChangePhase()
 	BossPhase++;
 }
 
-void ACBoss::SlashAttack()
-{
-	CheckFalse(StateComponent->IsIdle());
-	SetHeavyHit(true);
-	StateComponent->SetAction();
-	PlayAnimMontage(AttackSlashMontage);
-}
-
 void ACBoss::BiteAttack()
 {
 	CheckFalse(StateComponent->IsIdle());
 	StateComponent->SetAction();
 	PlayAnimMontage(AttackBiteMontage);
+}
+
+void ACBoss::SlashAttack()
+{
+	CheckFalse(StateComponent->IsIdle());
+	//SetHeavyHit(true);
+	StateComponent->SetAction();
+	PlayAnimMontage(AttackSlashMontage);
+	bCanSlash = false;
+	UKismetSystemLibrary::K2_SetTimer(this, "OnSlashCoolDown", SlashCoolDown, false);
+}
+
+void ACBoss::OnSlashCoolDown()
+{
+	bCanSlash = true;
 }
 
 void ACBoss::BreathAttack()
@@ -165,6 +172,13 @@ void ACBoss::BreathAttack()
 		BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
 		PlayAnimMontage(LandFlameMontage);
 	}
+	bCanBreath = false;
+	UKismetSystemLibrary::K2_SetTimer(this, "OnBreathCoolDown", BreathCoolDown, false);
+}
+
+void ACBoss::OnBreathCoolDown()
+{
+	bCanBreath = true;
 }
 
 void ACBoss::EndAttack()

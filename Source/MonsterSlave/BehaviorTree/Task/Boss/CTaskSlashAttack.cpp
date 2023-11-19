@@ -1,4 +1,4 @@
-#include "BehaviorTree/Task/CTaskSlashAttack.h"
+#include "CTaskSlashAttack.h"
 
 #include "Component/CStateComponent.h"
 #include "Enemy/CBoss.h"
@@ -24,6 +24,7 @@ EBTNodeResult::Type UCTaskSlashAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
 	CheckNullResult(boss, EBTNodeResult::Failed);
 
+	controller->StopMovement();
 	boss->SlashAttack();
 
 	return EBTNodeResult::InProgress;

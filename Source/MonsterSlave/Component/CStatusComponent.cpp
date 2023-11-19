@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "GameMode/CSaveGame.h"
+#include "Player/CPlayer.h"
 
 #include "Global.h"
 
@@ -26,7 +27,7 @@ void UCStatusComponent::BeginPlay()
 
 	// 저장된 정보 있으면 저장
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
-	if (saveGame != nullptr)
+	if (saveGame != nullptr && Cast<ACPlayer>(OwnerCharacter) != nullptr)
 	{
 		MaxHp = saveGame->MaxHp;
 		CurrentHp = saveGame->CurrentHp;

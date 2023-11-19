@@ -17,6 +17,7 @@ UCWeaponComponent::UCWeaponComponent()
 void UCWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
 	// 저장된 정보 있으면 저장
 	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
@@ -25,6 +26,7 @@ void UCWeaponComponent::BeginPlay()
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	CheckNull(saveGame);
 
+	CheckNull(Cast<ACPlayer>(OwnerCharacter));
 	if(saveGame->SwordItem.Name != "NULL")
 	{
 		SetSword((saveGame->SwordItem));

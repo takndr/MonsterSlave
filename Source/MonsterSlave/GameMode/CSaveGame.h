@@ -31,8 +31,8 @@ public:
 	UPROPERTY(VisibleDefaultsOnly)
 		TArray<FCItemStruct> Items;
 
-	//UPROPERTY(VisibleDefaultsOnly)
-
+	UPROPERTY(VisibleDefaultsOnly)
+		TArray<class UCItemData*> Item;
 
 	//UPROPERTY(VisibleDefaultsOnly)
 		

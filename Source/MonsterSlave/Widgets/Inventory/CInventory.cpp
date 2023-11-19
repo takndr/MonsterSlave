@@ -7,6 +7,7 @@
 #include "Widgets/Inventory/CEquipSlot.h"
 #include "Player/CPlayer.h"
 #include "GameMode/CSaveGame.h"
+#include "Items/CItemData.h"
 
 #include "Global.h"
 
@@ -69,9 +70,9 @@ void UCInventory::Update()
 
 	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	
-	for (uint8 i = 0; i < saveGame->Items.Num(); i++)
+	for (uint8 i = 0; i < saveGame->Item.Num(); i++)
 	{
-		AddItem(saveGame->Items[i]);
+		AddItem(saveGame->Item[i]);
 	}
 
 	if (saveGame->SwordItem.Name != "NULL")
@@ -86,9 +87,24 @@ void UCInventory::Update()
 }
 
 // 아이템 먹었을 때 실행
-uint32 UCInventory::AddItem(FCItemStruct item)
+uint8 UCInventory::AddItem(FCItemStruct item)
 {
 	for (uint32 i = 0; i < MaxInventory; i++)
+	{
+		UCInventorySlot* slot = Cast<UCInventorySlot>(BagPannel->GetChildAt(i));
+		if (slot->IsFilled() == false)
+		{
+			slot->SettingSlot(item);
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+uint8 UCInventory::AddItem(class UCItemData* item)
+{
+	for (uint8 i = 0; i < MaxInventory; i++)
 	{
 		UCInventorySlot* slot = Cast<UCInventorySlot>(BagPannel->GetChildAt(i));
 		if (slot->IsFilled() == false)

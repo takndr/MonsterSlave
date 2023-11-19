@@ -8,6 +8,7 @@
 #include "Widgets/Inventory/CEquipSlot.h"
 #include "Player/CPlayer.h"
 #include "Component/CWeaponComponent.h"
+#include "Items/CItemData.h"
 
 #include "Global.h"
 
@@ -26,6 +27,16 @@ void UCInventorySlot::SettingSlot(FCItemStruct InItem)
 	bFilled = true;
 
 	SlotImage->SetBrushFromTexture(InvenSlotItem.Picture);
+	SlotImage->SetBrushSize(FVector2D(32.0f));
+	SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
+void UCInventorySlot::SettingSlot(class UCItemData* InItem)
+{
+	Item = InItem;
+	bFilled = true;
+
+	SlotImage->SetBrushFromTexture(Item->Item.Picture);
 	SlotImage->SetBrushSize(FVector2D(32.0f));
 	SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
 }
@@ -49,7 +60,7 @@ void UCInventorySlot::EquipItem()
 
 void UCInventorySlot::EquipSword()
 {
-	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
 
 	// 현재는 EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
@@ -75,8 +86,7 @@ void UCInventorySlot::EquipSword()
 
 void UCInventorySlot::EquipBow()
 {
-	CLog::Log("Equip Bow!");
-	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
 
 	// 현재는 EquipSlot이 비어있다 가정하고 진행하지만, 만약 EquipSlot에 아이템이 들어가있으면, 교체로 진행해야함
