@@ -43,6 +43,8 @@ void UCQuestMain::OnClickedOkButton()
 	if(temp.QuestProgress == EQuestProgressType::Available)
 	{
 		// 플레이어에게 현재 퀘스트 전달
+		ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		player->Quests.Add(SelectedQuest);
 
 		// QuestComponent에서 QuestProgress를 InProgress로 변경
 		SelectedQuest->SetProgressType(EQuestProgressType::InProgress);
@@ -56,13 +58,14 @@ void UCQuestMain::OnClickedOkButton()
 		for (auto giftData : temp.GiftDatas)
 		{
 			player->AddItem(giftData);
-			//player->AddItem(giftData->Item);
 		}
 
 		// 퀘스트 디테일 widget에서 제거
 
 		// QuestComponent에서의 QuestProgress를 Clear로 변경
 		SelectedQuest->SetProgressType(EQuestProgressType::Clear);
+
+		// 다음 연계될 퀘스트가 있으면 다음 퀘스트 QuestProgress를 Available로 변경
 	}
 
 
@@ -90,12 +93,7 @@ void UCQuestMain::AddQuestList(class ACQuest* Quest)
 
 void UCQuestMain::OffQuestWidget()
 {
-	// 내용들 초기화
-	GiftList->ClearChildren();
-	QuestList->ClearChildren();
-	SelectedQuest = nullptr;
-	Name->SetText(FText::FromString(""));
-	Conversation->SetText(FText::FromString(""));
+	Clear();
 
 	SetVisibility(ESlateVisibility::Collapsed);
 
@@ -110,6 +108,16 @@ void UCQuestMain::OffQuestWidget()
 	controller->SetInputMode(inputMode);
 
 	this->RemoveFromParent();
+}
+
+void UCQuestMain::Clear()
+{
+	GiftList->ClearChildren();
+	QuestList->ClearChildren();
+	SelectedQuest = nullptr;
+	Name->SetText(FText::FromString(""));
+	Conversation->SetText(FText::FromString(""));
+	ConfirmText->SetText(FText::FromString("OK"));
 }
 
 void UCQuestMain::SetQuestDetails(ACQuest* InQuest)

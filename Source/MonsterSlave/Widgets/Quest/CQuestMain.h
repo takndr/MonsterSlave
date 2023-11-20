@@ -23,7 +23,7 @@ public:
 
 private:
 	void OffQuestWidget();
-	//void Clear();
+	void Clear();
 // ============================================================================
 private:
 	UFUNCTION()

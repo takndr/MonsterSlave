@@ -23,7 +23,10 @@ void UCAnimNotifyEndAttack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 		UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 		CheckNull(weaponComp);
 
-		ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+		UCItemData* equipItemData = weaponComp->GetCurrentWeapon();
+		CheckNull(equipItemData);
+
+		ACEquipItem* equipItem = equipItemData->GetEquipItem();
 		CheckNull(equipItem);
 
 		equipItem->EndAttack();

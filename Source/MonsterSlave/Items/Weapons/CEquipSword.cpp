@@ -39,13 +39,11 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	
 	if (ComboCount == 2)
 	{
-		CLog::Print("KnockBack");
 		bNormal = false;
 		bKnockBack = true;
 	}
 	else
 	{
-		CLog::Print("Normal");
 		bNormal = true;
 		bKnockBack = false;
 	}

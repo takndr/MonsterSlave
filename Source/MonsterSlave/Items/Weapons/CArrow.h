@@ -22,7 +22,7 @@ private:
 // ==================================================================
 public:
 	class ACharacter* OwnerCharacter;
-	class AActor* OwnerBow;
+	class ACEquipItem* OwnerItem;
 private:
 // ==================================================================
 private:

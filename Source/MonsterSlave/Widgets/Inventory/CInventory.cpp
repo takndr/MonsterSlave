@@ -70,38 +70,23 @@ void UCInventory::Update()
 
 	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	
-	for (uint8 i = 0; i < saveGame->Item.Num(); i++)
+	for (uint8 i = 0; i < saveGame->Items.Num(); i++)
 	{
-		AddItem(saveGame->Item[i]);
+		AddItem(saveGame->Items[i]);
 	}
 
-	if (saveGame->SwordItem.Name != "NULL")
+	if (saveGame->SwordItem != nullptr)
 	{
 		SwordEquipment->SettingSlot((saveGame->SwordItem));
 	}
 
-	if (saveGame->BowItem.Name != "NULL")
+	if (saveGame->BowItem != nullptr)
 	{
 		BowEquipment->SettingSlot((saveGame->BowItem));
 	}
 }
 
 // 아이템 먹었을 때 실행
-uint8 UCInventory::AddItem(FCItemStruct item)
-{
-	for (uint32 i = 0; i < MaxInventory; i++)
-	{
-		UCInventorySlot* slot = Cast<UCInventorySlot>(BagPannel->GetChildAt(i));
-		if (slot->IsFilled() == false)
-		{
-			slot->SettingSlot(item);
-			return i;
-		}
-	}
-
-	return -1;
-}
-
 uint8 UCInventory::AddItem(class UCItemData* item)
 {
 	for (uint8 i = 0; i < MaxInventory; i++)

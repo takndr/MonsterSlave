@@ -134,8 +134,7 @@ void ACPlayer::BeginPlay()
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	CheckNull(saveGame);
 
-	//MyItems = saveGame->Items;
-	Items = saveGame->Item;
+	Items = saveGame->Items;
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -260,7 +259,7 @@ void ACPlayer::Attack()
 {
 	if (WeaponComponent->GetCurrentWeapon() != nullptr)
 	{
-		WeaponComponent->GetCurrentWeapon()->Attack();
+		WeaponComponent->GetCurrentWeapon()->GetEquipItem()->Attack();
 	}
 }
 
@@ -268,7 +267,7 @@ void ACPlayer::FirstSkill()
 {
 	if (WeaponComponent->GetCurrentWeapon() != nullptr)
 	{
-		WeaponComponent->GetCurrentWeapon()->FirstSkill();
+		WeaponComponent->GetCurrentWeapon()->GetEquipItem()->FirstSkill();
 	}
 }
 
@@ -276,7 +275,7 @@ void ACPlayer::SecondSkill()
 {
 	if (WeaponComponent->GetCurrentWeapon() != nullptr)
 	{
-		WeaponComponent->GetCurrentWeapon()->SecondSkill();
+		WeaponComponent->GetCurrentWeapon()->GetEquipItem()->SecondSkill();
 	}
 }
 
@@ -302,30 +301,38 @@ void ACPlayer::Interact()
 	}
 }
 
-void ACPlayer::AddItem(const FCItemStruct& InItem)
-{
-	int32 index = InventoryWidget->AddItem(InItem);
-	MyItems.Insert(InItem, index);
-}
-
 void ACPlayer::AddItem(class UCItemData* InItem)
 {
 	int32 index = InventoryWidget->AddItem(InItem);
 	Items.Insert(InItem, index);
 }
 
-void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)
+//void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)
+//{
+//	MyItems.Remove(InItem);
+//}
+
+void ACPlayer::RemoveInventoryItem(class UCItemData* InItem)
 {
-	MyItems.Remove(InItem);
+	Items.Remove(InItem);
 }
 
-void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem)
+//void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem)
+//{
+//	CLog::Log("Replace Inventory Item");
+//	int32 index;
+//	index = MyItems.Find(OldItem);
+//	MyItems.Remove(OldItem);
+//	MyItems.Insert(NewItem, index);
+//}
+
+void ACPlayer::ReplaceInventoryItem(class UCItemData* OldItem, class UCItemData* NewItem)
 {
 	CLog::Log("Replace Inventory Item");
 	int32 index;
-	index = MyItems.Find(OldItem);
-	MyItems.Remove(OldItem);
-	MyItems.Insert(NewItem, index);
+	index = Items.Find(OldItem);
+	Items.Remove(OldItem);
+	Items.Insert(NewItem, index);
 }
 
 float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

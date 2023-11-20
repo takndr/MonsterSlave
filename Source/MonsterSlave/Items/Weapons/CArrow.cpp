@@ -9,7 +9,8 @@
 
 #include "Component/CWeaponComponent.h"
 
-#include "Items/Weapons/CEquipBow.h"
+#include "Items/CItemData.h"
+#include "Items/CEquipItem.h"
 #include "Enemy/CBoss.h"
 #include "Enemy/CDummyEnemy.h"
 
@@ -34,7 +35,7 @@ void ACArrow::BeginPlay() {
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
-	OwnerBow = Cast<AActor>(weaponComp->GetCurrentWeapon());
+	OwnerItem = weaponComp->GetCurrentWeapon()->GetEquipItem();
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FlashEffect, GetActorLocation(), GetActorRotation());
 	
@@ -54,29 +55,28 @@ void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitEffect, location + impactNormal * 5, rotator);
 
-	ACEquipBow* bow = Cast<ACEquipBow>(OwnerBow);
-	if (bow->ComboCount == 2)
+	if (OwnerItem->ComboCount == 2)
 	{
-		bow->bNormal = false;
-		bow->bKnockBack = true;
+		OwnerItem->bNormal = false;
+		OwnerItem->bKnockBack = true;
 	}
 	else
 	{
-		bow->bNormal = true;
-		bow->bKnockBack = false;
+		OwnerItem->bNormal = true;
+		OwnerItem->bKnockBack = false;
 	}
 
 	// 데미지를 줄 경우는 적일 경우에만
 	if (Cast<ACBoss>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerBow);
+		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerItem);
 	}
 	
 	if (Cast<ACDummyEnemy>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerBow);
+		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerItem);
 	}
 
 	this->Destroy();

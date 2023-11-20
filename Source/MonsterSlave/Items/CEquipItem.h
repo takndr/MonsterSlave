@@ -95,6 +95,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FOffSecondSkillSignature OffSecondSkillCoolDown;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
+		FName UnEquippedHolster;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Socket")
+		FName EquippedHolster;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UStaticMeshComponent* StaticMesh;
@@ -111,12 +117,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		class UAnimMontage* SecondSkillMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Socket")
-		FName UnEquippedHolster;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Socket")
-		FName EquippedHolster;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CoolDown")
 		float FirstSkillCoolDown = 5.0f;

@@ -9,6 +9,7 @@
 #include "Widgets/Enemy/CDummyHp.h"
 #include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
+#include "Quest/CQuest.h"
 
 #include "Global.h"
 
@@ -123,7 +124,6 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 	//LaunchCharacter(FVector(0, 0, 100), false, false);
 	//GetCharacterMovement()->Launch(FVector(0, 0, Damage));
-	ACEquipItem* item = Cast<ACEquipItem>(DamageCauser);
 
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
@@ -173,5 +173,15 @@ void ACDummyEnemy::Dead()
 
 void ACDummyEnemy::EndDead()
 {
+	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	for (auto quest : player->Quests)
+	{
+		if (quest->OnQuestCheck.IsBound())
+		{
+			quest->OnQuestCheck.Execute(this);
+		}
+	}
+
 	this->Destroy();
 }

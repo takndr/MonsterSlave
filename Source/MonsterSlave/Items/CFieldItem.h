@@ -29,7 +29,7 @@ private:
 // ==================================================================
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Description")
-		FCItemStruct ItemDescription;
+		class UCItemData* ItemDescription;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly)

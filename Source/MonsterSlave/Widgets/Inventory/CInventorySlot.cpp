@@ -21,16 +21,6 @@ void UCInventorySlot::NativeConstruct()
 	Inventory = player->GetInventory();
 }
 
-void UCInventorySlot::SettingSlot(FCItemStruct InItem)
-{
-	InvenSlotItem = InItem;
-	bFilled = true;
-
-	SlotImage->SetBrushFromTexture(InvenSlotItem.Picture);
-	SlotImage->SetBrushSize(FVector2D(32.0f));
-	SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
-}
-
 void UCInventorySlot::SettingSlot(class UCItemData* InItem)
 {
 	Item = InItem;
@@ -43,7 +33,7 @@ void UCInventorySlot::SettingSlot(class UCItemData* InItem)
 
 void UCInventorySlot::EquipItem()
 {
-	switch (InvenSlotItem.WeaponType)
+	switch (Item->Item.WeaponType)
 	{
 		case EWeaponType::Sword:
 		{
@@ -67,19 +57,19 @@ void UCInventorySlot::EquipSword()
 	if (weaponComp->IsSetSword())
 	{
 		weaponComp->RemoveSword();
-		FCItemStruct temp = Inventory->SwordEquipment->GetItem();
-		player->ReplaceInventoryItem(InvenSlotItem, temp);
-		Inventory->SwordEquipment->SettingSlot(InvenSlotItem);
+		UCItemData* temp = Inventory->SwordEquipment->GetItem();
+		player->ReplaceInventoryItem(Item, temp);
+		Inventory->SwordEquipment->SettingSlot(Item);
 		
-		weaponComp->SetSword(InvenSlotItem);
+		weaponComp->SetSword(Item);
 		SettingSlot(temp);
 	}
 	else
 	{
-		Inventory->SwordEquipment->SettingSlot(InvenSlotItem);
-		player->RemoveInventoryItem(InvenSlotItem);
+		Inventory->SwordEquipment->SettingSlot(Item);
+		player->RemoveInventoryItem(Item);
 		SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 0.0f));
-		weaponComp->SetSword(InvenSlotItem);
+		weaponComp->SetSword(Item);
 		bFilled = false;
 	}	
 }
@@ -93,18 +83,18 @@ void UCInventorySlot::EquipBow()
 	if (weaponComp->IsSetBow())
 	{
 		weaponComp->RemoveBow();
-		FCItemStruct temp = Inventory->BowEquipment->GetItem();
-		player->ReplaceInventoryItem(InvenSlotItem, temp);
-		Inventory->BowEquipment->SettingSlot(InvenSlotItem);
-		weaponComp->SetBow(InvenSlotItem);
+		UCItemData* temp = Inventory->BowEquipment->GetItem();
+		player->ReplaceInventoryItem(Item, temp);
+		Inventory->BowEquipment->SettingSlot(Item);
+		weaponComp->SetBow(Item);
 		SettingSlot(temp);
 	}
 	else
 	{
-		Inventory->BowEquipment->SettingSlot(InvenSlotItem);
-		player->RemoveInventoryItem(InvenSlotItem);
+		Inventory->BowEquipment->SettingSlot(Item);
+		player->RemoveInventoryItem(Item);
 		SlotImage->SetColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 0.0f));
-		weaponComp->SetBow(InvenSlotItem);
+		weaponComp->SetBow(Item);
 		bFilled = false;
 	}
 }

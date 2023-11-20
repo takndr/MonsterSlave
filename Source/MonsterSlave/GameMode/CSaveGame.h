@@ -11,10 +11,10 @@ class MONSTERSLAVE_API UCSaveGame : public USaveGame
 	GENERATED_BODY()
 public:
 	UPROPERTY(VisibleDefaultsOnly)
-		FCItemStruct SwordItem;
+		class UCItemData* SwordItem;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		FCItemStruct BowItem;
+		class UCItemData* BowItem;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		EWeaponType WeaponType;
@@ -29,10 +29,7 @@ public:
 		float MoveSpeed;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		TArray<FCItemStruct> Items;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		TArray<class UCItemData*> Item;
+		TArray<class UCItemData*> Items;
 
 	//UPROPERTY(VisibleDefaultsOnly)
 		

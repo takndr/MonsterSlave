@@ -5,6 +5,7 @@
 
 #include "Player/CPlayer.h"
 #include "Component/CWeaponComponent.h"
+#include "Items/CItemData.h"
 
 #include "Global.h"
 
@@ -15,9 +16,9 @@ void UCEquipSlot::NativeConstruct()
 	OwnerCharacter = Cast<ACharacter>(GetOwningPlayerPawn());
 }
 
-void UCEquipSlot::SettingSlot(FCItemStruct InItem)
+void UCEquipSlot::SettingSlot(class UCItemData* InItem)
 {
-	SlotImage->SetBrushFromTexture(InItem.Picture);
+	SlotImage->SetBrushFromTexture(InItem->Item.Picture);
 
 	Item = InItem;
 	bEquipped = true;
@@ -33,7 +34,7 @@ void UCEquipSlot::UnEquipItem()
 	player->AddItem(Item);
 	SlotImage->SetBrushFromTexture(DefaultImage);
 
-	switch (Item.WeaponType)
+	switch (Item->Item.WeaponType)
 	{
 		case EWeaponType::Sword: 
 		{

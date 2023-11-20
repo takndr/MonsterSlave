@@ -8,6 +8,7 @@
 #include "Player/CPlayer.h"
 #include "Widgets/CInteract.h"
 #include "Component/CStatusComponent.h"
+#include "Items/CItemData.h"
 
 #include "Global.h"
 
@@ -46,9 +47,7 @@ void ACFieldItem::BeginPlay()
 	InteractWidget->AddToViewport();
 	InteractWidget->SetVisibility(ESlateVisibility::Hidden);
 
-	ItemDescription.Init();
-
-	InteractWidget->SetInteractText(ItemDescription.Interact);
+	InteractWidget->SetInteractText(ItemDescription->Item.Interact);
 }
 
 void ACFieldItem::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
@@ -78,7 +77,7 @@ void ACFieldItem::OnInteract()
 	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	CheckNull(player);
 
-	if (player->MyItems.Num() == player->MaxItem)
+	if (player->Items.Num() == player->MaxItem)
 	{
 		CLog::Log("Not Enough Inventory...");
 		return;

@@ -17,7 +17,10 @@ void UCAnimNotifyStateCheckCombo::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 	CheckNull(weaponComp);
 
-	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+	UCItemData* equipItemData = weaponComp->GetCurrentWeapon();
+	CheckNull(equipItemData);
+
+	ACEquipItem* equipItem = equipItemData->GetEquipItem();
 	CheckNull(equipItem);
 
 	equipItem->EnabledCombo();
@@ -31,7 +34,10 @@ void UCAnimNotifyStateCheckCombo::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 	CheckNull(weaponComp);
 
-	ACEquipItem* equipItem = weaponComp->GetCurrentWeapon();
+	UCItemData* equipItemData = weaponComp->GetCurrentWeapon();
+	CheckNull(equipItemData);
+
+	ACEquipItem* equipItem = equipItemData->GetEquipItem();
 	CheckNull(equipItem);
 
 	equipItem->DisabledCombo();

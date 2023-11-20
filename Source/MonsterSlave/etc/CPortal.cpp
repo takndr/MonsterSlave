@@ -76,9 +76,8 @@ void ACPortal::OnInteract()
 	CheckNull(saveGame);
 
 	// 인벤토리 저장
-	//saveGame->Items = player->MyItems;
-	saveGame->Item = player->Items;
 	// 장착장비 인벤 표기
+	saveGame->Items = player->Items;
 
 	// 현재 Weapon 장착 정보 저장
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
@@ -86,12 +85,12 @@ void ACPortal::OnInteract()
 	{
 		if (weaponComp->GetSwordWeapon() != nullptr)
 		{
-			saveGame->SwordItem = (weaponComp->GetSwordWeapon()->Item);
+			saveGame->SwordItem = (weaponComp->GetSwordWeapon());
 		}
 
 		if (weaponComp->GetBowWeapon() != nullptr)
 		{
-			saveGame->BowItem = (weaponComp->GetBowWeapon()->Item);
+			saveGame->BowItem = (weaponComp->GetBowWeapon());
 		}
 
 		if (weaponComp->GetWeaponType() != EWeaponType::Unarmed)

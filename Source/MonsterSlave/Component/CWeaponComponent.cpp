@@ -4,7 +4,7 @@
 
 #include "GameMode/CSaveGame.h"
 #include "Items/CEquipItem.h"
-
+#include "Items/CItemData.h"
 
 #include "Player/CPlayer.h"
 #include "Global.h"
@@ -27,12 +27,12 @@ void UCWeaponComponent::BeginPlay()
 	CheckNull(saveGame);
 
 	CheckNull(Cast<ACPlayer>(OwnerCharacter));
-	if(saveGame->SwordItem.Name != "NULL")
+	if(saveGame->SwordItem != nullptr)
 	{
 		SetSword((saveGame->SwordItem));
 	}
 
-	if(saveGame->BowItem.Name != "NULL")
+	if(saveGame->BowItem != nullptr)
 	{
 		SetBow((saveGame->BowItem));
 	}
@@ -40,7 +40,7 @@ void UCWeaponComponent::BeginPlay()
 	if(saveGame->WeaponType != EWeaponType::Unarmed)
 	{
 		ChangeType(saveGame->WeaponType);
-		Weapons[(int32)saveGame->WeaponType]->Equip();
+		Weapons[(int32)saveGame->WeaponType]->GetEquipItem()->Equip();
 	}
 	
 }
@@ -71,62 +71,48 @@ void UCWeaponComponent::ChangeType(EWeaponType InNewType)
 	}
 }
 
-void UCWeaponComponent::SetSword(const FCItemStruct& InItem)
+void UCWeaponComponent::SetSword(class UCItemData* InItem)
 {
-	ACEquipItem* weapon;
 	ACharacter* character = Cast<ACharacter>(GetOwner());
+	Weapons[(int32)EWeaponType::Sword] = InItem;
 
-	FActorSpawnParameters param;
-	param.Owner = GetOwner();
-
-	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
-	weapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("sword_holster"));
-	weapon->Item = InItem;
-
-	Weapons[(int32)EWeaponType::Sword] = weapon;
+	InItem->SpawnEquipItem(GetWorld(), character);
 }
 
-void UCWeaponComponent::SetBow(const FCItemStruct& InItem)
+void UCWeaponComponent::SetBow(class UCItemData* InItem)
 {
-	ACEquipItem* weapon;
 	ACharacter* character = Cast<ACharacter>(GetOwner());
+	Weapons[(int32)EWeaponType::Bow] = InItem;
 
-	FActorSpawnParameters param;
-	param.Owner = GetOwner();
-
-	weapon = GetWorld()->SpawnActor<ACEquipItem>(InItem.EquipWeaponClass, param);
-	weapon->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("bow_holster"));
-	weapon->Item = InItem;
-
-	Weapons[(int32)EWeaponType::Bow] = weapon;
+	InItem->SpawnEquipItem(GetWorld(), character);
 }
 
 void UCWeaponComponent::RemoveSword()
 {
-	Weapons[(int32)EWeaponType::Sword]->Destroy();
+	Weapons[(int32)EWeaponType::Sword]->GetEquipItem()->Destroy();
 	Weapons[(int32)EWeaponType::Sword] = nullptr;
 }
 
 void UCWeaponComponent::RemoveBow()
 {
-	Weapons[(int32)EWeaponType::Bow]->Destroy();
+	Weapons[(int32)EWeaponType::Bow]->GetEquipItem()->Destroy();
 	Weapons[(int32)EWeaponType::Bow] = nullptr;
 }
 
 void UCWeaponComponent::EquipSword()
 {
 	SetSwordType();
-	Weapons[(int32)EWeaponType::Sword]->Equip();
+	Weapons[(int32)EWeaponType::Sword]->GetEquipItem()->Equip();
 }
 
 void UCWeaponComponent::EquipBow()
 {
 	SetBowType();
-	Weapons[(int32)EWeaponType::Bow]->Equip();
+	Weapons[(int32)EWeaponType::Bow]->GetEquipItem()->Equip();
 }
 
 void UCWeaponComponent::UnEquip()
 {
-	Weapons[(int32)WeaponType]->UnEquip();
+	Weapons[(int32)WeaponType]->GetEquipItem()->UnEquip();
 	SetUnarmed();
 }

@@ -21,8 +21,8 @@ public:
 	void SetSwordType();
 	void SetBowType();
 
-	void SetSword(const FCItemStruct& InItem);
-	void SetBow(const FCItemStruct& InItem);
+	void SetSword(class UCItemData* InItem);
+	void SetBow(class UCItemData* InItem);
 
 	void RemoveSword();
 	void RemoveBow();
@@ -32,9 +32,9 @@ public:
 	void UnEquip();
 
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
-	FORCEINLINE class ACEquipItem* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
-	FORCEINLINE class ACEquipItem* GetSwordWeapon() { return Weapons[(int32)EWeaponType::Sword]; }
-	FORCEINLINE class ACEquipItem* GetBowWeapon() { return Weapons[(int32)EWeaponType::Bow]; }
+	FORCEINLINE class UCItemData* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
+	FORCEINLINE class UCItemData* GetSwordWeapon() { return Weapons[(int32)EWeaponType::Sword]; }
+	FORCEINLINE class UCItemData* GetBowWeapon() { return Weapons[(int32)EWeaponType::Bow]; }
 
 	FORCEINLINE bool IsUnarmed() { return WeaponType == EWeaponType::Unarmed; }
 	FORCEINLINE bool IsEquipSword() { return WeaponType == EWeaponType::Sword; }
@@ -51,8 +51,7 @@ private:
 //===================================================================
 public:	
 	EWeaponType WeaponType = EWeaponType::Unarmed;
-
-	class ACEquipItem* Weapons[(int32)EWeaponType::Max] = { nullptr };
+	class UCItemData* Weapons[(int32)EWeaponType::Max];
 	
 private:
 	class ACharacter* OwnerCharacter;

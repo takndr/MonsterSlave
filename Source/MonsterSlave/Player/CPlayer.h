@@ -21,10 +21,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 // ============================================================================
 public:
-	void AddItem(const FCItemStruct& InItem);
 	void AddItem(class UCItemData* InItem);
-	void RemoveInventoryItem(const FCItemStruct& InItem);
-	void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
+	//void RemoveInventoryItem(const FCItemStruct& InItem);
+	void RemoveInventoryItem(class UCItemData* InItem);
+	//void ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem);
+	void ReplaceInventoryItem(class UCItemData* OldItem, class UCItemData* NewItem);
 	void Dead();
 	
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
@@ -99,8 +100,9 @@ private:
 // ===========================================================
 public:
 	FInteractSignature OnInteract;
-	TArray<FCItemStruct> MyItems;
 	TArray<class UCItemData*> Items;
+	//TArray<class UCQuestData*> Quests;
+	TArray<class ACQuest*> Quests;
 	int32 MaxItem = 30;
 
 private:

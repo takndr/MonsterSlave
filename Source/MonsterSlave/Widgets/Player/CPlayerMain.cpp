@@ -7,6 +7,7 @@
 #include "Component/CStatusComponent.h"
 #include "Component/CWeaponComponent.h"		//--> WeaponImage 변경용 델리게이트
 #include "Items/CEquipItem.h"				//--> SkillCooldown 및 SkillImage 변경용 델리게이트
+#include "Items/CItemData.h"
 
 #include "Player/CPlayer.h"
 
@@ -52,12 +53,13 @@ void UCPlayerMain::OnWeaponChanged(EWeaponType InPrevType, EWeaponType InNewType
 {
 	// 여기서 스킬쿨관련 델리게이트 바인딩, 이미지 변경
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
-	ACEquipItem* prevEquipItem = weaponComp->Weapons[(int32)InPrevType];
-	ACEquipItem* newEquipItem = weaponComp->Weapons[(int32)InNewType];
-
+	UCItemData* prevEquipItemData = weaponComp->Weapons[(int32)InPrevType];
+	UCItemData* newEquipItemData = weaponComp->Weapons[(int32)InNewType];
+	
 	// 이전 무기 바인딩 되어있으면 해제
-	if (prevEquipItem != nullptr)
+	if (prevEquipItemData != nullptr)
 	{
+		ACEquipItem* prevEquipItem = prevEquipItemData->GetEquipItem();
 		prevEquipItem->OnFirstSkillCoolDown.Clear();
 		prevEquipItem->OffFirstSkillCoolDown.Clear();
 		prevEquipItem->OnSecondSkillCoolDown.Clear();
@@ -71,8 +73,9 @@ void UCPlayerMain::OnWeaponChanged(EWeaponType InPrevType, EWeaponType InNewType
 	SecondSkillCoolDown->SetVisibility(ESlateVisibility::Hidden);
 
 	// 새로운 무기 쿨타임 적용시키게 델리게이트 바인딩
-	if (newEquipItem != nullptr)
+	if (newEquipItemData != nullptr)
 	{
+		ACEquipItem* newEquipItem = newEquipItemData->GetEquipItem();
 		newEquipItem->OnFirstSkillCoolDown.AddDynamic(this, &UCPlayerMain::OnFirstSkillCoolDown);
 		newEquipItem->OffFirstSkillCoolDown.AddDynamic(this, &UCPlayerMain::OffFirstSkillCoolDown);
 		newEquipItem->OnSecondSkillCoolDown.AddDynamic(this, &UCPlayerMain::OnSecondSkillCoolDown);

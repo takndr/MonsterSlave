@@ -14,7 +14,6 @@ public:
 
 	void Attach();
 	void Detach();
-	uint8 AddItem(FCItemStruct item);
 	uint8 AddItem(class UCItemData* item);
 
 protected:

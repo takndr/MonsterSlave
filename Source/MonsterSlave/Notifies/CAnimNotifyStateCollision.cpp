@@ -5,6 +5,7 @@
 #include "Enemy/CDummyEnemy.h"
 #include "Component/CWeaponComponent.h"
 #include "Items/Weapons/CEquipSword.h"
+#include "Items/CItemData.h"
 
 #include "Global.h"
 
@@ -20,7 +21,11 @@ void UCAnimNotifyStateCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	{
 		UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 		CheckNull(weaponComp);
-		ACEquipSword* swordEquip = Cast<ACEquipSword>(weaponComp->GetCurrentWeapon());
+
+		UCItemData* swordData = weaponComp->GetCurrentWeapon();
+		CheckNull(swordData);
+
+		ACEquipSword* swordEquip = Cast<ACEquipSword>(swordData->GetEquipItem());
 		CheckNull(swordEquip);
 
 		swordEquip->OnCollision();
@@ -53,7 +58,11 @@ void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 	{
 		UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 		CheckNull(weaponComp);
-		ACEquipSword* swordEquip = Cast<ACEquipSword>(weaponComp->GetCurrentWeapon());
+
+		UCItemData* swordData = weaponComp->GetCurrentWeapon();
+		CheckNull(swordData);
+
+		ACEquipSword* swordEquip = Cast<ACEquipSword>(swordData->GetEquipItem());
 		CheckNull(swordEquip);
 
 		swordEquip->OffCollision();
