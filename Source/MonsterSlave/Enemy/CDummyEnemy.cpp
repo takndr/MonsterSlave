@@ -9,7 +9,7 @@
 #include "Widgets/Enemy/CDummyHp.h"
 #include "Player/CPlayer.h"
 #include "Items/CEquipItem.h"
-#include "Quest/CQuest.h"
+#include "Quest/CQuestData.h"
 
 #include "Global.h"
 

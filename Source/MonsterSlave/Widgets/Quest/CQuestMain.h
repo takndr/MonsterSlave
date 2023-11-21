@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Quest/CQuest.h"
 #include "CQuestMain.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE(FQuestAcceptSignature);
@@ -19,7 +18,7 @@ protected:
 	virtual void NativeDestruct() override;
 // ============================================================================
 public:
-	void AddQuestList(class ACQuest* Quest);
+	void AddQuestList(class UCQuestData* InQuest);
 
 private:
 	void OffQuestWidget();
@@ -33,7 +32,7 @@ private:
 		void OnClickedCancelButton();
 
 	UFUNCTION()
-		void SetQuestDetails(ACQuest* InQuest);
+		void SetQuestDetails(class UCQuestData* InQuest);
 
 // ============================================================================
 public:
@@ -44,7 +43,7 @@ private:
 	class ACharacter* OwnerCharacter;
 	TSubclassOf<class UCQuestList> QuestListWidgetClass;
 	TSubclassOf<class UCGiftSlot> GiftSlotWidgetClass;
-	ACQuest* SelectedQuest;
+	class UCQuestData* SelectedQuest;
 
 // ============================================================================
 private:

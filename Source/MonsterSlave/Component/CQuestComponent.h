@@ -14,15 +14,12 @@ protected:
 	virtual void BeginPlay() override;
 // ============================================================================
 public:
-	FORCEINLINE TArray<class ACQuest*> GetQuests() { return Quests; }
-	void DeleteQuest(class ACQuest* InQuest);
+	FORCEINLINE TArray<class UCQuestData*> GetQuestDatas() { return QuestDatas; }
 // ============================================================================
 private:
 	class ACharacter* OwnerCharacter;
-	TArray<class ACQuest*> Quests;
 // ============================================================================
 protected:
-	UPROPERTY(EditAnywhere)
-		TArray<TSubclassOf<ACQuest>> QuestClasses;
-
+	UPROPERTY(EditDefaultsOnly)
+		TArray<class UCQuestData*> QuestDatas;
 };

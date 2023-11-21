@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "Components/GridPanel.h"
 
+#include "Quest/CQuestData.h"
 #include "Widgets/Quest/CQuestList.h"
 #include "Widgets/Quest/CGiftSlot.h"
 #include "Player/CPlayer.h"
@@ -22,7 +23,6 @@ void UCQuestMain::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// 버튼 바인딩
 	OkButton->OnClicked.AddDynamic(this, &UCQuestMain::OnClickedOkButton);
 	CancelButton->OnClicked.AddDynamic(this, &UCQuestMain::OnClickedCancelButton);
 }
@@ -37,10 +37,10 @@ void UCQuestMain::NativeDestruct()
 
 void UCQuestMain::OnClickedOkButton()
 {
-	FMyQuest temp = SelectedQuest->GetQuestInfo();
+	FQuest temp = SelectedQuest->Quest;
 
 	// 수락버튼을 누를경우 PlayerMainWidget에 퀘스트 관련쪽에다가 추가해주는 Delegate를 만들어서 바로 추가되고
-	if(temp.QuestProgress == EQuestProgressType::Available)
+	if (temp.QuestProgress == EQuestProgressType::Available)
 	{
 		// 플레이어에게 현재 퀘스트 전달
 		ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -66,9 +66,8 @@ void UCQuestMain::OnClickedOkButton()
 		SelectedQuest->SetProgressType(EQuestProgressType::Clear);
 
 		// 다음 연계될 퀘스트가 있으면 다음 퀘스트 QuestProgress를 Available로 변경
+		SelectedQuest->ClearQuest();
 	}
-
-
 
 	OffQuestWidget();
 }
@@ -78,13 +77,14 @@ void UCQuestMain::OnClickedCancelButton()
 	OffQuestWidget();
 }
 
-void UCQuestMain::AddQuestList(class ACQuest* Quest)
+void UCQuestMain::AddQuestList(UCQuestData* InQuest)
 {
-	CheckFalse(((Quest->GetQuestInfo().QuestProgress == EQuestProgressType::Available) || (Quest->GetQuestInfo().QuestProgress == EQuestProgressType::InProgress) || (Quest->GetQuestInfo().QuestProgress == EQuestProgressType::Completed)));
+	CheckFalse(((InQuest->Quest.QuestProgress == EQuestProgressType::Available) || (InQuest->Quest.QuestProgress == EQuestProgressType::InProgress) || (InQuest->Quest.QuestProgress == EQuestProgressType::Completed)));
 
 	// QuestList 위젯을 생성하여
 	UCQuestList* quest = CreateWidget<UCQuestList>(GetWorld(), QuestListWidgetClass);
-	quest->SetQuest(Quest);
+	//quest->SetQuest(InQuest);
+	quest->SetQuestData(InQuest);
 	quest->OnClickedList.BindUFunction(this, "SetQuestDetails");
 
 	// ScrollBox에 추가
@@ -120,14 +120,12 @@ void UCQuestMain::Clear()
 	ConfirmText->SetText(FText::FromString("OK"));
 }
 
-void UCQuestMain::SetQuestDetails(ACQuest* InQuest)
+void UCQuestMain::SetQuestDetails(UCQuestData* InQuest)
 {
 	SelectedQuest = InQuest;
-	FMyQuest temp = SelectedQuest->GetQuestInfo();
+	FQuest temp = SelectedQuest->Quest;
 
-	// 퀘스트 이름 등록
 	Name->SetText(temp.QuestName);
-	// 퀘스트 내용 등록
 	Conversation->SetText(temp.QuestConversation);
 
 	GiftList->ClearChildren();

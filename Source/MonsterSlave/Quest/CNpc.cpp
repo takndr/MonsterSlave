@@ -6,7 +6,7 @@
 
 #include "Player/CPlayer.h"
 #include "Widgets/CInteract.h"
-#include "Quest/CQuest.h"
+#include "Quest/CQuestData.h"
 #include "Widgets/Quest/CQuestMain.h"
 
 #include "Global.h"
@@ -74,11 +74,13 @@ void ACNpc::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherAc
 
 void ACNpc::OnInteract()
 {
+	CheckNull(QuestMainWidget);
 	QuestMainWidget->AddToViewport();
 	QuestMainWidget->SetVisibility(ESlateVisibility::Visible);
-	for (auto quest : QuestComp->GetQuests())
+
+	for (auto questData : QuestComp->GetQuestDatas())
 	{
-		QuestMainWidget->AddQuestList(quest);
+		QuestMainWidget->AddQuestList(questData);
 	}
 
 	FInputModeUIOnly inputMode;
@@ -88,7 +90,4 @@ void ACNpc::OnInteract()
 
 	controller->bShowMouseCursor = true;
 	controller->SetInputMode(inputMode);
-
-	// 현재 Npc가 가지고 있는 QuestComponent내부의 Quest들을 가져와서 위젯에 추가
-
 }

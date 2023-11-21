@@ -307,24 +307,10 @@ void ACPlayer::AddItem(class UCItemData* InItem)
 	Items.Insert(InItem, index);
 }
 
-//void ACPlayer::RemoveInventoryItem(const FCItemStruct& InItem)
-//{
-//	MyItems.Remove(InItem);
-//}
-
 void ACPlayer::RemoveInventoryItem(class UCItemData* InItem)
 {
 	Items.Remove(InItem);
 }
-
-//void ACPlayer::ReplaceInventoryItem(const FCItemStruct& OldItem, const FCItemStruct& NewItem)
-//{
-//	CLog::Log("Replace Inventory Item");
-//	int32 index;
-//	index = MyItems.Find(OldItem);
-//	MyItems.Remove(OldItem);
-//	MyItems.Insert(NewItem, index);
-//}
 
 void ACPlayer::ReplaceInventoryItem(class UCItemData* OldItem, class UCItemData* NewItem)
 {

@@ -31,6 +31,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly)
 		TArray<class UCItemData*> Items;
 
-	//UPROPERTY(VisibleDefaultsOnly)
-		
+	UPROPERTY(VisibleDefaultsOnly)
+		TArray<class UCQuestData*> AllQuests;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		TArray<class UCQuestData*> PlayerQuests;
 };

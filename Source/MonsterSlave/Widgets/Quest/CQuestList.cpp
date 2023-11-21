@@ -3,6 +3,8 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 
+#include "Quest/CQuestData.h"
+
 #include "Global.h"
 
 void UCQuestList::NativeConstruct()
@@ -15,9 +17,9 @@ void UCQuestList::NativeConstruct()
 		ListButton->OnClicked.AddDynamic(this, &UCQuestList::OnClickedListButton);
 	}
 
-	if (Quest != nullptr)
+	if (QuestData != nullptr)
 	{
-		QuestName->SetText(Quest->GetQuestInfo().QuestName);
+		QuestName->SetText(QuestData->Quest.QuestName);
 	}
 }
 
@@ -25,6 +27,6 @@ void UCQuestList::OnClickedListButton()
 {
 	if (OnClickedList.IsBound())
 	{
-		OnClickedList.Execute(Quest);
+		OnClickedList.Execute(QuestData);
 	}
 }

@@ -2,7 +2,7 @@
 
 #include "GameFramework/Character.h"
 
-#include "Quest/CQuest.h"
+#include "Quest/CQuestData.h"
 
 #include "Global.h"
 
@@ -15,21 +15,9 @@ void UCQuestComponent::BeginPlay()
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
-
-	for (auto QuestClass : QuestClasses)
+	for (auto questData : QuestDatas)
 	{
-		ACQuest* temp;
-		FTransform transform = OwnerCharacter->GetActorTransform();
-		temp = GetWorld()->SpawnActorDeferred<ACQuest>(QuestClass, transform, OwnerCharacter);
-		temp->FinishSpawning(transform);
-		temp->AttachToActor(OwnerCharacter, FAttachmentTransformRules::KeepRelativeTransform);
-		Quests.Add(temp);
+		questData->BeginPlay();
 	}
 }
-
-void UCQuestComponent::DeleteQuest(class ACQuest* InQuest)
-{
-
-}
-
 

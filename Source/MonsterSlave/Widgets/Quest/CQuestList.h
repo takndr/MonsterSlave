@@ -2,10 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Quest/CQuest.h"
 #include "CQuestList.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FClickedListSignature, class ACQuest*, InQuest);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FClickedListSignature, class UCQuestData*, InQuestData);
 
 UCLASS()
 class MONSTERSLAVE_API UCQuestList : public UUserWidget
@@ -15,7 +14,7 @@ protected:
 	virtual void NativeConstruct() override;
 // ============================================================================
 public:
-	FORCEINLINE void SetQuest(ACQuest* InQuest) { Quest = InQuest; }
+	FORCEINLINE void SetQuestData(class UCQuestData* InQuestData) { QuestData = InQuestData; }
 // ============================================================================
 private:
 	UFUNCTION()
@@ -25,7 +24,7 @@ public:
 	FClickedListSignature OnClickedList;
 
 private:
-	ACQuest* Quest;
+	class UCQuestData* QuestData;
 // ============================================================================
 private:
 	UPROPERTY(meta = (BindWidget))
