@@ -27,6 +27,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DecreaseHealth(float Dx);
+
+private:
+	UFUNCTION()
+		void SaveStatusDatas();
 // =================================================================
 private:
 	class ACharacter* OwnerCharacter;

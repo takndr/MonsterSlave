@@ -3,10 +3,31 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Actor.h"
 
+#include "GameMode/CSaveGame.h"
+
 #include "Global.h"
 
 void UCQuestData::BeginPlay()
 {
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+
+	if (saveGame != nullptr)
+	{
+		if (saveGame->AllQuests.Num() != 0)
+		{
+			for (auto quest : saveGame->AllQuests)
+			{
+				if (Quest.QuestID == quest.QuestID)
+				{
+					Quest = quest;
+					break;
+				}
+			}
+		}
+	}
+
+	CheckTrue(Quest.QuestProgress == EQuestProgressType::Clear);
 	switch (Quest.QuestType)
 	{
 		case EQuestType::Move:
@@ -38,6 +59,30 @@ void UCQuestData::ClearQuest()
 
 	CheckNull(Quest.NextQuest);
 	Quest.NextQuest->Quest.QuestProgress = EQuestProgressType::Available;
+}
+
+void UCQuestData::SaveData()
+{
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	if (Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0)) != nullptr)
+	{
+		saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	}
+	
+	int index = saveGame->AllQuests.Find(Quest);
+
+	if (index == INDEX_NONE)
+	{
+		saveGame->AllQuests.AddUnique(Quest);
+	}
+	else
+	{
+		saveGame->AllQuests[index] = Quest;
+	}
+
+	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 }
 
 void UCQuestData::MoveToLocation(AActor* InActor)

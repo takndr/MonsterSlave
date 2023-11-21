@@ -17,6 +17,10 @@ public:
 	FORCEINLINE TArray<class UCQuestData*> GetQuestDatas() { return QuestDatas; }
 // ============================================================================
 private:
+	UFUNCTION()
+		void SaveQuestDatas();
+// ============================================================================
+private:
 	class ACharacter* OwnerCharacter;
 // ============================================================================
 protected:

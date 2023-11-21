@@ -69,10 +69,11 @@ void UCInventory::Update()
 	CheckNull(saveGame);
 
 	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
-	
-	for (uint8 i = 0; i < saveGame->Items.Num(); i++)
+	CheckNull(player);
+
+	for (uint8 i = 0; i < saveGame->PlayerItems.Num(); i++)
 	{
-		AddItem(saveGame->Items[i]);
+		AddItem(saveGame->PlayerItems[i]);
 	}
 
 	if (saveGame->SwordItem != nullptr)

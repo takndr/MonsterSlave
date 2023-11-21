@@ -37,6 +37,12 @@ void UCQuestMain::NativeDestruct()
 
 void UCQuestMain::OnClickedOkButton()
 {
+	if (SelectedQuest == nullptr)
+	{
+		OffQuestWidget();
+		return;
+	}
+
 	FQuest temp = SelectedQuest->Quest;
 
 	// 수락버튼을 누를경우 PlayerMainWidget에 퀘스트 관련쪽에다가 추가해주는 Delegate를 만들어서 바로 추가되고

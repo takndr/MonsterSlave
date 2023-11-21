@@ -53,6 +53,9 @@ public:
 private:
 	UFUNCTION()
 		void EndDead();
+
+	UFUNCTION()
+		void SaveDatas();
 // ===========================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)

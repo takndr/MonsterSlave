@@ -3,6 +3,8 @@
 #include "GameFramework/Character.h"
 
 #include "GameMode/CSaveGame.h"
+#include "etc/CPortal.h"
+
 #include "Items/CEquipItem.h"
 #include "Items/CItemData.h"
 
@@ -21,28 +23,36 @@ void UCWeaponComponent::BeginPlay()
 
 	// 저장된 정보 있으면 저장
 	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
-	CheckNull(saveGame);
-
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
-	CheckNull(saveGame);
-
-	CheckNull(Cast<ACPlayer>(OwnerCharacter));
-	if(saveGame->SwordItem != nullptr)
+	if (saveGame != nullptr && Cast<ACPlayer>(OwnerCharacter) != nullptr)
 	{
-		SetSword((saveGame->SwordItem));
+		if (saveGame->SwordItem != nullptr)
+		{
+			SetSword((saveGame->SwordItem));
+		}
+
+		if (saveGame->BowItem != nullptr)
+		{
+			SetBow((saveGame->BowItem));
+		}
+
+		if (saveGame->WeaponType != EWeaponType::Unarmed)
+		{
+			ChangeType(saveGame->WeaponType);
+			Weapons[(int32)saveGame->WeaponType]->GetEquipItem()->Equip();
+		}
 	}
 
-	if(saveGame->BowItem != nullptr)
+	// 포탈에 저장 관련 델리게이트 바인딩
+	TArray<AActor*> outActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
+	for (auto outActor : outActors)
 	{
-		SetBow((saveGame->BowItem));
-	}
+		ACPortal* outPortal = Cast<ACPortal>(outActor);
+		if (outPortal == nullptr) continue;
 
-	if(saveGame->WeaponType != EWeaponType::Unarmed)
-	{
-		ChangeType(saveGame->WeaponType);
-		Weapons[(int32)saveGame->WeaponType]->GetEquipItem()->Equip();
+		outPortal->OnPortalSave.AddDynamic(this, &UCWeaponComponent::SaveWeaponDatas);
 	}
-	
 }
 
 void UCWeaponComponent::SetUnarmed()
@@ -115,4 +125,35 @@ void UCWeaponComponent::UnEquip()
 {
 	Weapons[(int32)WeaponType]->GetEquipItem()->UnEquip();
 	SetUnarmed();
+}
+
+void UCWeaponComponent::SaveWeaponDatas()
+{
+	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
+	CheckNull(player);
+
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	if (Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0)) != nullptr)
+	{
+		saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	}
+
+	//if (GetSwordWeapon() != nullptr)
+	//{
+		saveGame->SwordItem = GetSwordWeapon();
+	//}
+
+	//if (GetBowWeapon() != nullptr)
+	//{
+		saveGame->BowItem = GetBowWeapon();
+	//}
+
+	//if (GetWeaponType() != EWeaponType::Unarmed)
+	//{
+		saveGame->WeaponType = GetWeaponType();
+	//}
+
+	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 }

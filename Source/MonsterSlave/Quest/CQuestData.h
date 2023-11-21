@@ -22,6 +22,9 @@ struct FQuest
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int32 QuestID;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		EQuestType QuestType;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -49,6 +52,11 @@ public:
 		class UCQuestData* NextQuest;
 };
 
+FORCEINLINE bool operator==(const FQuest& Lhs, const FQuest& Rhs)
+{
+	return Lhs.QuestID == Rhs.QuestID;
+}
+
 DECLARE_DYNAMIC_DELEGATE_OneParam(FQuestCheckSignature, class AActor*, InActor);
 
 UCLASS()
@@ -59,6 +67,7 @@ public:
 	void BeginPlay();
 	void SetProgressType(EQuestProgressType InType);
 	void ClearQuest();
+	void SaveData();
 private:
 	UFUNCTION()
 		void MoveToLocation(class AActor* InActor);

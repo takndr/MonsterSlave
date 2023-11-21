@@ -66,50 +66,49 @@ void ACPortal::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 
 void ACPortal::OnInteract()
 {
-	APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	CheckNull(controller);
+	//APlayerController* controller = GetWorld()->GetFirstPlayerController();
+	//CheckNull(controller);
+	
+	//ACPlayer* player = Cast<ACPlayer>(controller->GetPawn());
+	//CheckNull(player);
 
-	ACPlayer* player = Cast<ACPlayer>(controller->GetPawn());
-	CheckNull(player);
-
-	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
-	CheckNull(saveGame);
+	//UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	//CheckNull(saveGame);
 
 	// 인벤토리 저장
 	// 장착장비 인벤 표기
-	saveGame->Items = player->Items;
+	//saveGame->Items = player->Items;
 
 	// 현재 Weapon 장착 정보 저장
-	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
-	if (weaponComp != nullptr)
-	{
-		if (weaponComp->GetSwordWeapon() != nullptr)
-		{
-			saveGame->SwordItem = (weaponComp->GetSwordWeapon());
-		}
+	//UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
+	//if (weaponComp != nullptr)
+	//{
+	//	if (weaponComp->GetSwordWeapon() != nullptr)
+	//	{
+	//		saveGame->SwordItem = (weaponComp->GetSwordWeapon());
+	//	}
 
-		if (weaponComp->GetBowWeapon() != nullptr)
-		{
-			saveGame->BowItem = (weaponComp->GetBowWeapon());
-		}
+	//	if (weaponComp->GetBowWeapon() != nullptr)
+	//	{
+	//		saveGame->BowItem = (weaponComp->GetBowWeapon());
+	//	}
 
-		if (weaponComp->GetWeaponType() != EWeaponType::Unarmed)
-		{
-			saveGame->WeaponType = weaponComp->GetWeaponType();
-		}
-	}
+	//	if (weaponComp->GetWeaponType() != EWeaponType::Unarmed)
+	//	{
+	//		saveGame->WeaponType = weaponComp->GetWeaponType();
+	//	}
+	//}
 
 	// 현재 플레이어 Status 저장
-	UCStatusComponent* statusComp = CHelpers::GetComponent<UCStatusComponent>(player);
-	if (statusComp != nullptr)
+	
+
+	if (OnPortalSave.IsBound())
 	{
-		saveGame->MaxHp = statusComp->GetMaxHp();
-		saveGame->CurrentHp = statusComp->GetCurrentHp();
-		saveGame->MoveSpeed = statusComp->GetMoveSpeed();
+		OnPortalSave.Broadcast();
 	}
 
 
-	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
+	//UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 
 
 	FString map = "/Game/Maps/" + NextMap;

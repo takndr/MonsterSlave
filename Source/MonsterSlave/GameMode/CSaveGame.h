@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "Quest/CQuestData.h"
 #include "Items/ItemStruct.h"
 #include "CSaveGame.generated.h"
 
@@ -29,10 +30,10 @@ public:
 		float MoveSpeed;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		TArray<class UCItemData*> Items;
+		TArray<FQuest> AllQuests;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		TArray<class UCQuestData*> AllQuests;
+		TArray<class UCItemData*> PlayerItems;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		TArray<class UCQuestData*> PlayerQuests;

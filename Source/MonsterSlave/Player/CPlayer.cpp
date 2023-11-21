@@ -28,8 +28,9 @@
 #include "Quest/CNpc.h"
 #include "Items/CFieldItem.h"
 #include "Items/CItemData.h"
-#include "etc/CPortal.h"
+
 #include "GameMode/CSaveGame.h"
+#include "etc/CPortal.h"
 
 #include "Global.h"
 
@@ -129,12 +130,30 @@ void ACPlayer::BeginPlay()
 
 	// 저장된 정보 있으면 저장
 	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
-	CheckNull(saveGame);
-
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
-	CheckNull(saveGame);
+	if (saveGame != nullptr)
+	{
+		Items = saveGame->PlayerItems;
+		Quests = saveGame->PlayerQuests;
+		for (auto quest : Quests)
+		{
+			quest->BeginPlay();
+		}
+	}
+	
 
-	Items = saveGame->Items;
+	// 로그로 현재 퀘스트 확인해보고 제대로 들어가는지 테스트
+
+	// 포탈에 저장 관련 델리게이트 바인딩
+	TArray<AActor*> outActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
+	for (auto outActor : outActors)
+	{
+		ACPortal* outPortal = Cast<ACPortal>(outActor);
+		if (outPortal == nullptr) continue;
+
+		outPortal->OnPortalSave.AddDynamic(this, &ACPlayer::SaveDatas);
+	}
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -390,4 +409,19 @@ void ACPlayer::Dead()
 void ACPlayer::EndDead()
 {
 
+}
+
+void ACPlayer::SaveDatas()
+{
+	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
+	CheckNull(saveGame);
+
+	if (Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0)) != nullptr)
+	{
+		saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	}
+
+	saveGame->PlayerItems = Items;
+	saveGame->PlayerQuests = Quests;
+	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 }
