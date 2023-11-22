@@ -140,9 +140,6 @@ void ACPlayer::BeginPlay()
 			quest->BeginPlay();
 		}
 	}
-	
-
-	// 로그로 현재 퀘스트 확인해보고 제대로 들어가는지 테스트
 
 	// 포탈에 저장 관련 델리게이트 바인딩
 	TArray<AActor*> outActors;
