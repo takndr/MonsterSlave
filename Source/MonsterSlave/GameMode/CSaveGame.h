@@ -30,6 +30,21 @@ public:
 		float MoveSpeed;
 
 	UPROPERTY(VisibleDefaultsOnly)
+		float HpStat;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		float PowerStat;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		float SpeedStat;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		float DefenseStat;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		float RemainStatPoint;
+
+	UPROPERTY(VisibleDefaultsOnly)
 		TArray<FQuest> AllQuests;
 
 	UPROPERTY(VisibleDefaultsOnly)

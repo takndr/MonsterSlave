@@ -27,16 +27,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DecreaseHealth(float Dx);
-
-private:
-	UFUNCTION()
-		void SaveStatusDatas();
 // =================================================================
-private:
+protected:
 	class ACharacter* OwnerCharacter;
 	float CurrentHp;
 // =================================================================
-private:
+protected: 
 	UPROPERTY(EditAnywhere, Category = "Status : Hp")
 		float MaxHp = 100.0f;
 

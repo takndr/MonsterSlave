@@ -34,6 +34,30 @@ void UCQuestComponent::BeginPlay()
 	}
 }
 
+bool UCQuestComponent::HasAvailableQuest()
+{
+	bool result = false;
+
+	for (auto questData : QuestDatas)
+	{
+		result = result || (questData->Quest.QuestProgress == EQuestProgressType::Available);
+	}
+
+	return result;
+}
+
+bool UCQuestComponent::HasCompletedQuest()
+{
+	bool result = false;
+
+	for (auto questData : QuestDatas)
+	{
+		result = result || (questData->Quest.QuestProgress == EQuestProgressType::Completed);
+	}
+
+	return result;
+}
+
 void UCQuestComponent::SaveQuestDatas()
 {
 	for (auto questData : QuestDatas)

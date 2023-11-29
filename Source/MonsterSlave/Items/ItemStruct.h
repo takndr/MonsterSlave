@@ -90,7 +90,13 @@ public:
 
 	// 무기인지 아닌지? 굳이 필요한가 싶기도 하고
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		bool isWeapon;
+		UTexture2D* WeaponIcon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* FirstSkillIcon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UTexture2D* SecondSkillIcon;
 
 private:
 	int32 Index = 0;

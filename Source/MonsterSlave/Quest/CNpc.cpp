@@ -1,6 +1,7 @@
 #include "Quest/CNpc.h"
 
 #include "Components/SphereComponent.h"
+#include "NiagaraComponent.h"
 
 #include "Component/CQuestComponent.h"
 
@@ -13,7 +14,10 @@
 
 ACNpc::ACNpc()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	CHelpers::CreateSceneComponent(this, &Sphere, "Sphere", RootComponent);
+	CHelpers::CreateSceneComponent(this, &NiagaraComp, "NiagaraComp", GetMesh());
 	CHelpers::CreateActorComponent(this, &QuestComp, "Quest");
 
 	Sphere->SetSphereRadius(200.0f);
@@ -27,6 +31,12 @@ ACNpc::ACNpc()
 	USkeletalMesh* meshAsset;
 	CHelpers::GetAsset(&meshAsset, "/Game/NPC/_Asset/BattleWizardPolyart/Meshes/WizardSM");
 	GetMesh()->SetSkeletalMesh(meshAsset);
+
+	// NiagaraComp Setting
+	NiagaraComp->SetRelativeLocation(FVector(0.0f, 0.0f, 220.0f));
+	NiagaraComp->SetRelativeScale3D(FVector(2.0f));
+	CHelpers::GetAsset(&AvailableQuest, "/Game/NPC/_Asset/Expressive_Head_VFX/Niagara/PS_State_Exclamation");
+	CHelpers::GetAsset(&CompletedQuest, "/Game/NPC/_Asset/Expressive_Head_VFX/Niagara/PS_State_Interogation");
 
 	// Widget Setting
 	CHelpers::GetClass(&InteractWidgetClass, "/Game/Widgets/Widget/WB_Interact");
@@ -48,6 +58,21 @@ void ACNpc::BeginPlay()
 	InteractWidget->SetInteractText("Quest");
 
 	QuestMainWidget = CreateWidget<UCQuestMain>(GetWorld(), QuestMainWidgetClass);
+}
+
+void ACNpc::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (QuestComp->HasAvailableQuest())
+	{
+		NiagaraComp->SetAsset(AvailableQuest);
+	}
+
+	if (QuestComp->HasCompletedQuest())
+	{
+		NiagaraComp->SetAsset(CompletedQuest);
+	}
 }
 
 void ACNpc::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

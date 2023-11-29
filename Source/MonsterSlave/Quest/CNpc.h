@@ -12,6 +12,8 @@ public:
 	ACNpc();
 protected:
 	virtual void BeginPlay() override;
+public:
+	virtual void Tick(float DeltaTime) override;
 //=============================================================================
 
 //=============================================================================
@@ -24,6 +26,9 @@ private:
 
 	UFUNCTION()
 		void OnInteract();
+
+	//UFUNCTION()
+	//	void QuestSignalChanged();
 //=============================================================================
 private:
 	TSubclassOf<class UUserWidget> InteractWidgetClass;
@@ -31,6 +36,9 @@ private:
 
 	TSubclassOf<class UCQuestMain> QuestMainWidgetClass;
 	class UCQuestMain* QuestMainWidget;
+
+	class UNiagaraSystem* AvailableQuest;
+	class UNiagaraSystem* CompletedQuest;
 
 //=============================================================================
 private:
@@ -40,4 +48,6 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCQuestComponent* QuestComp;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UNiagaraComponent* NiagaraComp;
 };

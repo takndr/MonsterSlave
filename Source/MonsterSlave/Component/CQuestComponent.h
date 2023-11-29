@@ -15,6 +15,9 @@ protected:
 // ============================================================================
 public:
 	FORCEINLINE TArray<class UCQuestData*> GetQuestDatas() { return QuestDatas; }
+
+	bool HasAvailableQuest();
+	bool HasCompletedQuest();
 // ============================================================================
 private:
 	UFUNCTION()

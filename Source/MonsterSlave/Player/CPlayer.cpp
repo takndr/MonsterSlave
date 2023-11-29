@@ -12,8 +12,9 @@
 #include "Widgets/Inventory/CInventory.h"
 #include "Widgets/Quest/CQuestMain.h"
 #include "Widgets/Player/CPlayerMain.h"
+#include "Widgets/Player/CPlayerStatus.h"
 
-#include "Component/CStatusComponent.h"
+#include "Component/CPlayerStatusComponent.h"
 #include "Component/CStateComponent.h"
 #include "Component/CWeaponComponent.h"
 #include "Component/COptionComponent.h"
@@ -46,7 +47,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateSceneComponent(this, &MinimapSprite, "Sprite", GetMesh());
 
 	// Create Actor Component
-	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
+	CHelpers::CreateActorComponent(this, &PlayerStatusComponent, "Status");
 	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
 	CHelpers::CreateActorComponent(this, &OptionComponent, "Option");
@@ -101,31 +102,38 @@ ACPlayer::ACPlayer()
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
 	CHelpers::GetClass(&PlayerMainWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerMain");
 	CHelpers::GetClass(&QuestMainWidgetClass, "/Game/Widgets/Widget/Quest/WB_QuestMain");
+	CHelpers::GetClass(&StatusWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerStatus");
 	
 }
 
 void ACPlayer::BeginPlay()
 {
-	Super::BeginPlay();
-
 	// Hair Set
 	PlayerHair = ACPlayerHair::Spawn(GetWorld(), this);
 
 	// Widget Create
 	InventoryWidget = CreateWidget<UCInventory, APlayerController>(GetController<APlayerController>(), InventoryWidgetClass);
+	QuestMainWidget = CreateWidget<UCQuestMain, APlayerController>(GetController<APlayerController>(), QuestMainWidgetClass);
+	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
+	StatusWidget = CreateWidget<UCPlayerStatus, APlayerController>(GetController<APlayerController>(), StatusWidgetClass);
+	
+	Super::BeginPlay();
+	
+	// Widget Add
 	InventoryWidget->AddToViewport();
 	InventoryWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	QuestMainWidget = CreateWidget<UCQuestMain, APlayerController>(GetController<APlayerController>(), QuestMainWidgetClass);
 	QuestMainWidget->AddToViewport();
 	QuestMainWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
 	PlayerMainWidget->AddToViewport();
 	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 
+	StatusWidget->AddToViewport();
+	StatusWidget->SetVisibility(ESlateVisibility::Collapsed);
+
 	// Status Setting
-	CheckNull(StatusComponent);
+	CheckNull(PlayerStatusComponent);
 	PlayerMainWidget->UpdateHealth();
 
 	// 저장된 정보 있으면 저장
@@ -173,6 +181,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Inventory 관련
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ACPlayer::Inventory);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ACPlayer::Interact);
+	
+	PlayerInputComponent->BindAction("Status", IE_Pressed, this, &ACPlayer::OnStatus);
+
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -317,6 +328,20 @@ void ACPlayer::Interact()
 	}
 }
 
+void ACPlayer::OnStatus()
+{
+	CheckNull(StatusWidget);
+
+	if (StatusWidget->IsOpened() == false)
+	{
+		StatusWidget->Attach();
+	}
+	else
+	{
+		StatusWidget->Detach();
+	}
+}
+
 void ACPlayer::AddItem(class UCItemData* InItem)
 {
 	int32 index = InventoryWidget->AddItem(InItem);
@@ -340,14 +365,14 @@ void ACPlayer::ReplaceInventoryItem(class UCItemData* OldItem, class UCItemData*
 float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float damageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	CheckTrueResult(StatusComponent->IsDead(), damageValue);
+	CheckTrueResult(PlayerStatusComponent->IsDead(), damageValue);
 
 	CLog::Print(damageValue);
 
-	StatusComponent->DecreaseHealth(damageValue);
+	PlayerStatusComponent->DecreaseHealth(damageValue);
 	PlayerMainWidget->UpdateHealth();
 
-	if (StatusComponent->IsDead())
+	if (PlayerStatusComponent->IsDead())
 	{
 		CheckNullResult(DeadMontage, damageValue);
 		PlayAnimMontage(DeadMontage);
@@ -394,9 +419,15 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 
 void ACPlayer::TakeDamageTest()
 {
-	StatusComponent->DecreaseHealth(10);
+	PlayerStatusComponent->DecreaseHealth(10);
 	PlayerMainWidget->UpdateHealth();
 }
+
+void ACPlayer::IncreaseStatTest()
+{
+	PlayerStatusComponent->IncreaseRemainStat(5);
+}
+
 
 void ACPlayer::Dead()
 {

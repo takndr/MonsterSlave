@@ -14,6 +14,7 @@ void UCEquipSlot::NativeConstruct()
 	Super::NativeConstruct();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwningPlayerPawn());
+	SlotImage->SetBrushFromTexture(DefaultImage);
 }
 
 void UCEquipSlot::SettingSlot(class UCItemData* InItem)

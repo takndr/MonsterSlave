@@ -48,11 +48,16 @@ void UCQuestData::BeginPlay()
 void UCQuestData::SetProgressType(EQuestProgressType InType)
 {
 	Quest.QuestProgress = InType;
+
+	//if (OnQuestSignal.IsBound())
+	//{
+	//	OnQuestSignal.Execute(InType);
+	//}
 }
 
 void UCQuestData::ClearQuest()
 {
-	if (OnQuestCheck.IsBound() == true)
+	if (OnQuestCheck.IsBound())
 	{
 		OnQuestCheck.Clear();
 	}

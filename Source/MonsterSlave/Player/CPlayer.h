@@ -27,6 +27,7 @@ public:
 	void Dead();
 	
 	FORCEINLINE class UCInventory* GetInventory() {	return InventoryWidget;	}
+	FORCEINLINE class UCPlayerStatus* GetPlayerStatus() { return StatusWidget; }
 	FORCEINLINE class UCameraComponent* GetMeshCamera() { return MeshCamera; }
 private:
 	// Axis Event
@@ -35,21 +36,24 @@ private:
 	void OnHorizontalLook(float Axis);
 	void OnVerticalLook(float Axis);
 	void OnZoom(float Axis);
-	void OnSwordWeapon();
-	void OnBowWeapon();
 
 	// Action Event
 	void Inventory();
 	void Attack();
 	void Interact();
+	void OnSwordWeapon();
+	void OnBowWeapon();
 	void FirstSkill();
 	void SecondSkill();
+	void OnStatus();
 
 // ============================================================================
 public:
 	UFUNCTION(Exec)
 		void TakeDamageTest();
 
+	UFUNCTION(Exec)
+		void IncreaseStatTest();
 private:
 	UFUNCTION()
 		void EndDead();
@@ -74,7 +78,7 @@ private:
 		class UPaperSpriteComponent* MinimapSprite;
 
 	UPROPERTY(VisibleDefaultsOnly)
-		class UCStatusComponent* StatusComponent;
+		class UCPlayerStatusComponent* PlayerStatusComponent;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStateComponent* StateComponent;
@@ -117,6 +121,9 @@ private:
 
 	TSubclassOf<class UCQuestMain> QuestMainWidgetClass;
 	class UCQuestMain* QuestMainWidget;
+
+	TSubclassOf<class UCPlayerStatus> StatusWidgetClass;
+	class UCPlayerStatus* StatusWidget;
 
 	bool bKnockDown = false;
 };

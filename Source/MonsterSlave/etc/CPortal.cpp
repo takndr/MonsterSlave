@@ -66,52 +66,12 @@ void ACPortal::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 
 void ACPortal::OnInteract()
 {
-	//APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	//CheckNull(controller);
-	
-	//ACPlayer* player = Cast<ACPlayer>(controller->GetPawn());
-	//CheckNull(player);
-
-	//UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
-	//CheckNull(saveGame);
-
-	// 인벤토리 저장
-	// 장착장비 인벤 표기
-	//saveGame->Items = player->Items;
-
-	// 현재 Weapon 장착 정보 저장
-	//UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(player);
-	//if (weaponComp != nullptr)
-	//{
-	//	if (weaponComp->GetSwordWeapon() != nullptr)
-	//	{
-	//		saveGame->SwordItem = (weaponComp->GetSwordWeapon());
-	//	}
-
-	//	if (weaponComp->GetBowWeapon() != nullptr)
-	//	{
-	//		saveGame->BowItem = (weaponComp->GetBowWeapon());
-	//	}
-
-	//	if (weaponComp->GetWeaponType() != EWeaponType::Unarmed)
-	//	{
-	//		saveGame->WeaponType = weaponComp->GetWeaponType();
-	//	}
-	//}
-
-	// 현재 플레이어 Status 저장
-	
-
 	if (OnPortalSave.IsBound())
 	{
 		OnPortalSave.Broadcast();
 	}
 
-
-	//UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
-
-
-	FString map = "/Game/Maps/" + NextMap;
+	FString map = "/Game/Maps/Tutorial/" + NextMap;
 	UGameplayStatics::OpenLevel(GetWorld(), (FName)map);
 	//controller->ClientTravel(map, ETravelType::TRAVEL_Absolute);
 }

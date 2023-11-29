@@ -58,6 +58,7 @@ FORCEINLINE bool operator==(const FQuest& Lhs, const FQuest& Rhs)
 }
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FQuestCheckSignature, class AActor*, InActor);
+//DECLARE_DYNAMIC_DELEGATE_OneParam(FQuestSignalSignature, EQuestProgressType, InType);
 
 UCLASS()
 class MONSTERSLAVE_API UCQuestData : public UDataAsset
@@ -82,6 +83,8 @@ private:
 		void ConversationToNpc(class AActor* InActor);
 public:
 	FQuestCheckSignature OnQuestCheck;
+	//FQuestSignalSignature OnQuestSignal;
+
 	uint8 CurrentCount = 0;
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Quests")
