@@ -79,6 +79,11 @@ void UCWeaponComponent::ChangeType(EWeaponType InNewType)
 	{
 		OnWeaponTypeChanged.Broadcast(prev, InNewType);
 	}
+
+	if (OnWeaponImageChanged.IsBound())
+	{
+		OnWeaponImageChanged.Broadcast(Weapons[(int8)InNewType]);
+	}
 }
 
 void UCWeaponComponent::SetSword(class UCItemData* InItem)
@@ -140,20 +145,9 @@ void UCWeaponComponent::SaveWeaponDatas()
 		saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	}
 
-	//if (GetSwordWeapon() != nullptr)
-	//{
-		saveGame->SwordItem = GetSwordWeapon();
-	//}
-
-	//if (GetBowWeapon() != nullptr)
-	//{
-		saveGame->BowItem = GetBowWeapon();
-	//}
-
-	//if (GetWeaponType() != EWeaponType::Unarmed)
-	//{
-		saveGame->WeaponType = GetWeaponType();
-	//}
+	saveGame->SwordItem = GetSwordWeapon();
+	saveGame->BowItem = GetBowWeapon();
+	saveGame->WeaponType = GetWeaponType();
 
 	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 }

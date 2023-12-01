@@ -21,6 +21,7 @@ void UCPlayerMain::NativeConstruct()
 
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
 	weaponComp->OnWeaponTypeChanged.AddDynamic(this, &UCPlayerMain::OnWeaponChanged);
+	weaponComp->OnWeaponImageChanged.AddDynamic(this, &UCPlayerMain::OnWeaponImageChanged);
 }
 
 void UCPlayerMain::UpdateHealth()
@@ -111,8 +112,20 @@ void UCPlayerMain::OffSecondSkillCoolDown()
 // 스킬을 썻을 때 Text를 보여주는 델리게이트
 // 스킬 쿨이 다 돌았을 때 Text를 사라지게 하는 델리게이트
 
+void UCPlayerMain::OnWeaponImageChanged(UCItemData* InItem)
+{
+	if (InItem == nullptr)
+	{
+		WeaponImage->SetBrushFromTexture(WeaponDefaultImage, true);
+		FirstSkillImage->SetBrushFromTexture(WeaponDefaultImage, true);
+		SecondSkillImage->SetBrushFromTexture(WeaponDefaultImage, true);
+		return;
+	}
 
-// 현재 검스킬 하나 돌리고 무기 변경시 튕기는 현상 있음
+	WeaponImage->SetBrushFromTexture(InItem->Item.WeaponIcon, true);
+	FirstSkillImage->SetBrushFromTexture(InItem->Item.FirstSkillIcon, true);
+	SecondSkillImage->SetBrushFromTexture(InItem->Item.SecondSkillIcon, true);
+}
 
 void UCPlayerMain::OnQuestAccept()
 {
@@ -123,3 +136,4 @@ void UCPlayerMain::OnQuestClear()
 {
 
 }
+

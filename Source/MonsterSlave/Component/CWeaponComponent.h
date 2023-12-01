@@ -6,6 +6,7 @@
 #include "CWeaponComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWeaponTypeChangedSignature, EWeaponType, InPrevType, EWeaponType, InNewType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponImageChangedSignature, UCItemData*, InItem);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MONSTERSLAVE_API UCWeaponComponent : public UActorComponent
@@ -61,4 +62,7 @@ private:
 public:
 	UPROPERTY(BlueprintAssignable)
 		FWeaponTypeChangedSignature OnWeaponTypeChanged;
+
+	UPROPERTY(BlueprintAssignable)
+		FWeaponImageChangedSignature OnWeaponImageChanged;
 };

@@ -36,6 +36,9 @@ private:
 		void OffSecondSkillCoolDown();
 
 	UFUNCTION()
+		void OnWeaponImageChanged(class UCItemData* InItem);
+
+	UFUNCTION()
 		void OnQuestAccept();
 
 	UFUNCTION()
@@ -48,6 +51,10 @@ private:
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UProgressBar* Health;
+
+	UPROPERTY(EditAnywhere)
+		class UTexture2D* WeaponDefaultImage;
+// ==================================================================
 private:
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* CurrentHP;

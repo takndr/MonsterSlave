@@ -117,6 +117,9 @@ void ACPlayer::BeginPlay()
 	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
 	StatusWidget = CreateWidget<UCPlayerStatus, APlayerController>(GetController<APlayerController>(), StatusWidgetClass);
 	
+	PlayerMainWidget->AddToViewport();
+	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+
 	Super::BeginPlay();
 	
 	// Widget Add
@@ -126,8 +129,7 @@ void ACPlayer::BeginPlay()
 	QuestMainWidget->AddToViewport();
 	QuestMainWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	PlayerMainWidget->AddToViewport();
-	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+	
 
 	StatusWidget->AddToViewport();
 	StatusWidget->SetVisibility(ESlateVisibility::Collapsed);
