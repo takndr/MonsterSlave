@@ -22,7 +22,6 @@ private:
 // ============================================================================
 public:
 	FClickedListSignature OnClickedList;
-
 private:
 	class UCQuestData* QuestData;
 // ============================================================================

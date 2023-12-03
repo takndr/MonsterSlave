@@ -5,6 +5,7 @@
 
 #include "Player/CPlayer.h"
 #include "Component/CStateComponent.h"
+#include "Component/CPlayerStatusComponent.h"
 
 #include "Global.h"
 
@@ -48,7 +49,8 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 		bKnockBack = false;
 	}
 	
-	OtherActor->TakeDamage(30.0f, damageEvent, OwnerCharacter->GetController(), this);
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	OtherActor->TakeDamage(Damage + statusComp->GetPowerStat() * 10, damageEvent, OwnerCharacter->GetController(), this);
 }
 
 void ACEquipSword::OnCollision()

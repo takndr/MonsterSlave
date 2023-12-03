@@ -46,6 +46,9 @@ public:
 		uint8 QuestNums;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		uint8 CurrentCount;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TArray<class UCItemData*> GiftDatas;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -83,9 +86,6 @@ private:
 		void ConversationToNpc(class AActor* InActor);
 public:
 	FQuestCheckSignature OnQuestCheck;
-	//FQuestSignalSignature OnQuestSignal;
-
-	uint8 CurrentCount = 0;
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Quests")
 		FQuest Quest;

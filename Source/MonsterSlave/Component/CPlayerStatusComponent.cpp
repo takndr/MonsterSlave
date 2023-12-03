@@ -32,6 +32,9 @@ void UCPlayerStatusComponent::BeginPlay()
 		SpeedStat = saveGame->SpeedStat;
 		DefenseStat = saveGame->DefenseStat;
 		RemainStatusPoint = saveGame->RemainStatPoint;
+
+		SetHealth();
+		SetSpeed();
 	}
 
 	// 포탈에 저장 관련 델리게이트 바인딩
@@ -88,6 +91,7 @@ void UCPlayerStatusComponent::OnHP()
 {
 	DecreaseRemainStat(1);
 	HpStat++;
+	SetHealth();
 
 	if (OnHpStat.IsBound())
 	{
@@ -121,6 +125,7 @@ void UCPlayerStatusComponent::OnSpeed()
 {
 	DecreaseRemainStat(1);
 	SpeedStat++;
+	SetSpeed();
 
 	if (OnSpeedStat.IsBound())
 	{
@@ -148,4 +153,24 @@ void UCPlayerStatusComponent::DecreaseRemainStat(float dx)
 	{
 		OnButtonDisappear.Execute();
 	}
+}
+
+void UCPlayerStatusComponent::SetHealth()
+{
+	MaxHp += HpStat * 50;
+	CurrentHp += HpStat * 50;
+	
+	// 플레이어 체력 위젯 바인딩
+	if (OnHealthTextSetting.IsBound())
+	{
+		OnHealthTextSetting.Execute();
+	}
+}
+
+void UCPlayerStatusComponent::SetSpeed()
+{
+	UCharacterMovementComponent* movementComponent = CHelpers::GetComponent<UCharacterMovementComponent>(OwnerCharacter);
+	CheckNull(movementComponent);
+
+	movementComponent->MaxWalkSpeed = MoveSpeed + SpeedStat * 200;
 }

@@ -13,6 +13,7 @@
 #include "Widgets/Quest/CQuestMain.h"
 #include "Widgets/Player/CPlayerMain.h"
 #include "Widgets/Player/CPlayerStatus.h"
+#include "Widgets/Player/CPlayerQuestLog.h"
 
 #include "Component/CPlayerStatusComponent.h"
 #include "Component/CStateComponent.h"
@@ -103,7 +104,7 @@ ACPlayer::ACPlayer()
 	CHelpers::GetClass(&PlayerMainWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerMain");
 	CHelpers::GetClass(&QuestMainWidgetClass, "/Game/Widgets/Widget/Quest/WB_QuestMain");
 	CHelpers::GetClass(&StatusWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerStatus");
-	
+	CHelpers::GetClass(&QuestLogWidgetClass, "/Game/Widgets/Widget/Player/WB_PlayerQuestLog");
 }
 
 void ACPlayer::BeginPlay()
@@ -116,6 +117,7 @@ void ACPlayer::BeginPlay()
 	QuestMainWidget = CreateWidget<UCQuestMain, APlayerController>(GetController<APlayerController>(), QuestMainWidgetClass);
 	PlayerMainWidget = CreateWidget<UCPlayerMain, APlayerController>(GetController<APlayerController>(), PlayerMainWidgetClass);
 	StatusWidget = CreateWidget<UCPlayerStatus, APlayerController>(GetController<APlayerController>(), StatusWidgetClass);
+	QuestLogWidget = CreateWidget<UCPlayerQuestLog, APlayerController>(GetController<APlayerController>(), QuestLogWidgetClass);
 	
 	PlayerMainWidget->AddToViewport();
 	PlayerMainWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
@@ -129,10 +131,10 @@ void ACPlayer::BeginPlay()
 	QuestMainWidget->AddToViewport();
 	QuestMainWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	
-
 	StatusWidget->AddToViewport();
 	StatusWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	
 
 	// Status Setting
 	CheckNull(PlayerStatusComponent);
@@ -185,6 +187,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ACPlayer::Interact);
 	
 	PlayerInputComponent->BindAction("Status", IE_Pressed, this, &ACPlayer::OnStatus);
+	PlayerInputComponent->BindAction("QuestLog", IE_Pressed, this, &ACPlayer::OnQuestLog);
 
 
 	// Axis Event Binding
@@ -344,6 +347,20 @@ void ACPlayer::OnStatus()
 	}
 }
 
+void ACPlayer::OnQuestLog()
+{
+	CheckNull(QuestLogWidget);
+
+	if (QuestLogWidget->IsOpened() == false)
+	{
+		QuestLogWidget->Attach();
+	}
+	else
+	{
+		QuestLogWidget->Detach();
+	}
+}
+
 void ACPlayer::AddItem(class UCItemData* InItem)
 {
 	int32 index = InventoryWidget->AddItem(InItem);
@@ -369,7 +386,7 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 	float damageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	CheckTrueResult(PlayerStatusComponent->IsDead(), damageValue);
 
-	CLog::Print(damageValue);
+	damageValue -= PlayerStatusComponent->GetDefenseStat() * 5;
 
 	PlayerStatusComponent->DecreaseHealth(damageValue);
 	PlayerMainWidget->UpdateHealth();

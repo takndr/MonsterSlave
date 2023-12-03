@@ -48,11 +48,6 @@ void UCQuestData::BeginPlay()
 void UCQuestData::SetProgressType(EQuestProgressType InType)
 {
 	Quest.QuestProgress = InType;
-
-	//if (OnQuestSignal.IsBound())
-	//{
-	//	OnQuestSignal.Execute(InType);
-	//}
 }
 
 void UCQuestData::ClearQuest()
@@ -101,10 +96,10 @@ void UCQuestData::MoveToLocation(AActor* InActor)
 void UCQuestData::KilledEnemy(AActor* InActor)
 {
 	CheckFalse(Quest.QuestObjectives == InActor->GetClass());
-	CurrentCount++;
-	CurrentCount = FMath::Clamp(CurrentCount, (uint8)0, Quest.QuestNums);
+	Quest.CurrentCount++;
+	Quest.CurrentCount = FMath::Clamp(Quest.CurrentCount, (uint8)0, Quest.QuestNums);
 
-	if (CurrentCount == Quest.QuestNums)
+	if (Quest.CurrentCount == Quest.QuestNums)
 	{
 		Quest.QuestProgress = EQuestProgressType::Completed;
 		// Update UI
@@ -114,10 +109,10 @@ void UCQuestData::KilledEnemy(AActor* InActor)
 void UCQuestData::CollectedItems(AActor* InActor)
 {
 	CheckFalse(Quest.QuestObjectives == InActor->GetClass());
-	CurrentCount++;
-	CurrentCount = FMath::Clamp(CurrentCount, (uint8)0, Quest.QuestNums);
+	Quest.CurrentCount++;
+	Quest.CurrentCount = FMath::Clamp(Quest.CurrentCount, (uint8)0, Quest.QuestNums);
 
-	if (CurrentCount == Quest.QuestNums)
+	if (Quest.CurrentCount == Quest.QuestNums)
 	{
 		Quest.QuestProgress = EQuestProgressType::Completed;
 		// Update UI

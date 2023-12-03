@@ -10,7 +10,7 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FSpeedStatSignature, float, InSpeedStat, floa
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FDefenseStatSignature, float, InDefenseStat, float, InRemainStat);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FButtonAppearSignature, float, InRemainStat);
 DECLARE_DYNAMIC_DELEGATE(FButtonDisappearSignature);
-
+DECLARE_DYNAMIC_DELEGATE(FHealthTextSettingSignature);
 
 UCLASS()
 class MONSTERSLAVE_API UCPlayerStatusComponent : public UCStatusComponent
@@ -29,6 +29,9 @@ public:
 	void IncreaseRemainStat(float dx);		// Test¿ë
 private:
 	void DecreaseRemainStat(float dx);
+
+	void SetHealth();
+	void SetSpeed();
 // ============================================================================
 private:
 	UFUNCTION()
@@ -54,6 +57,8 @@ public:
 
 	FButtonAppearSignature OnButtonAppear;
 	FButtonDisappearSignature OnButtonDisappear;
+
+	FHealthTextSettingSignature OnHealthTextSetting;
 // ============================================================================
 private:
 	UPROPERTY(EditDefaultsOnly)

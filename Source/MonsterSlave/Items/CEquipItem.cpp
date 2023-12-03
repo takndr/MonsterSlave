@@ -6,6 +6,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 
 #include "Component/CStateComponent.h"
+#include "Component/CPlayerStatusComponent.h"
 #include "Component/CWeaponComponent.h"
 
 #include "Global.h"
@@ -83,8 +84,11 @@ void ACEquipItem::Attack()
 	}
 	CheckFalse(StateComp->IsIdle());
 
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	CheckNull(statusComp);
+
 	StateComp->SetAction();
-	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount]);
+	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount], 1.0f + statusComp->GetSpeedStat() * 0.25f);
 }
 
 void ACEquipItem::NextCombo()
@@ -92,10 +96,13 @@ void ACEquipItem::NextCombo()
 	CheckFalse(bSucceed);
 	CheckNull(OwnerCharacter);
 
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	CheckNull(statusComp);
+
 	bSucceed = false;
 	ComboCount++;
 
-	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount]);
+	OwnerCharacter->PlayAnimMontage(AttackMontage[ComboCount], 1.0f + statusComp->GetSpeedStat() * 0.25f);
 }
 
 void ACEquipItem::EndAttack()
@@ -111,8 +118,11 @@ void ACEquipItem::FirstSkill()
 	CheckNull(FirstSkillMontage);
 	CheckFalse(bCanFirstSkill);
 
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	CheckNull(statusComp);
+
 	StateComp->SetAction();
-	OwnerCharacter->PlayAnimMontage(FirstSkillMontage);
+	OwnerCharacter->PlayAnimMontage(FirstSkillMontage, 1.0f + statusComp->GetSpeedStat() * 0.25f);
 
 	bCanFirstSkill = false;
 	UKismetSystemLibrary::K2_SetTimer(this, "EndFirstSkillCool", FirstSkillCoolDown, false);
@@ -134,8 +144,11 @@ void ACEquipItem::SecondSkill()
 	CheckNull(SecondSkillMontage);
 	CheckFalse(bCanSecondSkill);
 
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	CheckNull(statusComp);
+
 	StateComp->SetAction();
-	OwnerCharacter->PlayAnimMontage(SecondSkillMontage);
+	OwnerCharacter->PlayAnimMontage(SecondSkillMontage, 1.0f + statusComp->GetSpeedStat() * 0.25f);
 
 	bCanSecondSkill = false;
 	UKismetSystemLibrary::K2_SetTimer(this, "EndSecondSkillCool", SecondSkillCoolDown, false);

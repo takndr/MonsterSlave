@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "CTaskDummyPatrol.generated.h"
 
 UCLASS()

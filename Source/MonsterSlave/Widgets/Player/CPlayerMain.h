@@ -13,8 +13,12 @@ protected:
 	virtual void NativeConstruct() override;
 // ==================================================================
 public:
-	void UpdateHealth();
+	
 // ==================================================================
+public:
+	UFUNCTION()
+		void UpdateHealth();
+
 protected:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 		float GetHealthRatio();
@@ -38,11 +42,7 @@ private:
 	UFUNCTION()
 		void OnWeaponImageChanged(class UCItemData* InItem);
 
-	UFUNCTION()
-		void OnQuestAccept();
-
-	UFUNCTION()
-		void OnQuestClear();
+	
 // ==================================================================
 private:
 	class ACharacter* OwnerCharacter;

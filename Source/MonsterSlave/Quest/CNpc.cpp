@@ -115,4 +115,14 @@ void ACNpc::OnInteract()
 
 	controller->bShowMouseCursor = true;
 	controller->SetInputMode(inputMode);
+
+	ACPlayer* player = Cast<ACPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	for (auto quest : player->Quests)
+	{
+		if (quest->OnQuestCheck.IsBound())
+		{
+			quest->OnQuestCheck.Execute(this);
+		}
+	}
 }

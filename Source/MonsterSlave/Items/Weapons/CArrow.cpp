@@ -8,6 +8,7 @@
 #include "NiagaraFunctionLibrary.h"
 
 #include "Component/CWeaponComponent.h"
+#include "Component/CPlayerStatusComponent.h"
 
 #include "Items/CItemData.h"
 #include "Items/CEquipItem.h"
@@ -16,7 +17,8 @@
 
 #include "Global.h"
 
-ACArrow::ACArrow() {
+ACArrow::ACArrow()
+{
 	CHelpers::CreateSceneComponent(this, &Sphere, "Collision");
 	CHelpers::CreateSceneComponent(this, &ProjectileEffect, "ProjectileEffect", Sphere);
 
@@ -30,7 +32,8 @@ ACArrow::ACArrow() {
 	Projectile->MaxSpeed = 0.0f;
 }
 
-void ACArrow::BeginPlay() {
+void ACArrow::BeginPlay()
+{
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
@@ -70,13 +73,15 @@ void ACArrow::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	if (Cast<ACBoss>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerItem);
+		UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+		OtherActor->TakeDamage(Damage + statusComp->GetPowerStat() * 10, damageEvent, OwnerCharacter->GetController(), OwnerItem);
 	}
 	
 	if (Cast<ACDummyEnemy>(OtherActor) != nullptr)
 	{
 		FDamageEvent damageEvent;
-		OtherActor->TakeDamage(Damage, damageEvent, OwnerCharacter->GetController(), OwnerItem);
+		UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+		OtherActor->TakeDamage(Damage + statusComp->GetPowerStat() * 10, damageEvent, OwnerCharacter->GetController(), OwnerItem);
 	}
 
 	this->Destroy();

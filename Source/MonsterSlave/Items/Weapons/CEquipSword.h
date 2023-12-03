@@ -25,4 +25,7 @@ private:
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCapsuleComponent* Capsule;
+
+	UPROPERTY(EditDefaultsOnly)
+		float Damage = 30.0f;
 };

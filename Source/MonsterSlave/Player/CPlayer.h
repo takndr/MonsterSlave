@@ -46,6 +46,7 @@ private:
 	void FirstSkill();
 	void SecondSkill();
 	void OnStatus();
+	void OnQuestLog();
 
 // ============================================================================
 public:
@@ -124,6 +125,9 @@ private:
 
 	TSubclassOf<class UCPlayerStatus> StatusWidgetClass;
 	class UCPlayerStatus* StatusWidget;
+
+	TSubclassOf<class UCPlayerQuestLog> QuestLogWidgetClass;
+	class UCPlayerQuestLog* QuestLogWidget;
 
 	bool bKnockDown = false;
 };

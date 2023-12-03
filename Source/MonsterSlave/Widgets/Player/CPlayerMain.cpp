@@ -4,9 +4,9 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
-#include "Component/CStatusComponent.h"
-#include "Component/CWeaponComponent.h"		//--> WeaponImage 변경용 델리게이트
-#include "Items/CEquipItem.h"				//--> SkillCooldown 및 SkillImage 변경용 델리게이트
+#include "Component/CPlayerStatusComponent.h"	//--> Player Health Text 변경용 델리게이트
+#include "Component/CWeaponComponent.h"			//--> WeaponImage 변경용 델리게이트
+#include "Items/CEquipItem.h"					//--> SkillCooldown 및 SkillImage 변경용 델리게이트
 #include "Items/CItemData.h"
 
 #include "Player/CPlayer.h"
@@ -22,13 +22,17 @@ void UCPlayerMain::NativeConstruct()
 	UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(OwnerCharacter);
 	weaponComp->OnWeaponTypeChanged.AddDynamic(this, &UCPlayerMain::OnWeaponChanged);
 	weaponComp->OnWeaponImageChanged.AddDynamic(this, &UCPlayerMain::OnWeaponImageChanged);
+
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+	CheckNull(statusComp);
+	statusComp->OnHealthTextSetting.BindUFunction(this, "UpdateHealth");
 }
 
 void UCPlayerMain::UpdateHealth()
 {
-	UCStatusComponent* statusComp = CHelpers::GetComponent<UCStatusComponent>(GetOwningPlayerPawn());
+	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(GetOwningPlayerPawn());
 	CheckNull(statusComp);
-
+	
 	Health->SetPercent(GetHealthRatio());
 
 	float currentHp = statusComp->GetCurrentHp();
@@ -125,15 +129,5 @@ void UCPlayerMain::OnWeaponImageChanged(UCItemData* InItem)
 	WeaponImage->SetBrushFromTexture(InItem->Item.WeaponIcon, true);
 	FirstSkillImage->SetBrushFromTexture(InItem->Item.FirstSkillIcon, true);
 	SecondSkillImage->SetBrushFromTexture(InItem->Item.SecondSkillIcon, true);
-}
-
-void UCPlayerMain::OnQuestAccept()
-{
-
-}
-
-void UCPlayerMain::OnQuestClear()
-{
-
 }
 
