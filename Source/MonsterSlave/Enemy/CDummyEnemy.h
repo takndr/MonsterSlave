@@ -19,6 +19,7 @@ public:
 public:
 	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 	FORCEINLINE void ClearHittedCharacters() { HittedCharacters.Empty(); }
+	FORCEINLINE FText GetEnemyName() { return EnemyName; }
 
 	void OnCollision();
 	void OffCollision();
@@ -89,4 +90,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		float SkillDamage = 30.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Details")
+		FText EnemyName;
 };

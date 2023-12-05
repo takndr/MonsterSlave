@@ -26,6 +26,7 @@ public:
 	FORCEINLINE void SetHeavyHit(bool InHit) { bHeavyHit = InHit; }
 	FORCEINLINE bool IsHeavyHit() { return bHeavyHit; }
 	FORCEINLINE class ACBossBreath* GetBossBreath() { return BossBreath; }
+	FORCEINLINE FText GetBossName() { return BossName; }
 
 	void ChangePhase();
 

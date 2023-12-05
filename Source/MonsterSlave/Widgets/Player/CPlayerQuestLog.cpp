@@ -7,8 +7,11 @@
 #include "Components/SizeBox.h"
 
 #include "Quest/CQuestData.h"
+#include "Items/CItemData.h"
 #include "Widgets/Quest/CQuestList.h"
 #include "Widgets/Quest/CGiftSlot.h"
+#include "Enemy/CBoss.h"
+#include "Enemy/CDummyEnemy.h"
 #include "Player/CPlayer.h"
 
 #include "Global.h"
@@ -118,17 +121,47 @@ void UCPlayerQuestLog::SetQuestDetails(UCQuestData* InQuest)
 	{
 		ClearCaseBox->SetVisibility(ESlateVisibility::Visible);
 		ObjectBox->SetVisibility(ESlateVisibility::Visible);
-
-		// QuestObject 텍스트 추가
-		InQuest->Quest.QuestObjectives.GetDefaultObject()->Rename();
-		CLog::Print(InQuest->Quest.QuestObjectives.GetDefaultObject()->GetName());
-		InQuest->Quest.CurrentCount;
-		InQuest->Quest.QuestNums;
-
 	}
 
-	GiftList->ClearChildren();
+	// QuestObject 변경
+	FString temp;
+	if (InQuest->Quest.QuestType == EQuestType::Killed)
+	{
+		UObject* object = InQuest->Quest.QuestObjectives->GetDefaultObject();
+		if (Cast<ACBoss>(object) != nullptr)
+		{
+			temp += Cast<ACBoss>(object)->GetBossName().ToString();
+			temp += " : ";
+			temp += FString::FromInt(InQuest->Quest.CurrentCount);
+			temp += " / ";
+			temp += FString::FromInt(InQuest->Quest.QuestNums);
+		}
+		if (Cast<ACDummyEnemy>(object) != nullptr)
+		{
+			temp += Cast<ACDummyEnemy>(object)->GetEnemyName().ToString();
+			temp += " : ";
+			temp += FString::FromInt(InQuest->Quest.CurrentCount);
+			temp += " / ";
+			temp += FString::FromInt(InQuest->Quest.QuestNums);
+		}
 
+	}
+	if (InQuest->Quest.QuestType == EQuestType::Collect)
+	{
+		UObject* object = InQuest->Quest.QuestObjectives->GetDefaultObject();
+		if (Cast<UCItemData>(object) != nullptr)
+		{
+			temp += Cast<UCItemData>(object)->Item.Name;
+			temp += " : ";
+			temp += FString::FromInt(InQuest->Quest.CurrentCount);
+			temp += " / ";
+			temp += FString::FromInt(InQuest->Quest.QuestNums);
+		}
+	}
+	QuestObject->SetText(FText::FromString(temp));
+
+
+	GiftList->ClearChildren();
 	// 보상 칸 등록
 	uint8 index = 0;
 	for (auto giftData : InQuest->Quest.GiftDatas)
