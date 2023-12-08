@@ -1,39 +1,63 @@
 # Portfolio - MonsterSlave
-개인 포트폴리오 프로젝트 / C++ BluePrint
-<br>
+개인 포트폴리오 프로젝트 / C++ BluePrint<br>
 
 ## 프로젝트 소개
+> 게임 시작 UI 제작 예정<br>
+> <br>
+> <br>
+> 대세 모바일 게임은 원신의 UI를 착안하여 제작하였고<br>
+> 몬스터헌터에서 용을 잡는 것을 생각하여 보스를 용으로 설정해보았습니다<br>
+> 지금까지의 버전은 게임 시작 후, 기본적인 튜토리얼 느낌으로 제작하였으며<br>
+> 현재 제작 중인 레벨은 오픈월드 형태로 거대하게 제작 중에 있습니다.<br>
+> 주로 게임을 플레이하면서 사용하는 기능 및 전투 시스템을 확인할 수 있도록 작성하였습니다.<br>
+>
 
+## 개발 환경
+* Unreal Engine 4.27<br>
+* Visual Studio 2019<br>
 
 ## 개발 기간 
 * 23년 07월 10일 ~ (현재 진행 중)
 
 
 ## 주요 기능(목차)
-### 캐릭터
-> * 사용자 정의 컴포넌트 <br>
->   * [BehaviorComponent](https://github.com/takndr/MonsterSlave/blob/main/Md/BehaviorComponent.md)
->   * [StateComponent](https://github.com/takndr/MonsterSlave/blob/main/Md/StateComponent.md)
->   * [StatusComponent](https://github.com/takndr/MonsterSlave/blob/main/Md/StatusComponent.md)
->   * [WeaponComponent](https://github.com/takndr/MonsterSlave/blob/main/Md/WeaponComponent.md)
-> 
-> * 플레이어
->   * [플레이어 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/Player.md)
->   * [플레이어 애니메이션 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/PlayerAnimation.md)
->     
-> * 보스 <br>
->   * [보스 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/Boss.md)
->   * [보스 애니메이션 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/BossAnimation.md)
->   * [AI 컨트롤러](https://github.com/takndr/MonsterSlave/blob/main/Md/AIController.md)
->   * [Behavior Tree 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/BehaviorTree.md)
->     * Service
->     * Task 
+클릭하면 해당 세부 기능을 확인하실 수 있습니다.
 
-### 인벤토리
-> * [인벤토리 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/Inventory.md)
+### 사용자 정의 컴포넌트 - [상세보기]()
+
+* 언리얼에서 제공해주는 다양한 컴포넌트들이 존재하지만, 원하는 사용처에 맞게 사용하고자 사용자 정의 컴포넌트를 새로 제작하였습니다.<br>
+* 종류는 총 7가지 입니다.<br>
 
 
-### 아이템
-> * [아이템 구조체 구성](https://github.com/takndr/MonsterSlave/blob/main/Md/Item.md)
->   * [검 아이템](https://github.com/takndr/MonsterSlave/blob/main/Md/SwordItem.md)
->   * [활 아이템](https://github.com/takndr/MonsterSlave/blob/main/Md/BowItem.md)
+### 플레이어 - [상세보기]()
+
+* 플레이어가 컨트롤 할 수 있는 캐릭터로 이동, 공격, 상호작용등을 진행합니다.<br>
+* 공격을 하여 적을 처치하여 본인을 성장 시킬 수도 있고, 이동을 하여 여러가지 맵을 탐험할 수도 있습니다.<br>
+* 플레이어는 여러가지 위젯을 통해 본인을 성장하거나, 장비를 착용할 수 있습니다.<br>
+
+
+### 인벤토리 - [상세보기]()
+
+* 플레이어가 가지고 있는 위젯 중 하나로, 흔히 가방을 생각하고 제작하였습니다.<br>
+* 퀘스트를 클리어하거나, 적을 처치하고 드랍한 아이템을 주워서 관리할 수 있습니다.<br>
+* 아이템을 관리할 수 있는 주 위젯이기 때문에, 여러가지 위젯과 델리게이트로 연동되어 있습니다.<br>
+
+
+### 아이템 - [상세보기]()
+
+* 여러가지 아이템을 관리하기 위해 DataAsset형태로 관리하였습니다.<br>
+* DataAsset안에 아이템 구조체를 가지고 있고, 해당 구조체로 아이템이 어떤 형태인지 자유롭게 적용할 수 있습니다.<br>
+
+
+### 퀘스트 - [상세보기]()
+
+* 맵에 있는 NPC들이 퀘스트를 소유하고 있고, 플레이어는 해당 퀘스트를 진행할 수도 아닐 수도 있습니다.<br>
+* 아이템과 마찬가지로 여러가지 종류로 관리하기 위해 DataAsset형태로 제작하였고, 퀘스트 구조체로 퀘스트가 어떤 내용인지 자유롭게 작성할 수 있습니다.<br>
+
+
+### 적군(일반 적, 보스) - [상세보기]()
+
+* 플레이어가 공격을 통하여 처치할 수 있습니다. 일반 잡몹 3마리와 보스 1마리를 제작해보았습니다.<br>
+* 위 적군들은 각각 마다 다른 체력, 속도 등을 가지고 있으며, 잡몹과 보스의 행동능력도 서로 다르게 제작하였습니다.<br>
+* 보스의 경우에는 총 3개의 페이즈로 구성되어 있으며, 공격을 피해가며 총 3번의 처치를 해야합니다.<br>
+
