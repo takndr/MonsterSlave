@@ -50,9 +50,6 @@ struct FCItemStruct : public FTableRowBase {
 public:
 	FORCEINLINE int32 GetIndex() const { return Index; }
 	void Init();
-
-public:
-
 // ==============================================
 
 public:
@@ -88,7 +85,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* Picture;
 
-	// 무기인지 아닌지? 굳이 필요한가 싶기도 하고
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UTexture2D* WeaponIcon;
 
