@@ -2,8 +2,8 @@
 개인 포트폴리오 프로젝트 / C++ BluePrint<br>
 
 ## 프로젝트 소개
-> 게임 시작 UI 제작 예정<br>
-> <br>
+> ![Main](https://github.com/takndr/MonsterSlave/assets/126765215/84b04f6f-68e3-4e9b-bce6-ac0834084905)<br>
+> ![Boss](https://github.com/takndr/MonsterSlave/assets/126765215/dd836a5e-9879-4ddc-9bf1-0cc7f39213b3)<br>
 > <br>
 > 대세 모바일 게임은 원신의 UI를 착안하여 제작하였고<br>
 > 몬스터헌터에서 용을 잡는 것을 생각하여 보스를 용으로 설정해보았습니다<br>
