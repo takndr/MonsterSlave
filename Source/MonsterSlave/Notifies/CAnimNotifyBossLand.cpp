@@ -5,12 +5,14 @@
 
 #include "Global.h"
 
-FString UCAnimNotifyBossLand::GetNotifyName_Implementation() const {
+FString UCAnimNotifyBossLand::GetNotifyName_Implementation() const
+{
 	return "LandOff";
 }
 
 
-void UCAnimNotifyBossLand::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {
+void UCAnimNotifyBossLand::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+{
 	Super::Notify(MeshComp, Animation);
 	CheckNull(MeshComp);
 
@@ -21,7 +23,6 @@ void UCAnimNotifyBossLand::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	CheckNull(stateComp);
 
 	boss->SetFly(false);
-	// TODO : °íÄ¥Á¡
 	boss->SetPhaseChangeFalse();
 	stateComp->SetIdle();
 }

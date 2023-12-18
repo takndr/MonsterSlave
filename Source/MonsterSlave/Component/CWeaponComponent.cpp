@@ -6,6 +6,7 @@
 #include "etc/CPortal.h"
 
 #include "Items/CEquipItem.h"
+#include "Items/Weapons/CEquipSword.h"
 #include "Items/CItemData.h"
 
 #include "Player/CPlayer.h"
@@ -150,4 +151,16 @@ void UCWeaponComponent::SaveWeaponDatas()
 	saveGame->WeaponType = GetWeaponType();
 
 	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
+}
+
+void UCWeaponComponent::OffAllCollisions()
+{
+	for (const auto& weapon : Weapons)
+	{
+		if (weapon == nullptr)
+			continue;
+
+		if (Cast<ACEquipSword>(weapon->GetEquipItem()) != nullptr)
+			Cast<ACEquipSword>(weapon->GetEquipItem())->OffCollision();
+	}
 }

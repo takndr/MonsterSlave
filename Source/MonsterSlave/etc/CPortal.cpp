@@ -1,6 +1,8 @@
 #include "etc/CPortal.h"
 
 #include "Components/BoxComponent.h"
+#include "Components/BoxComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 #include "Component/CWeaponComponent.h"
 #include "Component/CStatusComponent.h"
@@ -15,6 +17,9 @@
 ACPortal::ACPortal()
 {
 	CHelpers::CreateSceneComponent(this, &Box, "Box", RootComponent);
+	CHelpers::CreateSceneComponent(this, &Particle, "Particle", Box);
+
+	Particle->SetRelativeLocation(FVector(0.0f, 0.0f, -150.0f));
 
 	// Widget Setting
 	CHelpers::GetClass(&InteractWidgetClass, "/Game/Widgets/Widget/WB_Interact");
@@ -26,6 +31,9 @@ void ACPortal::BeginPlay()
 	
 	Box->OnComponentBeginOverlap.AddDynamic(this, &ACPortal::BeginOverlap);
 	Box->OnComponentEndOverlap.AddDynamic(this, &ACPortal::EndOverlap);
+
+	CheckNull(PortalParticle);
+	Particle->SetTemplate(PortalParticle);
 
 	InteractWidget = CreateWidget<UCInteract>(GetWorld(), InteractWidgetClass);
 	CheckNull(InteractWidget);

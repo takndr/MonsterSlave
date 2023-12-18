@@ -34,20 +34,8 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 	HittedActors.AddUnique(OtherActor);
 
-	// TODO : 데미지 줄때 델리게이트해서 actor마다 다른 효과 일어나도록 진행하면 괜찮을 것 같기도 함
 	FDamageEvent damageEvent;
 	damageEvent.DamageTypeClass;
-	
-	if (ComboCount == 2)
-	{
-		bNormal = false;
-		bKnockBack = true;
-	}
-	else
-	{
-		bNormal = true;
-		bKnockBack = false;
-	}
 	
 	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
 	OtherActor->TakeDamage(Damage + statusComp->GetPowerStat() * 10, damageEvent, OwnerCharacter->GetController(), this);
@@ -67,4 +55,7 @@ void ACEquipSword::OffCollision()
 	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HittedActors.Empty();
 	HittedActors.Shrink();
+
+	bNormal = false;
+	bKnockBack = false;
 }

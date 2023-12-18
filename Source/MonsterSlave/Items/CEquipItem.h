@@ -34,11 +34,14 @@ public:
 	void Attach();
 	void Detach();
 
+	void SetHitNormal();
+	void SetHitKnockBack();
+
 	FORCEINLINE void EnabledCombo() { bCanCombo = true; }
 	FORCEINLINE void DisabledCombo() { bCanCombo = false; }
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
-private:	
-
+	FORCEINLINE bool IsNormalHit() { return bNormal; }
+	FORCEINLINE bool IsKnockBackHit() { return bKnockBack; }
 // ===================================================
 private:
 	UFUNCTION()
@@ -54,8 +57,6 @@ private:
 public:
 	FCItemStruct Item;
 	int32 ComboCount = 0;
-	bool bNormal = false;
-	bool bKnockBack = false;
 
 protected:
 	class ACharacter* OwnerCharacter;
@@ -66,6 +67,8 @@ protected:
 	class UCStateComponent* StateComp;
 	class UCWeaponComponent* WeaponComp;
 	bool bEquipping = false;
+	bool bNormal = false;
+	bool bKnockBack = false;
 
 private:
 	class UMaterialInstanceDynamic* DynamicMaterial;

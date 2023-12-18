@@ -48,6 +48,8 @@ private:
 	void OnStatus();
 	void OnQuestLog();
 
+	void Hitted(AActor* DamageCauser);
+
 // ============================================================================
 public:
 	UFUNCTION(Exec)
@@ -95,13 +97,16 @@ private:
 // ===========================================================
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* DeadMontage;
+		class UAnimMontage* DieMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+		class UAnimMontage* HitMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 		class UAnimMontage* KnockbackMontage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-		class UAnimMontage* HitMontage;
+		class UAnimMontage* PickupMontage;
 
 // ===========================================================
 public:

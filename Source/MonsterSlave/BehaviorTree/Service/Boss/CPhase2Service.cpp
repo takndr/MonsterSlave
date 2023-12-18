@@ -27,7 +27,6 @@ void UCPhase2Service::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	ACPlayer* player = behaviorComp->GetPlayerKey();
 	CheckNull(player);
 
-	// boss의 전방벡터와 플레이어의 전방벡터가 -1이 아닐경우에는 Rotate모드 -> 내적은 아닌것같음
 	FVector bossForward = boss->GetActorForwardVector();
 	FVector bossLoc = boss->GetActorLocation();
 	FVector playerLoc = player->GetActorLocation();

@@ -21,7 +21,6 @@ void UCAnimNotifyBossFly::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 	CheckNull(stateComp);
 
 	boss->SetFly(true);
-	// TODO : °íÄ¥Á¡
 	boss->SetPhaseChangeFalse();
 	stateComp->SetIdle();
 }

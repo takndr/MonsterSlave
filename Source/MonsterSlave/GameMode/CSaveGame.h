@@ -12,6 +12,12 @@ class MONSTERSLAVE_API UCSaveGame : public USaveGame
 	GENERATED_BODY()
 public:
 	UPROPERTY(VisibleDefaultsOnly)
+		FName CurrentLevelName;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		FVector LastPlayerLocation;
+		
+	UPROPERTY(VisibleDefaultsOnly)
 		class UCItemData* SwordItem;
 
 	UPROPERTY(VisibleDefaultsOnly)

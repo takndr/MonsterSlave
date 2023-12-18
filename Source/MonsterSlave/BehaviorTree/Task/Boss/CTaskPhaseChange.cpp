@@ -25,19 +25,15 @@ EBTNodeResult::Type UCTaskPhaseChange::ExecuteTask(UBehaviorTreeComponent& Owner
 
 EBTNodeResult::Type UCTaskPhaseChange::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-
-
 	return EBTNodeResult::Aborted;
 }
 
 void UCTaskPhaseChange::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-
 	return;
 }
 
 void UCTaskPhaseChange::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult)
 {
-
 	return;
 }

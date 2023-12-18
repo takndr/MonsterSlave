@@ -10,8 +10,11 @@
 #include "Items/CItemData.h"
 #include "Widgets/Quest/CQuestList.h"
 #include "Widgets/Quest/CGiftSlot.h"
+
+#include "Enemy/CEnemy.h"
 #include "Enemy/CBoss.h"
 #include "Enemy/CDummyEnemy.h"
+
 #include "Player/CPlayer.h"
 
 #include "Global.h"
@@ -128,23 +131,14 @@ void UCPlayerQuestLog::SetQuestDetails(UCQuestData* InQuest)
 	if (InQuest->Quest.QuestType == EQuestType::Killed)
 	{
 		UObject* object = InQuest->Quest.QuestObjectives->GetDefaultObject();
-		if (Cast<ACBoss>(object) != nullptr)
+		if (Cast<ACEnemy>(object) != nullptr)
 		{
-			temp += Cast<ACBoss>(object)->GetBossName().ToString();
+			temp += Cast<ACEnemy>(object)->GetEnemyName().ToString();
 			temp += " : ";
 			temp += FString::FromInt(InQuest->Quest.CurrentCount);
 			temp += " / ";
 			temp += FString::FromInt(InQuest->Quest.QuestNums);
 		}
-		if (Cast<ACDummyEnemy>(object) != nullptr)
-		{
-			temp += Cast<ACDummyEnemy>(object)->GetEnemyName().ToString();
-			temp += " : ";
-			temp += FString::FromInt(InQuest->Quest.CurrentCount);
-			temp += " / ";
-			temp += FString::FromInt(InQuest->Quest.QuestNums);
-		}
-
 	}
 	if (InQuest->Quest.QuestType == EQuestType::Collect)
 	{

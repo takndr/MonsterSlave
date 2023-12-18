@@ -14,7 +14,6 @@ protected:
 	virtual void BeginPlay() override;
 // ==================================================================
 public:
-
 // ==================================================================
 private:
 	UFUNCTION()
@@ -23,7 +22,6 @@ private:
 public:
 	class ACharacter* OwnerCharacter;
 	class ACEquipItem* OwnerItem;
-private:
 // ==================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)

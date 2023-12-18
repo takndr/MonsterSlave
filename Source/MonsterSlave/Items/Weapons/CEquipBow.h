@@ -19,7 +19,6 @@ public:
 	virtual void SecondSkill() override;
 
 	void SpawnArrow();
-
 // =========================================================
 private:
 	UFUNCTION()
@@ -33,6 +32,4 @@ private:
 private:
 	UPROPERTY(EditDefaultsOnly)
 		float ArrowRainRange = 700.0f;
-
-
 };

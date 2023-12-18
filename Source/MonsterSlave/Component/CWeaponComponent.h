@@ -31,6 +31,7 @@ public:
 	void EquipSword();
 	void EquipBow();
 	void UnEquip();
+	void OffAllCollisions();
 
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
 	FORCEINLINE class UCItemData* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }

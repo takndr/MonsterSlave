@@ -76,7 +76,6 @@ void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 		ACBoss* boss = Cast<ACBoss>(MeshComp->GetOwner());
 		boss->OffCollision(CollisionName);
 
-		boss->SetHeavyHit(false);
 		boss->ClearHittedCharacters();
 	}
 

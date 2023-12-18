@@ -43,14 +43,13 @@ ACDummyEnemy::ACDummyEnemy()
 void ACDummyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	HPWidget->InitWidget();
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
 	CheckNull(hpWidget);
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	Weapon->OnComponentBeginOverlap.AddDynamic(this, &ACDummyEnemy::OnOverlap);
-	
 }
 
 
@@ -58,6 +57,8 @@ void ACDummyEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// TODO : HP Widget을 플레이어쪽으로 향하게 / 이거를 Tick에서 매번 확인해야하나?
+	// 즉, HP Widget과 플레이어
 }
 
 void ACDummyEnemy::OnCollision()
@@ -69,6 +70,9 @@ void ACDummyEnemy::OffCollision()
 {
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ClearHittedCharacters();
+
+	bHitNormal = false;
+	bHitKnockback = false;
 }
 
 void ACDummyEnemy::Attack()
@@ -78,6 +82,7 @@ void ACDummyEnemy::Attack()
 	{
 		CheckNull(SkillMontage);
 		StateComponent->SetAction();
+		bHitKnockback = true;
 		PlayAnimMontage(SkillMontage);
 		bCanSkill = false;
 		UKismetSystemLibrary::K2_SetTimer(this, "OnSkillCoolDown", SkillCoolDown, false);
@@ -86,6 +91,7 @@ void ACDummyEnemy::Attack()
 	{
 		CheckNull(AttackMontage);
 		StateComponent->SetAction();
+		bHitNormal = true;
 		PlayAnimMontage(AttackMontage);
 	}
 }
@@ -112,7 +118,6 @@ void ACDummyEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 	HittedCharacters.AddUnique(player);
 
-	// TODO : 스킬인지, 일반 공격인지
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(AttackDamage, damageEvent, GetController(), this);
 }
@@ -148,15 +153,13 @@ void ACDummyEnemy::Hitted(AActor* DamageCauser)
 	ACEquipItem* item = Cast<ACEquipItem>(DamageCauser);
 	CheckNull(item);
 
-	if (item->bNormal)
+	if (item->IsNormalHit())
 	{
-		CLog::Print("Normal");
 		PlayAnimMontage(HitMontage);
 	}
 
-	if (item->bKnockBack)
+	if (item->IsKnockBackHit())
 	{
-		CLog::Print("KnockBack");
 		PlayAnimMontage(KnockbackMontage);
 	}
 }
@@ -164,10 +167,14 @@ void ACDummyEnemy::Hitted(AActor* DamageCauser)
 void ACDummyEnemy::Dead()
 {
 	CheckNull(DieMontage);
-	StateComponent->SetDead();
 	PlayAnimMontage(DieMontage);
+
+	StateComponent->SetDead();
+
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	Weapon->SetGenerateOverlapEvents(false);
+	HPWidget->SetVisibility(false);
+
 	UKismetSystemLibrary::K2_SetTimer(this, "EndDead", 3.0f, false);
 }
 

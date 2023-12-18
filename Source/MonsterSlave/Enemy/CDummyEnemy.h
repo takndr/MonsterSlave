@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Enemy/CEnemy.h"
 #include "CDummyEnemy.generated.h"
 
 UCLASS()
-class MONSTERSLAVE_API ACDummyEnemy : public ACharacter
+class MONSTERSLAVE_API ACDummyEnemy : public ACEnemy
 {
 	GENERATED_BODY()
 public:
@@ -17,17 +17,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 // =================================================================
 public:
-	FORCEINLINE class UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
-	FORCEINLINE void ClearHittedCharacters() { HittedCharacters.Empty(); }
-	FORCEINLINE FText GetEnemyName() { return EnemyName; }
-
 	void OnCollision();
 	void OffCollision();
 	void Attack();
 	void EndAttack();
 
 private:
-	void Hitted(class AActor* DamageCauser);
+	void Hitted(AActor* DamageCauser);
 	void Dead();
 // =================================================================
 private:
@@ -40,32 +36,21 @@ private:
 	UFUNCTION()
 		void OnSkillCoolDown();
 // =================================================================
-public:
-	TArray<class ACharacter*> HittedCharacters;
-	
 private:
 	TSubclassOf<class UUserWidget> HPWidgetClass;
-	float DamageValue;
 	bool bCanSkill = true;
+
+	bool bHitNormal = false;
+	bool bHitKnockback = false;
 // =================================================================
-private:
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCStatusComponent* StatusComponent;
-
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCStateComponent* StateComponent;
-
-	UPROPERTY(VisibleDefaultsOnly)
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class UWidgetComponent* HPWidget;
 
-protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class UCapsuleComponent* Weapon;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-		class UBehaviorTree* BehaviorTree;
-
 	UPROPERTY(EditDefaultsOnly, Category = "AttackMontage")
 		class UAnimMontage* AttackMontage;
 
@@ -90,7 +75,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 		float SkillDamage = 30.0f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Details")
-		FText EnemyName;
 };

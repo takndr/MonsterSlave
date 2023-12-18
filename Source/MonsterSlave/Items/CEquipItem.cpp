@@ -204,3 +204,13 @@ void ACEquipItem::Dissolving(float Output)
 {
 	DynamicMaterial->SetScalarParameterValue("Amount", Output);
 }
+
+void ACEquipItem::SetHitNormal()
+{
+	bNormal = true;
+}
+
+void ACEquipItem::SetHitKnockBack()
+{
+	bKnockBack = true;
+}

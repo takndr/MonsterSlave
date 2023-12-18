@@ -15,7 +15,8 @@ ACBossBreath::ACBossBreath()
 	CHelpers::CreateSceneComponent(this, &Collision, "Collision", Root);
 	CHelpers::CreateSceneComponent(this, &Particle, "Particle", Root);
 	
-	CHelpers::GetAsset(&BreathParticle, "/Game/Boss/Breath/Particles/Fire/P_Flamethrower");
+	//CHelpers::GetAsset(&BreathParticle, "/Game/Boss/Breath/Particles/Fire/P_Flamethrower");
+	CHelpers::GetAsset(&BreathParticle, "/Game/M5VFXVOL2/Particles/Reference/Fire/2_bonefire_fwd4_pt");
 	Particle->SetTemplate(BreathParticle);
 	Particle->bAutoActivate = false;
 

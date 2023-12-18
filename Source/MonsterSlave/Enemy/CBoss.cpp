@@ -47,20 +47,20 @@ ACBoss::ACBoss()
 
 	// AI Controller Setting
 	CHelpers::GetClass(&AIControllerClass, "/Game/Boss/BP_CBossController");
-
 }
 
 void ACBoss::BeginPlay()
 {
 	Super::BeginPlay();
-	BossHpWidget = CreateWidget<UCBossHp>(GetWorld(), BossHpWidgetClass);
-	BossHpWidget->AddToViewport();
 
+	BossHpWidget = CreateWidget<UCBossHp>(GetWorld(), BossHpWidgetClass);
 	CheckNull(BossHpWidget);
-	BossHpWidget->SetVisibility(ESlateVisibility::Collapsed);
-	
-	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
-	BossHpWidget->UpdateBossName(BossName);
+
+	BossHpWidget->AddToViewport();
+	//BossHpWidget->SetVisibility(ESlateVisibility::Collapsed);
+	//BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+	//BossHpWidget->UpdateBossName(EnemyName);
+	AttachHealthWidget();
 
 	Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
 	Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
@@ -79,7 +79,6 @@ void ACBoss::BeginPlay()
 void ACBoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -92,7 +91,7 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 
 	StatusComponent->DecreaseHealth(DamageValue);
 
-	// TODO : 보스전용 체력 위젯 만들기(보강)
+	// TODO : 보스전용 체력 위젯 만들기 & 언제 나타나게 해야할까(보강)
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
 	// 데미지 보여주기
@@ -109,8 +108,8 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 			PlayAnimMontage(DieMontage);
 			GetMesh()->SetGenerateOverlapEvents(false);
 			GetMesh()->SetCollisionProfileName("NoCollision");
-			// TODO : 보스가 죽어서 HP 위젯이 사라지는 것을 타이머로 설정하는 것이 나을 것 같음(보강)
-			BossHpWidget->RemoveFromViewport();
+			
+			UKismetSystemLibrary::K2_SetTimer(this, "RemoveHealthWidget", 3.0f, false);
 		}
 		else
 		{
@@ -118,11 +117,34 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 			StatusComponent->IncreaseHealth(StatusComponent->GetMaxHp());
 			BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 		}
+
+		return DamageValue;
 	}
 
-	// TODO : Player가 칼을들고 3번째 공격시 피격 몽타주 진행
+	// TODO : 카운터 기능 넣으면 어떠할까?(생각)
 
 	return DamageValue;
+}
+
+void ACBoss::AttachHealthWidget()
+{
+	CheckTrue(BossHpWidget->Visibility == ESlateVisibility::Visible);
+
+	BossHpWidget->SetVisibility(ESlateVisibility::Visible);
+
+	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+	BossHpWidget->UpdateBossName(EnemyName);
+}
+
+void ACBoss::RemoveHealthWidget()
+{
+	BossHpWidget->RemoveFromViewport();
+}
+
+void ACBoss::SettingHealthWidget()
+{
+	StatusComponent->IncreaseHealth(StatusComponent->GetMaxHp());
+	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 }
 
 // TODO : 보스 체력 위젯이 다시 차오르게(체력설정도 다시)
@@ -132,6 +154,8 @@ void ACBoss::ChangePhase()
 
 	StateComponent->SetAction();
 	PlayAnimMontage(PhaseChangeMontage[BossPhase]);
+
+	SettingHealthWidget();
 
 	BossPhase++;
 }
@@ -146,7 +170,6 @@ void ACBoss::BiteAttack()
 void ACBoss::SlashAttack()
 {
 	CheckFalse(StateComponent->IsIdle());
-	//SetHeavyHit(true);
 	StateComponent->SetAction();
 	PlayAnimMontage(AttackSlashMontage);
 	bCanSlash = false;
@@ -204,7 +227,6 @@ void ACBoss::OffCollision(FName InName)
 
 void ACBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 본인 제외
 	CheckTrue(OtherActor == this);
 
 	ACPlayer* player = Cast<ACPlayer>(OtherActor);
@@ -215,7 +237,6 @@ void ACBoss::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherAc
 	}
 	HittedCharacters.AddUnique(player);
 	
-	// Take Damage
 	FDamageEvent damageEvent;
 	OtherActor->TakeDamage(30.0f, damageEvent, GetController(), this);
 }

@@ -25,7 +25,7 @@
 #include "Items/Weapons/CEquipBow.h"
 #include "Items/Weapons/CEquipSword.h"
 
-#include "Enemy/CBoss.h"
+#include "Enemy/CEnemy.h"
 
 #include "Quest/CNpc.h"
 #include "Items/CFieldItem.h"
@@ -188,7 +188,6 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	PlayerInputComponent->BindAction("Status", IE_Pressed, this, &ACPlayer::OnStatus);
 	PlayerInputComponent->BindAction("QuestLog", IE_Pressed, this, &ACPlayer::OnQuestLog);
-
 
 	// Axis Event Binding
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACPlayer::OnMoveForward);
@@ -374,7 +373,6 @@ void ACPlayer::RemoveInventoryItem(class UCItemData* InItem)
 
 void ACPlayer::ReplaceInventoryItem(class UCItemData* OldItem, class UCItemData* NewItem)
 {
-	CLog::Log("Replace Inventory Item");
 	int32 index;
 	index = Items.Find(OldItem);
 	Items.Remove(OldItem);
@@ -393,47 +391,36 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContr
 
 	if (PlayerStatusComponent->IsDead())
 	{
-		CheckNullResult(DeadMontage, damageValue);
-		PlayAnimMontage(DeadMontage);
-
 		// TODO : 죽으면 아무것도 못하게(보강)
+		StateComponent->SetDead();
+		Dead();
+
 		return damageValue;
 	}
 
-	ACBoss* boss = Cast<ACBoss>(DamageCauser);
-	if (boss->IsHeavyHit())
-	{
-		switch (WeaponComponent->GetWeaponType())
-		{
-		case EWeaponType::Unarmed:
-			//PlayAnimMontage();
-			break;
-		case EWeaponType::Sword:
-			//PlayAnimMontage();
-			break;
-		case EWeaponType::Bow:
-			//PlayAnimMontage();
-			break;
-		}
-
-	} 
-	else
-	{
-		switch (WeaponComponent->GetWeaponType())
-		{
-		case EWeaponType::Unarmed:
-			//PlayAnimMontage();
-			break;
-		case EWeaponType::Sword:
-			//PlayAnimMontage();
-			break;
-		case EWeaponType::Bow:
-			//PlayAnimMontage();
-			break;
-		}
-	}
+	// 플레이어가 피격당했을 시 피격몽타주
+	Hitted(DamageCauser);
 
 	return damageValue;
+}
+
+void ACPlayer::Hitted(AActor* DamageCauser)
+{
+	CheckNull(HitMontage);
+	CheckNull(KnockbackMontage);
+
+	ACEnemy* enemy = Cast<ACEnemy>(DamageCauser);
+	CheckNull(enemy);
+
+	if (enemy->IsHitNormal())
+	{
+		PlayAnimMontage(HitMontage);
+	}
+
+	if (enemy->IsHitKnockBack())
+	{
+		PlayAnimMontage(KnockbackMontage);
+	}
 }
 
 void ACPlayer::TakeDamageTest()
@@ -450,12 +437,26 @@ void ACPlayer::IncreaseStatTest()
 
 void ACPlayer::Dead()
 {
+	CheckNull(DieMontage);
 
+	APlayerController* controller = GetController<APlayerController>();
+	if (!!controller)
+	{
+		DisableInput(controller);
+	}
+
+	PlayAnimMontage(DieMontage);
+
+	GetCapsuleComponent()->SetCollisionProfileName("Spectator");
+	WeaponComponent->OffAllCollisions();
+
+	UKismetSystemLibrary::K2_SetTimer(this, "EndDead", 3.0f, false);
 }
 
 void ACPlayer::EndDead()
 {
-
+	// TODO : 플레이어가 죽고 나서 어떻게 처리할 것인가
+	// 다시 시작할 수 있는 위젯
 }
 
 void ACPlayer::SaveDatas()
