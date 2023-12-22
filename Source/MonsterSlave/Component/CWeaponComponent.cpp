@@ -3,7 +3,7 @@
 #include "GameFramework/Character.h"
 
 #include "GameMode/CSaveGame.h"
-#include "etc/CPortal.h"
+#include "GameMode/CGameInstance.h"
 
 #include "Items/CEquipItem.h"
 #include "Items/Weapons/CEquipSword.h"
@@ -45,15 +45,20 @@ void UCWeaponComponent::BeginPlay()
 	}
 
 	// 포탈에 저장 관련 델리게이트 바인딩
-	TArray<AActor*> outActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
-	for (auto outActor : outActors)
+	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (gameInstance != nullptr)
 	{
-		ACPortal* outPortal = Cast<ACPortal>(outActor);
-		if (outPortal == nullptr) continue;
-
-		outPortal->OnPortalSave.AddDynamic(this, &UCWeaponComponent::SaveWeaponDatas);
+		gameInstance->OnGameSave.AddDynamic(this, &UCWeaponComponent::SaveWeaponDatas);
 	}
+	//TArray<AActor*> outActors;
+	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
+	//for (auto outActor : outActors)
+	//{
+	//	ACPortal* outPortal = Cast<ACPortal>(outActor);
+	//	if (outPortal == nullptr) continue;
+
+	//	outPortal->OnPortalSave.AddDynamic(this, &UCWeaponComponent::SaveWeaponDatas);
+	//}
 }
 
 void UCWeaponComponent::SetUnarmed()

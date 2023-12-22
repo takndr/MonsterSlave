@@ -4,7 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "GameMode/CSaveGame.h"
-#include "etc/CPortal.h"
+#include "GameMode/CGameInstance.h"
 
 #include "Player/CPlayer.h"
 #include "Widgets/Player/CPlayerStatus.h"
@@ -37,15 +37,11 @@ void UCPlayerStatusComponent::BeginPlay()
 		SetSpeed();
 	}
 
-	// 포탈에 저장 관련 델리게이트 바인딩
-	TArray<AActor*> outActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
-	for (auto outActor : outActors)
+	// 게임 저장 델리게이트 바인딩
+	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (gameInstance != nullptr)
 	{
-		ACPortal* outPortal = Cast<ACPortal>(outActor);
-		if (outPortal == nullptr) continue;
-
-		outPortal->OnPortalSave.AddDynamic(this, &UCPlayerStatusComponent::SaveStatusDatas);
+		gameInstance->OnGameSave.AddDynamic(this, &UCPlayerStatusComponent::SaveStatusDatas);
 	}
 
 	// Owner가 플레이어일 경우 PlayerStatus위젯 델리게이트 바인딩 진행

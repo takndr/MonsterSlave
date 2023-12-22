@@ -32,7 +32,7 @@
 #include "Items/CItemData.h"
 
 #include "GameMode/CSaveGame.h"
-#include "etc/CPortal.h"
+#include "GameMode/CGameInstance.h"
 
 #include "Global.h"
 
@@ -154,15 +154,20 @@ void ACPlayer::BeginPlay()
 	}
 
 	// 포탈에 저장 관련 델리게이트 바인딩
-	TArray<AActor*> outActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
-	for (auto outActor : outActors)
+	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (gameInstance != nullptr)
 	{
-		ACPortal* outPortal = Cast<ACPortal>(outActor);
-		if (outPortal == nullptr) continue;
-
-		outPortal->OnPortalSave.AddDynamic(this, &ACPlayer::SaveDatas);
+		gameInstance->OnGameSave.AddDynamic(this, &ACPlayer::SaveDatas);
 	}
+	//TArray<AActor*> outActors;
+	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
+	//for (auto outActor : outActors)
+	//{
+	//	ACPortal* outPortal = Cast<ACPortal>(outActor);
+	//	if (outPortal == nullptr) continue;
+
+	//	outPortal->OnPortalSave.AddDynamic(this, &ACPlayer::SaveDatas);
+	//}
 }
 
 void ACPlayer::Tick(float DeltaTime)
@@ -471,5 +476,8 @@ void ACPlayer::SaveDatas()
 
 	saveGame->PlayerItems = Items;
 	saveGame->PlayerQuests = Quests;
+	saveGame->CurrentLevelName = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	saveGame->LastPlayerLocation = GetActorLocation();
+
 	UGameplayStatics::SaveGameToSlot(saveGame, "Test", 0);
 }

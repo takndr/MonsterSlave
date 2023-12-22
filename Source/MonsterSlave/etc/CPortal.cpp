@@ -10,7 +10,9 @@
 #include "Widgets/CInteract.h"
 #include "Player/CPlayer.h"
 #include "GameMode/CSaveGame.h"
+#include "GameMode/CGameInstance.h"
 #include "Items/CEquipItem.h"
+
 
 #include "Global.h"
 
@@ -44,12 +46,6 @@ void ACPortal::BeginPlay()
 	InteractWidget->SetInteractText("Portal");
 }
 
-void ACPortal::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void ACPortal::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ACPlayer* player = Cast<ACPlayer>(OtherActor);
@@ -74,12 +70,13 @@ void ACPortal::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 
 void ACPortal::OnInteract()
 {
-	if (OnPortalSave.IsBound())
+	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	CheckNull(gameInstance);
+
+	if (gameInstance->OnGameSave.IsBound())
 	{
-		OnPortalSave.Broadcast();
+		gameInstance->OnGameSave.Broadcast();
 	}
 
-	FString map = "/Game/Maps/Tutorial/" + NextMap;
-	UGameplayStatics::OpenLevel(GetWorld(), (FName)map);
-	//controller->ClientTravel(map, ETravelType::TRAVEL_Absolute);
+	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), NextLevel, true, ObjectPlayerStartOption);
 }

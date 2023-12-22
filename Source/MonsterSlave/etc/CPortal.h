@@ -4,8 +4,6 @@
 #include "GameFramework/Actor.h"
 #include "CPortal.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPortalSaveSignature);
-
 UCLASS()
 class MONSTERSLAVE_API ACPortal : public AActor
 {
@@ -14,8 +12,6 @@ public:
 	ACPortal();
 protected:
 	virtual void BeginPlay() override;
-public:	
-	virtual void Tick(float DeltaTime) override;
 //=============================================================================
 public:
 	FORCEINLINE bool IsActive() { return bActive; }
@@ -31,9 +27,6 @@ private:
 	UFUNCTION()
 		void OnInteract();
 //=============================================================================
-public:
-	FPortalSaveSignature OnPortalSave;
-
 private:
 	class TSubclassOf<UUserWidget> InteractWidgetClass;
 	class UCInteract* InteractWidget;
@@ -48,7 +41,10 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere)
-		FString NextMap;
+		TSoftObjectPtr<UWorld> NextLevel;
+
+	UPROPERTY(EditAnywhere)
+		FString ObjectPlayerStartOption;
 
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* PortalParticle;

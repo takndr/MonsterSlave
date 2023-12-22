@@ -12,9 +12,9 @@ class MONSTERSLAVE_API UCSaveGame : public USaveGame
 	GENERATED_BODY()
 public:
 	UPROPERTY(VisibleDefaultsOnly)
-		FName CurrentLevelName;
+		FString CurrentLevelName;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		FVector LastPlayerLocation;
 		
 	UPROPERTY(VisibleDefaultsOnly)

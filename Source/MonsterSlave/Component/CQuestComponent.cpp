@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 
 #include "Quest/CQuestData.h"
-#include "etc/CPortal.h"
+#include "GameMode/CGameInstance.h"
 
 #include "Global.h"
 
@@ -23,15 +23,20 @@ void UCQuestComponent::BeginPlay()
 	}
 
 	// 포탈에 저장 관련 델리게이트 바인딩
-	TArray<AActor*> outActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
-	for (auto outActor : outActors)
+	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (gameInstance != nullptr)
 	{
-		ACPortal* outPortal = Cast<ACPortal>(outActor);
-		if (outPortal == nullptr) continue;
-
-		outPortal->OnPortalSave.AddDynamic(this, &UCQuestComponent::SaveQuestDatas);
+		gameInstance->OnGameSave.AddDynamic(this, &UCQuestComponent::SaveQuestDatas);
 	}
+	//TArray<AActor*> outActors;
+	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPortal::StaticClass(), outActors);
+	//for (auto outActor : outActors)
+	//{
+	//	ACPortal* outPortal = Cast<ACPortal>(outActor);
+	//	if (outPortal == nullptr) continue;
+
+	//	outPortal->OnPortalSave.AddDynamic(this, &UCQuestComponent::SaveQuestDatas);
+	//}
 }
 
 bool UCQuestComponent::HasAvailableQuest()
