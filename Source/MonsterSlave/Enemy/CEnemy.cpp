@@ -5,6 +5,9 @@
 ACEnemy::ACEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
+	CHelpers::CreateActorComponent(this, &StateComponent, "State");
 }
 
 void ACEnemy::BeginPlay()

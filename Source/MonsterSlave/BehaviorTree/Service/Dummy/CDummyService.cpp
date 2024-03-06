@@ -49,3 +49,5 @@ void UCDummyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	// 어느정도 거리가 가까워 졌으면 ActionMode
 	behaviorComp->SetActionMode();
 }
+
+// 어떤 모드를 취하기 전에 일정 시간의 대기 시간이 있어야 할 것 같음

@@ -38,10 +38,10 @@ protected:
 	bool bHitKnockBack = false;
 // =================================================================
 protected:
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	UPROPERTY(VisibleDefaultsOnly)
 		class UCStatusComponent* StatusComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	UPROPERTY(VisibleDefaultsOnly)
 		class UCStateComponent* StateComponent;
 
 protected:

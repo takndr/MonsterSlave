@@ -16,8 +16,8 @@ ACBoss::ACBoss()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
-	CHelpers::CreateActorComponent(this, &StateComponent, "State");
+	//CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
+	//CHelpers::CreateActorComponent(this, &StateComponent, "State");
 
 	CHelpers::CreateSceneComponent(this, &Mouth, "MouthCollision", GetMesh());
 	CHelpers::CreateSceneComponent(this, &Hand, "HandCollision", GetMesh());
@@ -43,7 +43,7 @@ ACBoss::ACBoss()
 	Hand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// Widget Setting
-	CHelpers::GetClass(&BossHpWidgetClass, "WidgetBlueprint'/Game/Widgets/Widget/Enemy/WB_BossHp.WB_BossHp_C'");
+	CHelpers::GetClass(&BossHpWidgetClass, "/Game/Widgets/Widget/Enemy/WB_BossHp");
 
 	// AI Controller Setting
 	CHelpers::GetClass(&AIControllerClass, "/Game/Boss/BP_CBossController");
@@ -52,28 +52,31 @@ ACBoss::ACBoss()
 void ACBoss::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	BossHpWidget = CreateWidget<UCBossHp>(GetWorld(), BossHpWidgetClass);
-	CheckNull(BossHpWidget);
+	if(BossHpWidget != nullptr)
+	{
+		BossHpWidget->AddToViewport();
+		//BossHpWidget->SetVisibility(ESlateVisibility::Collapsed);
+		//BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+		//BossHpWidget->UpdateBossName(EnemyName);
+		AttachHealthWidget();
+	}
+	
+	{
+		Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
+		Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
 
-	BossHpWidget->AddToViewport();
-	//BossHpWidget->SetVisibility(ESlateVisibility::Collapsed);
-	//BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
-	//BossHpWidget->UpdateBossName(EnemyName);
-	AttachHealthWidget();
+		FActorSpawnParameters param;
+		param.Owner = this;
 
-	Mouth->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "BiteSocket");
-	Hand->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "HandSocket");
+		BossBreath = GetWorld()->SpawnActor<ACBossBreath>(ACBossBreath::StaticClass(), param);
+		BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
+		//BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "FlyBreathSocket");
 
-	FActorSpawnParameters param;
-	param.Owner = this;
-
-	BossBreath = GetWorld()->SpawnActor<ACBossBreath>(ACBossBreath::StaticClass(), param);
-	BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "LandBreathSocket");
-	//BossBreath->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "FlyBreathSocket");
-
-	Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
-	Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
+		Mouth->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
+		Hand->OnComponentBeginOverlap.AddDynamic(this, &ACBoss::OnOverlap);
+	}
 }
 
 void ACBoss::Tick(float DeltaTime)
@@ -94,22 +97,13 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 	// TODO : 보스전용 체력 위젯 만들기 & 언제 나타나게 해야할까(보강)
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 
-	// 데미지 보여주기
-	FTransform damageTransform = GetActorTransform();
-	ACDamageText* damageText = GetWorld()->SpawnActorDeferred<ACDamageText>(ACDamageText::StaticClass(), damageTransform);
-	damageText->FinishSpawning(damageTransform);
-	damageText->SetDamageText(Damage);
-
 	// 체력 전부 줄으면 페이즈 전환 / 마지막 페이즈라면 보스 사망
 	if (StatusComponent->IsDead())
 	{
 		if (BossPhase == 2)
 		{
-			PlayAnimMontage(DieMontage);
-			GetMesh()->SetGenerateOverlapEvents(false);
-			GetMesh()->SetCollisionProfileName("NoCollision");
-			
-			UKismetSystemLibrary::K2_SetTimer(this, "RemoveHealthWidget", 3.0f, false);
+			StateComponent->SetDead();
+			Dead();
 		}
 		else
 		{
@@ -129,9 +123,8 @@ float ACBoss::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AControl
 void ACBoss::AttachHealthWidget()
 {
 	CheckTrue(BossHpWidget->Visibility == ESlateVisibility::Visible);
-
+	
 	BossHpWidget->SetVisibility(ESlateVisibility::Visible);
-
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
 	BossHpWidget->UpdateBossName(EnemyName);
 }
@@ -145,6 +138,22 @@ void ACBoss::SettingHealthWidget()
 {
 	StatusComponent->IncreaseHealth(StatusComponent->GetMaxHp());
 	BossHpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
+}
+
+void ACBoss::Dead()
+{
+	PlayAnimMontage(DieMontage);
+	GetMesh()->SetGenerateOverlapEvents(false);
+	GetMesh()->SetCollisionProfileName("NoCollision");
+
+	//UKismetSystemLibrary::K2_SetTimer(this, "RemoveHealthWidget", 3.0f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "EndDead", 3.0f, false);
+}
+
+void ACBoss::EndDead()
+{
+	RemoveHealthWidget();
+	this->Destroy();
 }
 
 // TODO : 보스 체력 위젯이 다시 차오르게(체력설정도 다시)

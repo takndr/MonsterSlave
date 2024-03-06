@@ -34,6 +34,9 @@ private:
 		void EndDead();
 
 	UFUNCTION()
+		void OffHpWidget();
+
+	UFUNCTION()
 		void OnSkillCoolDown();
 // =================================================================
 private:

@@ -20,8 +20,8 @@ ACDummyEnemy::ACDummyEnemy()
 	CHelpers::CreateSceneComponent(this, &Weapon, "Weapon", GetMesh());
 	CHelpers::CreateSceneComponent(this, &HPWidget, "HPWidget", GetCapsuleComponent());
 
-	CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
-	CHelpers::CreateActorComponent(this, &StateComponent, "State");
+	//CHelpers::CreateActorComponent(this, &StatusComponent, "Status");
+	//CHelpers::CreateActorComponent(this, &StateComponent, "State");
 	
 	// SkeletalMesh Setting
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
@@ -35,7 +35,8 @@ ACDummyEnemy::ACDummyEnemy()
 	HPWidget->SetRelativeLocation(FVector(0, 0, 90));
 	HPWidget->SetDrawSize(FVector2D(100, 10));
 	HPWidget->SetWidgetClass(HPWidgetClass);
-	
+	HPWidget->SetHiddenInGame(true);
+
 	// AI Controller Setting
 	CHelpers::GetClass(&AIControllerClass, "/Game/DummyEnemy/BP_CDummyController");
 }
@@ -57,8 +58,10 @@ void ACDummyEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TODO : HP Widget을 플레이어쪽으로 향하게 / 이거를 Tick에서 매번 확인해야하나?
-	// 즉, HP Widget과 플레이어
+	CheckTrue(HPWidget->bHiddenInGame);
+	FVector healthWidgetLocation = HPWidget->GetComponentLocation();
+	FVector playerCameraLocation = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetTransformComponent()->GetComponentLocation();
+	HPWidget->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(healthWidgetLocation, playerCameraLocation));
 }
 
 void ACDummyEnemy::OnCollision()
@@ -127,8 +130,13 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	StatusComponent->DecreaseHealth(DamageValue);
 
-	//LaunchCharacter(FVector(0, 0, 100), false, false);
-	//GetCharacterMovement()->Launch(FVector(0, 0, Damage));
+	HPWidget->SetHiddenInGame(false);
+
+	//CLog::Print("Launch");
+	//CLog::Log(GetCharacterMovement()->MovementMode);
+	//LaunchCharacter(FVector(0, 0, 1000), false, false);
+	//GetCharacterMovement()->AddForce(FVector(0, 0, 5000000));
+	//GetCharacterMovement()->Launch(FVector(0, 0, 1000));
 
 	UCDummyHp* hpWidget = Cast<UCDummyHp>(HPWidget->GetUserWidgetObject());
 	hpWidget->UpdateHealth(StatusComponent->GetCurrentHp(), StatusComponent->GetMaxHp());
@@ -142,7 +150,14 @@ float ACDummyEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 	Hitted(DamageCauser);
 
+	UKismetSystemLibrary::K2_SetTimer(this, "OffHpWidget", 5.0f, false);
+
 	return DamageValue;
+}
+
+void ACDummyEnemy::OffHpWidget()
+{
+	HPWidget->SetHiddenInGame(true);
 }
 
 void ACDummyEnemy::Hitted(AActor* DamageCauser)

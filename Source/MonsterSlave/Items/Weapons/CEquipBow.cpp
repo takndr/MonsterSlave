@@ -40,6 +40,7 @@ void ACEquipBow::FirstSkill()
 
 void ACEquipBow::SecondSkill()
 {
+	CheckFalse(bCanSecondSkill);
 	Super::SecondSkill();
 	
 	UKismetSystemLibrary::K2_SetTimer(this, "SpawnArrowRain", 2.0f, false);

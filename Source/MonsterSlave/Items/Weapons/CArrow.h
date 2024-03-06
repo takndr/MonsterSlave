@@ -27,17 +27,20 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USphereComponent* Sphere;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly, Category = "Arrow Effect")
 		class UNiagaraComponent* ProjectileEffect;
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UProjectileMovementComponent* Projectile;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Arrow Effect")
 		class UNiagaraSystem* FlashEffect;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Arrow Effect")
 		class UNiagaraSystem* HitEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera Shake")
+		TSubclassOf<class UCameraShakeBase> ShakeClass;
 
 	UPROPERTY(EditDefaultsOnly)
 		float ArrowSpeed = 1500.0f;

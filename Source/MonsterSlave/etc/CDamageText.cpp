@@ -29,7 +29,8 @@ void ACDamageText::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (DamageWidgetComp->GetUserWidgetObject() == nullptr) {
+	if (DamageWidgetComp->GetUserWidgetObject() == nullptr)
+	{
 		DamageWidgetComp->InitWidget();
 	}
 }
@@ -41,7 +42,8 @@ void ACDamageText::Tick(float DeltaTime)
 }
 
 void ACDamageText::SetDamageText(float InDamage) {
-	if (DamageWidgetComp->GetUserWidgetObject() == nullptr) {
+	if (DamageWidgetComp->GetUserWidgetObject() == nullptr)
+	{
 		DamageWidgetComp->InitWidget();
 	}
 

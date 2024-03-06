@@ -6,6 +6,9 @@
 #include "Player/CPlayer.h"
 #include "Component/CStateComponent.h"
 #include "Component/CPlayerStatusComponent.h"
+#include "etc/CDamageText.h"
+
+#include "Enemy/CEnemy.h"
 
 #include "Global.h"
 
@@ -14,6 +17,7 @@ ACEquipSword::ACEquipSword()
 {
 	WeaponType = EWeaponType::Sword;
 	CHelpers::CreateSceneComponent(this, &Capsule, "Collision", StaticMesh);
+	Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ACEquipSword::BeginPlay()
@@ -28,17 +32,40 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
 	CheckTrue(OtherActor == OwnerCharacter);
 	
+	CLog::Log("Combo : " + FString::FromInt(ComboCount));
+
 	if (HittedActors.Find(OtherActor) != -1)
 	{
 		return;
 	}
 	HittedActors.AddUnique(OtherActor);
 
-	FDamageEvent damageEvent;
-	damageEvent.DamageTypeClass;
-	
-	UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
-	OtherActor->TakeDamage(Damage + statusComp->GetPowerStat() * 10, damageEvent, OwnerCharacter->GetController(), this);
+	if (!!ShakeClass)
+	{
+		APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		controller->PlayerCameraManager->StartCameraShake(ShakeClass);
+	}
+
+	// 데미지를 줄 경우는 적일 경우에만
+	if (Cast<ACEnemy>(OtherActor) != nullptr)
+	{
+		// 데미지 계산
+		UCPlayerStatusComponent* statusComp = CHelpers::GetComponent<UCPlayerStatusComponent>(OwnerCharacter);
+		CheckNull(statusComp);
+
+		float temp = Damage + statusComp->GetPowerStat() * 10;
+		int finDamage = UKismetMathLibrary::RandomFloatInRange(temp - temp / 10, temp + temp / 10);
+
+		// 데미지 폰트
+		FTransform damageTransform = GetActorTransform();
+		ACDamageText* damageText = GetWorld()->SpawnActorDeferred<ACDamageText>(ACDamageText::StaticClass(), damageTransform);
+		damageText->FinishSpawning(damageTransform);
+		damageText->SetDamageText(finDamage);
+
+		// 데미지 계산 실행
+		FDamageEvent damageEvent;
+		OtherActor->TakeDamage(finDamage, damageEvent, OwnerCharacter->GetController(), this);
+	}
 }
 
 void ACEquipSword::OnCollision()

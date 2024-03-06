@@ -25,6 +25,8 @@ EBTNodeResult::Type UCTaskDummyAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	CheckNullResult(enemy, EBTNodeResult::Failed);
 	enemy->Attack();
 
+	CLog::Log("Enemy Attack");
+
 	return EBTNodeResult::InProgress;
 }
 

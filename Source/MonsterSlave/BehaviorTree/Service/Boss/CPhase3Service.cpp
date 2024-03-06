@@ -9,14 +9,10 @@
 
 void UCPhase3Service::OnSearchStart(FBehaviorTreeSearchData& SearchData)
 {
-	Controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
-	OwnerBoss = Controller->GetPossessedBoss();
+	//Controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
+	//OwnerBoss = Controller->GetPossessedBoss();
 
-}
-
-void UCPhase3Service::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
-{
-	ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
+	ACBossController* controller = Cast<ACBossController>(SearchData.OwnerComp.GetOwner());
 	CheckNull(controller);
 
 	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
@@ -63,4 +59,55 @@ void UCPhase3Service::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	}
 
 	behaviorComp->SetMoveMode();
+}
+
+void UCPhase3Service::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	//ACBossController* controller = Cast<ACBossController>(OwnerComp.GetOwner());
+	//CheckNull(controller);
+
+	//UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
+	//CheckNull(behaviorComp);
+
+	//ACBoss* boss = Cast<ACBoss>(controller->GetPawn());
+	//CheckNull(boss);
+
+	//UCStateComponent* stateComp = CHelpers::GetComponent<UCStateComponent>(boss);
+	//CheckNull(stateComp);
+
+	//ACPlayer* player = behaviorComp->GetPlayerKey();
+	//CheckNull(player);
+
+	//FVector bossForward = boss->GetActorForwardVector();
+	//FVector bossLoc = boss->GetActorLocation();
+	//FVector playerLoc = player->GetActorLocation();
+	//FVector temp = playerLoc - bossLoc;
+	//float doc = bossForward.GetSafeNormal2D() | temp.GetSafeNormal2D();
+	//float distance = player->GetDistanceTo(boss);
+
+	//if (doc < 0.98)
+	//{
+	//	behaviorComp->SetRotateMode();
+	//	return;
+	//}
+
+	//if (distance < 2000 && boss->bCanBreath)
+	//{
+	//	behaviorComp->SetBreathMode();
+	//	return;
+	//}
+
+	//if (distance < 1275 && boss->bCanSlash)
+	//{
+	//	behaviorComp->SetSlashMode();
+	//	return;
+	//}
+
+	//if (distance < 830)
+	//{
+	//	behaviorComp->SetActionMode();
+	//	return;
+	//}
+
+	//behaviorComp->SetMoveMode();
 }

@@ -69,13 +69,13 @@ protected:
 	bool bEquipping = false;
 	bool bNormal = false;
 	bool bKnockBack = false;
+	bool bCanFirstSkill = true;
+	bool bCanSecondSkill = true;
 
 private:
 	class UMaterialInstanceDynamic* DynamicMaterial;
 	bool bCanCombo = false;
 	bool bSucceed = false;
-	bool bCanFirstSkill = true;
-	bool bCanSecondSkill = true;
 
 	class UCurveFloat* DissolveCurve;
 	FTimeline Timeline;
@@ -103,6 +103,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Socket")
 		FName EquippedHolster;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera Shake")
+		TSubclassOf<class UCameraShakeBase> ShakeClass;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly)

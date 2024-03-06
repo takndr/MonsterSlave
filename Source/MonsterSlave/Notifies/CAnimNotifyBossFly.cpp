@@ -1,6 +1,7 @@
 #include "Notifies/CAnimNotifyBossFly.h"
 
 #include "Enemy/CBoss.h"
+#include "Component/CStateComponent.h"
 
 #include "Global.h"
 

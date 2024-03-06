@@ -23,7 +23,7 @@ ACDummyController::ACDummyController()
 
 	SightPerception->SightRadius = 1000.0f;
 	SightPerception->LoseSightRadius = 1000.0f;
-	SightPerception->PeripheralVisionAngleDegrees = 180.0f;
+	SightPerception->PeripheralVisionAngleDegrees = 90.0f;
 	SightPerception->SetMaxAge(2.0f);
 	SightPerception->DetectionByAffiliation.bDetectEnemies = false;
 	SightPerception->DetectionByAffiliation.bDetectFriendlies = false;
