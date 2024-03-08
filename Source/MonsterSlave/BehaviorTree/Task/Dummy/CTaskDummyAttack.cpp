@@ -1,8 +1,10 @@
 #include "BehaviorTree/Task/Dummy/CTaskDummyAttack.h"
 
 #include "Component/CStateComponent.h"
+#include "Component/CBehaviorComponent.h"
 #include "Enemy/CDummyEnemy.h"
 #include "Enemy/CDummyController.h"
+#include "Player/CPlayer.h"
 
 #include "Global.h"
 
@@ -23,9 +25,17 @@ EBTNodeResult::Type UCTaskDummyAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 
 	ACDummyEnemy* enemy = Cast<ACDummyEnemy>(controller->GetPawn());
 	CheckNullResult(enemy, EBTNodeResult::Failed);
-	enemy->Attack();
 
-	CLog::Log("Enemy Attack");
+	UCBehaviorComponent* behaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(controller);
+	CheckNullResult(behaviorComp, EBTNodeResult::Failed);
+
+	ACPlayer* player = behaviorComp->GetPlayerKey();
+	CheckNullResult(player, EBTNodeResult::Failed);
+
+	// 공격하기 전에 플레이어 쪽으로 돌아보고 공격
+	FRotator rotation = UKismetMathLibrary::FindLookAtRotation(enemy->GetActorLocation(), player->GetActorLocation());
+	enemy->SetActorRotation(FQuat(rotation));
+	enemy->Attack();
 
 	return EBTNodeResult::InProgress;
 }
@@ -44,8 +54,6 @@ void UCTaskDummyAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	CheckNull(stateComp);
 
 	RunningTime += DeltaSeconds;
-
-	// TODO : 모션이 끝나고 딜레이 시간 적용되게 설정해야 할 듯
 
 	if (stateComp->IsIdle() && (RunningTime >= Delay))
 	{

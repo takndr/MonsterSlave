@@ -26,8 +26,6 @@ private:
 private:
 	class ACDummyEnemy* PossessedDummy;
 	class UAISenseConfig_Sight* SightPerception;
-
-
 // ==================================================================
 private:
 	UPROPERTY(VisibleDefaultsOnly)
