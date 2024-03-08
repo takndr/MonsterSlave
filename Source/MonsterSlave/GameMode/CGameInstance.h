@@ -11,6 +11,8 @@ class MONSTERSLAVE_API UCGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
+	virtual void Shutdown() override;
+public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 		FGameSaveSignature OnGameSave;
 };
