@@ -19,16 +19,31 @@ void UCMainMenu::Connect()
 	// 해당 레벨로 이동
 	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
+	FString map;
 
 	if (saveGame != nullptr)
 	{
-		FString map = "/Game/Maps/" + saveGame->CurrentLevelName;
-		UGameplayStatics::OpenLevel(GetWorld(), (FName)map);
+		CLog::Log("Load Game" + saveGame->CurrentLevelName);
+		map = "/Game/Maps/" + saveGame->CurrentLevelName;
 	}
 	else
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), "/Game/Maps/Map");
+		CLog::Log("New Game");
+		map = "/Game/Maps/Map";
 	}
+
+
+	FInputModeGameOnly inputMode;
+
+	UWorld* world = GetWorld();
+	CheckNull(world);
+	APlayerController* controller = world->GetFirstPlayerController();
+	CheckNull(controller);
+
+	controller->bShowMouseCursor = false;
+	controller->SetInputMode(inputMode);
+
+	UGameplayStatics::OpenLevel(GetWorld(), (FName)map);
 }
 
 void UCMainMenu::OpenOptionMenu()

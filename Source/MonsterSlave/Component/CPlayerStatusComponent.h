@@ -62,16 +62,16 @@ public:
 // ============================================================================
 private:
 	UPROPERTY(EditDefaultsOnly)
-		float HpStat = 30.0f;
+		float HpStat = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-		float PowerStat = 30.0f;
+		float PowerStat = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-		float SpeedStat = 30.0f;
+		float SpeedStat = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-		float DefenseStat = 30.0f;
+		float DefenseStat = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly)
 		float RemainStatusPoint = 5.0f;

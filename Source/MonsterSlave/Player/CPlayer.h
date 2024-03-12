@@ -64,10 +64,11 @@ private:
 	UFUNCTION()
 		void SaveDatas();
 // ===========================================================
-private:
-	UPROPERTY(VisibleDefaultsOnly)
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class UCameraComponent* MeshCamera;
 
+private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MeshSpringArm;
 

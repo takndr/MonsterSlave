@@ -23,6 +23,7 @@ void UCPlayerStatusComponent::BeginPlay()
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	if (saveGame != nullptr && Cast<ACPlayer>(OwnerCharacter) != nullptr)
 	{
+		CLog::Log("Load Player Status");
 		MaxHp = saveGame->MaxHp;
 		CurrentHp = saveGame->CurrentHp;
 		movementComponent->MaxWalkSpeed = saveGame->MoveSpeed;
@@ -33,14 +34,15 @@ void UCPlayerStatusComponent::BeginPlay()
 		DefenseStat = saveGame->DefenseStat;
 		RemainStatusPoint = saveGame->RemainStatPoint;
 
-		SetHealth();
-		SetSpeed();
+		//SetHealth();
+		//SetSpeed();
 	}
 
 	// 게임 저장 델리게이트 바인딩
 	UCGameInstance* gameInstance = Cast<UCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (gameInstance != nullptr)
 	{
+		CLog::Log("Binding Player Status Save");
 		gameInstance->OnGameSave.AddDynamic(this, &UCPlayerStatusComponent::SaveStatusDatas);
 	}
 
@@ -59,11 +61,16 @@ void UCPlayerStatusComponent::BeginPlay()
 
 void UCPlayerStatusComponent::SaveStatusDatas()
 {
+	CLog::Log("Save Player Status Data");
+
 	ACPlayer* player = Cast<ACPlayer>(OwnerCharacter);
 	CheckNull(player);
 
 	UCSaveGame* saveGame = Cast<UCSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSaveGame::StaticClass()));
 	CheckNull(saveGame);
+
+	UCharacterMovementComponent* movementComponent = CHelpers::GetComponent<UCharacterMovementComponent>(OwnerCharacter);
+	CheckNull(movementComponent);
 
 	if (Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0)) != nullptr)
 	{
@@ -72,7 +79,7 @@ void UCPlayerStatusComponent::SaveStatusDatas()
 
 	saveGame->MaxHp = MaxHp;
 	saveGame->CurrentHp = CurrentHp;
-	saveGame->MoveSpeed = MoveSpeed;
+	saveGame->MoveSpeed = movementComponent->MaxWalkSpeed;
 
 	saveGame->HpStat = HpStat;
 	saveGame->PowerStat = PowerStat;

@@ -145,7 +145,6 @@ void ACPlayer::BeginPlay()
 	saveGame = Cast<UCSaveGame>(UGameplayStatics::LoadGameFromSlot("Test", 0));
 	if (saveGame != nullptr)
 	{
-		CLog::Log("Save Game File Exists");
 		Items = saveGame->PlayerItems;
 		Quests = saveGame->PlayerQuests;
 		for (auto quest : Quests)

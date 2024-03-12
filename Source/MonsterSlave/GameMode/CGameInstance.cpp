@@ -4,10 +4,10 @@
 
 void UCGameInstance::Shutdown()
 {
-	if (OnGameSave.IsBound())
-	{
-		OnGameSave.Broadcast();
-	}
+	//if (OnGameSave.IsBound())
+	//{
+	//	OnGameSave.Broadcast();
+	//}
 
 	Super::Shutdown();
 }
