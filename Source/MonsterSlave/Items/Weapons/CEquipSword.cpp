@@ -31,7 +31,8 @@ void ACEquipSword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 {
 	// 여러 조건 붙이고 통과하면 진행 -> 본인과 Owner 제외
 	CheckTrue(OtherActor == OwnerCharacter);
-	
+	CheckFalse(Cast<ACEnemy>(OtherActor) != nullptr);
+
 	CLog::Log("Combo : " + FString::FromInt(ComboCount));
 
 	if (HittedActors.Find(OtherActor) != -1)

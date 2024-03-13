@@ -4,7 +4,7 @@
 #include "Enemy/CBoss.h"
 #include "Enemy/CDummyEnemy.h"
 #include "Component/CWeaponComponent.h"
-#include "Items/Weapons/CEquipSword.h"
+#include "Items/CEquipitem.h"
 #include "Items/CItemData.h"
 
 #include "Global.h"
@@ -22,13 +22,13 @@ void UCAnimNotifyStateCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 		UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 		CheckNull(weaponComp);
 
-		UCItemData* swordData = weaponComp->GetCurrentWeapon();
-		CheckNull(swordData);
+		UCItemData* weaponData = weaponComp->GetCurrentWeapon();
+		CheckNull(weaponData);
 
-		ACEquipSword* swordEquip = Cast<ACEquipSword>(swordData->GetEquipItem());
-		CheckNull(swordEquip);
+		ACEquipItem* weaponEquip = Cast<ACEquipItem>(weaponData->GetEquipItem());
+		CheckNull(weaponEquip);
 
-		swordEquip->OnCollision();
+		weaponEquip->OnCollision();
 	}
 
 	// Boss老 版快
@@ -59,13 +59,13 @@ void UCAnimNotifyStateCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAn
 		UCWeaponComponent* weaponComp = CHelpers::GetComponent<UCWeaponComponent>(MeshComp->GetOwner());
 		CheckNull(weaponComp);
 
-		UCItemData* swordData = weaponComp->GetCurrentWeapon();
-		CheckNull(swordData);
+		UCItemData* weaponData = weaponComp->GetCurrentWeapon();
+		CheckNull(weaponData);
 
-		ACEquipSword* swordEquip = Cast<ACEquipSword>(swordData->GetEquipItem());
-		CheckNull(swordEquip);
+		ACEquipItem* weaponEquip = Cast<ACEquipItem>(weaponData->GetEquipItem());
+		CheckNull(weaponEquip);
 
-		swordEquip->OffCollision();
+		weaponEquip->OffCollision();
 	}
 
 	// Boss老 版快

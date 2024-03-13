@@ -68,6 +68,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class UCameraComponent* MeshCamera;
 
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+		class UCWeaponComponent* WeaponComponent;
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USpringArmComponent* MeshSpringArm;
@@ -90,8 +93,7 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCOptionComponent* OptionComponent;
 
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCWeaponComponent* WeaponComponent;
+	
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCQuestComponent* QuestComponent;

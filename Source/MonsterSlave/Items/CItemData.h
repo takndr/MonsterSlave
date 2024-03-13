@@ -10,8 +10,11 @@ class MONSTERSLAVE_API UCItemData : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE class ACEquipItem* GetEquipItem() { return EquipItem; }
 	void SpawnEquipItem(UWorld* InWorld, class ACharacter* OwnerCharacter);
+// ==================================================================
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		FORCEINLINE class ACEquipItem* GetEquipItem() { return EquipItem; }
 // ==================================================================
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Items")

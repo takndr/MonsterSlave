@@ -34,7 +34,6 @@ public:
 	void OffAllCollisions();
 
 	FORCEINLINE EWeaponType GetWeaponType() { return WeaponType; }
-	FORCEINLINE class UCItemData* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
 	FORCEINLINE class UCItemData* GetSwordWeapon() { return Weapons[(int32)EWeaponType::Sword]; }
 	FORCEINLINE class UCItemData* GetBowWeapon() { return Weapons[(int32)EWeaponType::Bow]; }
 
@@ -47,6 +46,10 @@ public:
 private:
 	void ChangeType(EWeaponType InNewType);
 //===================================================================
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		FORCEINLINE class UCItemData* GetCurrentWeapon() { return Weapons[(int32)WeaponType]; }
+
 private:
 	UFUNCTION()
 		void SaveWeaponDatas();

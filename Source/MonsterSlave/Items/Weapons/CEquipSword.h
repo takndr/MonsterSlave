@@ -13,8 +13,8 @@ protected:
 	virtual void BeginPlay() override;
 // =========================================================
 public:
-	void OnCollision();
-	void OffCollision();
+	void OnCollision() override;
+	void OffCollision() override;
 // =========================================================
 private:
 	UFUNCTION()

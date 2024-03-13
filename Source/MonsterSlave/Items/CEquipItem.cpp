@@ -111,6 +111,8 @@ void ACEquipItem::EndAttack()
 	ComboCount = 0;
 	bNormal = false;
 	bKnockBack = false;
+
+	OffCollision();
 }
 
 void ACEquipItem::FirstSkill()

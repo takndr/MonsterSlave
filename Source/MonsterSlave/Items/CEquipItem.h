@@ -24,9 +24,11 @@ protected:
 public:
 	virtual void Attack();
 	virtual void NextCombo();
-	virtual void EndAttack();
 	virtual void FirstSkill();
 	virtual void SecondSkill();
+
+	virtual void OnCollision() {}
+	virtual void OffCollision() {}
 
 	void Equip();
 	void UnEquip();
@@ -43,6 +45,10 @@ public:
 	FORCEINLINE bool IsNormalHit() { return bNormal; }
 	FORCEINLINE bool IsKnockBackHit() { return bKnockBack; }
 // ===================================================
+public:
+	UFUNCTION(BlueprintCallable)
+		virtual void EndAttack();
+
 private:
 	UFUNCTION()
 		void Dissolving(float Output);
