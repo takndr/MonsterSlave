@@ -93,10 +93,11 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCOptionComponent* OptionComponent;
 
-	
-
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCQuestComponent* QuestComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCIKComponent* IKComponent;
 // ===========================================================
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")

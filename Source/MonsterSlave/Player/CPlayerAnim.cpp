@@ -7,7 +7,16 @@
 
 #include "Global.h"
 
-void UCPlayerAnim::NativeUpdateAnimation(float DeltaSeconds) {
+void UCPlayerAnim::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
+	WeaponComponent = CHelpers::GetComponent<UCWeaponComponent>(TryGetPawnOwner());
+}
+
+void UCPlayerAnim::NativeUpdateAnimation(float DeltaSeconds) 
+{
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	CheckNull(OwnerCharacter);
 	CheckNull(WeaponComponent);
@@ -19,12 +28,10 @@ void UCPlayerAnim::NativeUpdateAnimation(float DeltaSeconds) {
 	Pitch = player->GetBaseAimRotation().Pitch;
 
 	WeaponType = WeaponComponent->GetWeaponType();
+
+	UCIKComponent* ikComp = CHelpers::GetComponent<UCIKComponent>(player);
+	CheckNull(ikComp);
+
+	IKData = ikComp->GetData();
 }
 
-void UCPlayerAnim::NativeBeginPlay() {
-	Super::NativeBeginPlay();
-
-	OwnerCharacter = Cast<ACharacter>(TryGetPawnOwner());
-	WeaponComponent = CHelpers::GetComponent<UCWeaponComponent>(TryGetPawnOwner());
-
-}

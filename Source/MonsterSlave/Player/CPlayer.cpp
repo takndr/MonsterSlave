@@ -53,6 +53,7 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent(this, &WeaponComponent, "Weapon");
 	CHelpers::CreateActorComponent(this, &OptionComponent, "Option");
 	CHelpers::CreateActorComponent(this, &QuestComponent, "Quest");
+	CHelpers::CreateActorComponent(this, &IKComponent, "IK");
 
 	// MeshSpringArm Setting
 	MeshSpringArm->SetRelativeLocation(FVector(0, 0, 60));
@@ -93,11 +94,9 @@ ACPlayer::ACPlayer()
 	CHelpers::GetAsset(&PlayerBody, "SkeletalMesh'/Game/Player/Character/Mesh/Full_Mesh/SK_STgirl1.SK_STgirl1'");
 	GetMesh()->SetSkeletalMesh(PlayerBody);
 
-	ConstructorHelpers::FClassFinder<UCPlayerAnim> animAsset(TEXT("AnimBlueprint'/Game/Player/ABP_Player.ABP_Player_C'"));
-	if (animAsset.Succeeded())
-	{
-		GetMesh()->SetAnimInstanceClass(animAsset.Class);
-	}
+	TSubclassOf<UAnimInstance> animClass;
+	CHelpers::GetClass(&animClass, "/Game/Player/ABP_Player");
+	GetMesh()->SetAnimInstanceClass(animClass);
 
 	// Widget Setting
 	CHelpers::GetClass(&InventoryWidgetClass, "/Game/Widgets/Widget/Inventory/WB_Inventory");
@@ -133,8 +132,6 @@ void ACPlayer::BeginPlay()
 
 	StatusWidget->AddToViewport();
 	StatusWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-	
 
 	// Status Setting
 	CheckNull(PlayerStatusComponent);
