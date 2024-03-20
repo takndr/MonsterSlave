@@ -31,11 +31,13 @@ void UCIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	float offset = FMath::Min<float>(leftFootDistance, rightFootDistance);
 
+	CLog::Log("left Distance : " + FString::FromInt(leftFootDistance) + ", Right Distance : " + FString::FromInt(rightFootDistance));
+
 	//CLog::Log("IK offset : " + FString::FromInt(offset));
 
 	Data.PelvisDistance.Z = UKismetMathLibrary::FInterpTo(Data.PelvisDistance.Z, offset, DeltaTime, InterSpeed);
-	Data.LeftFootDistance.Y = UKismetMathLibrary::FInterpTo(Data.LeftFootDistance.Y, leftFootDistance - offset, DeltaTime, InterSpeed);
-	Data.RightFootDistance.Y = UKismetMathLibrary::FInterpTo(Data.RightFootDistance.Y, rightFootDistance - offset, DeltaTime, InterSpeed);
+	Data.LeftFootDistance.X = UKismetMathLibrary::FInterpTo(Data.LeftFootDistance.X, leftFootDistance - offset, DeltaTime, InterSpeed);
+	Data.RightFootDistance.X = UKismetMathLibrary::FInterpTo(Data.RightFootDistance.X, rightFootDistance - offset, DeltaTime, InterSpeed);
 	Data.LeftFootRotation = UKismetMathLibrary::RInterpTo(Data.LeftFootRotation, leftFootRotation, DeltaTime, InterSpeed);
 	Data.RightFootRotation = UKismetMathLibrary::RInterpTo(Data.RightFootRotation, rightFootRotation, DeltaTime, InterSpeed);
 }
@@ -44,7 +46,7 @@ void UCIKComponent::Trace(FName InSocketName, float& OutDistance, FRotator& OutR
 {
 	FVector socketLocation = OwnerCharacter->GetMesh()->GetSocketLocation(InSocketName);
 	FVector start = FVector(socketLocation.X, socketLocation.Y, OwnerCharacter->GetActorLocation().Z);
-	FVector end = FVector(socketLocation.X, socketLocation.Y, OwnerCharacter->GetActorLocation().Z - OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() - Extension);
+	FVector end = FVector(socketLocation.X, socketLocation.Y, OwnerCharacter->GetActorLocation().Z - OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()- Extension);
 
 	TArray<AActor*> ignoreActors;
 	ignoreActors.Add(OwnerCharacter);
