@@ -31,10 +31,6 @@ void UCIKComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	float offset = FMath::Min<float>(leftFootDistance, rightFootDistance);
 
-	CLog::Log("left Distance : " + FString::FromInt(leftFootDistance) + ", Right Distance : " + FString::FromInt(rightFootDistance));
-
-	//CLog::Log("IK offset : " + FString::FromInt(offset));
-
 	Data.PelvisDistance.Z = UKismetMathLibrary::FInterpTo(Data.PelvisDistance.Z, offset, DeltaTime, InterSpeed);
 	Data.LeftFootDistance.X = UKismetMathLibrary::FInterpTo(Data.LeftFootDistance.X, leftFootDistance - offset, DeltaTime, InterSpeed);
 	Data.RightFootDistance.X = UKismetMathLibrary::FInterpTo(Data.RightFootDistance.X, rightFootDistance - offset, DeltaTime, InterSpeed);
